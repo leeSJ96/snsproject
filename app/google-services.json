@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1000095917249",
+    "firebase_url": "https://meetagain-ab7d6.firebaseio.com",
+    "project_id": "meetagain-ab7d6",
+    "storage_bucket": "meetagain-ab7d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000095917249:android:646306b71f0932aa3ea040",
+        "android_client_info": {
+          "package_name": "com.sjkorea.Meetagain"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000095917249-ftprt8du7faefcihllrd9q1ill55dbgn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn4_inJS_5Mbi4VQr1IHYdMM9yYoY5YxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000095917249-ftprt8du7faefcihllrd9q1ill55dbgn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

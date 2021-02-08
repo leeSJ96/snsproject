@@ -1,0 +1,5 @@
+include ':viewpager'
+include ':tedimagepicker'
+include ':tedimagepicker11'
+include ':app'
+rootProject.name = "Meetagain"

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frg_3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgraund_gray"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/Darkgray"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:src="@drawable/mainlogo3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_title">
+
+        <com.github.matteobattilana.weather.WeatherView
+            android:id="@+id/wv_weather_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <Button
+            android:id="@+id/btn_change_weather"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btn"
+            android:textColor="@color/Text_white"
+            android:backgroundTint="@color/Btn_gray"
+            app:backgroundTint="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/wv_weather_view"
+            app:layout_constraintTop_toBottomOf="@+id/tourRV" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tourRV"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="@+id/wv_weather_view"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="250dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

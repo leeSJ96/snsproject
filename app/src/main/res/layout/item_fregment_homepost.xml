@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="675dp"
+    android:layout_margin="10dp"
+    android:background="@color/item_backgranud_gray">
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        card_view:layout_constraintBottom_toBottomOf="parent"
+        card_view:layout_constraintEnd_toEndOf="parent"
+        card_view:layout_constraintHorizontal_bias="0.0"
+        card_view:layout_constraintStart_toStartOf="parent"
+        card_view:layout_constraintTop_toTopOf="parent"
+        card_view:layout_constraintVertical_bias="0.0">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/item_backgranud_gray">
+
+
+            <ImageView
+                android:id="@+id/home_post_profile_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="7.5dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="2dp"
+                android:src="@mipmap/ic_launcher"
+                card_view:layout_constraintBottom_toTopOf="@+id/home_post_imageview_content"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+
+                android:id="@+id/home_post_profile_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginStart="76dp"
+                android:layout_marginEnd="208dp"
+
+                android:textSize="20dp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/home_post_profile_image"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="@+id/home_post_profile_image"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintVertical_bias="0.615"
+                tools:text="User Name" />
+
+            <ImageView
+                android:id="@+id/home_post_imageview_content"
+                android:layout_width="393dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@color/Btn_gray"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/home_post_ma"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="60dp"
+                android:text="싫어요 5개"
+                android:textColor="@color/Text_white"
+                android:textSize="12sp"
+                card_view:layout_constraintBottom_toBottomOf="@+id/home_post_like"
+                card_view:layout_constraintStart_toStartOf="@+id/home_post_like" />
+
+            <TextView
+                android:id="@+id/home_post_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:text="좋아요 5개"
+                android:textColor="@color/Text_white"
+                android:textSize="12sp"
+
+                card_view:layout_constraintBottom_toBottomOf="@+id/home_post_imageview_content"
+                card_view:layout_constraintStart_toStartOf="parent" />
+
+            <ImageView
+                android:id="@+id/home_post_ma_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_arrow_back_black_24dp"
+                card_view:layout_constraintStart_toEndOf="@+id/home_post_favorite_imageview"
+                card_view:layout_constraintTop_toBottomOf="@+id/home_post_imageview_content" />
+
+            <ImageView
+                android:id="@+id/bottomviewitem_comment_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="36dp"
+                android:padding="5dp"
+                android:src="@drawable/comment"
+                card_view:layout_constraintBottom_toTopOf="@+id/home_post_explain_textview"
+                card_view:layout_constraintEnd_toEndOf="@+id/home_post_explain_textview"
+                card_view:layout_constraintHorizontal_bias="1.0"
+                card_view:layout_constraintStart_toEndOf="@+id/home_post_ma_imageview" />
+
+            <ImageView
+                android:id="@+id/home_post_favorite_imageview"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="124dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_arrow_back_black_24dp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/home_post_imageview_content" />
+
+            <TextView
+                android:id="@+id/home_post_title_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="44dp"
+                android:textColor="@color/Text_white"
+                android:textSize="20sp"
+                card_view:layout_constraintBottom_toTopOf="@+id/home_post_explain_textview"
+                card_view:layout_constraintEnd_toStartOf="@+id/bottomviewitem_comment_imageview"
+                card_view:layout_constraintHorizontal_bias="0.097"
+                card_view:layout_constraintStart_toStartOf="parent"
+                tools:text="사진 제목" />
+
+            <TextView
+                android:id="@+id/home_post_explain_textview"
+                android:layout_width="342dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="84dp"
+                android:lineSpacingExtra="10dp"
+                android:textColor="@color/Text_white"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.46"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/home_post_imageview_content"
+                tools:text="사진 내용" />
+
+            <TextView
+                android:layout_width="115dp"
+                android:layout_height="23dp"
+                android:layout_marginTop="16dp"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.451"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/home_post_explain_textview" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

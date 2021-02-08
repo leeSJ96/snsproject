@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        >
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:padding="24dp"
+        android:background="#1B1E2E"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSample"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="     정말 창을 종료하시겠습니까? \n지금 쓰고계신 글내용이 삭제됩니다."
+
+            android:textColor="@android:color/white"
+            android:textSize="15dp" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/btnSample"
+            android:backgroundTint="@color/Btn_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:text="돌아가기"
+            android:elevation="20dp"
+            android:textColor="#fff"/>
+
+        <Button
+            android:id="@+id/btn_close"
+            android:backgroundTint="@color/Btn_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:elevation="20dp"
+            android:textColor="#fff"
+            android:text="창종료" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    </FrameLayout>
+</layout>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/design_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_bottom"
+    android:paddingStart="30dp"
+    android:paddingTop="60dp"
+    android:paddingEnd="30dp"
+    android:paddingBottom="60dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/btoolbar_btn_back"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/ic_baseline_arrow_back_ios_24"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="22dp"
+        />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="169dp"
+            android:orientation="horizontal">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/Bottom_profile_image_my"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+      android:layout_margin="25dp"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <ImageView
+        android:id="@+id/Bottom_profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="-70dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_weight="1.5"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <Button
+        android:id="@+id/account_btn_follow_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:elevation="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="59dp"
+        android:layout_weight="1"
+        android:text="팔로우"
+        android:backgroundTint="@color/Btn_gray"
+        app:backgroundTint="@null"
+        android:textColor="@color/Text_white" />
+</RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+
+                android:id="@+id/btoolbar_username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_toRightOf="@+id/toolbar_btn_back"
+                android:text="text@email.com"
+                android:textColor="@color/Text_white"
+                android:textSize="23sp"
+
+                />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bottom_tv_post_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:layout_marginRight="10dp"
+            android:textSize="20dp"
+            android:textColor="@color/Text_white" />
+
+        <TextView
+            android:id="@+id/btitle_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/Text_white"
+            android:text="게시글보기" />
+
+        <TextView
+            android:id="@+id/bottom_tv_following_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:textSize="20dp"
+            android:text="0"
+            android:textColor="@color/Text_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/Text_white"
+            android:text="팔로우" />
+        <TextView
+            android:id="@+id/bottom_tv_follower_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:textSize="20dp"
+            android:text="0"
+            android:textColor="@color/Text_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/Text_white"
+            android:text="팔로워" />
+
+
+    </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

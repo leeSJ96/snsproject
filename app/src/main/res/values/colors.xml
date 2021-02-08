@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="colorTransparency">#00ff0000</color>
+    <color name="colorLightGray">#f1f1f1</color>
+
+
+        <!-- Here you can add color of your choice  -->
+    <color name="ucrop_color_toolbar">#EC6868</color>
+    <color name="ucrop_color_statusbar">#EC6868</color>
+    <color name="ucrop_color_widget_active">#EC6868</color>
+
+
+    <color name="Darkgray">#35383B</color>
+    <color name="Btn_gray">#4D4E51</color>
+    <color name="backgraund_gray">#28292C</color>
+    <color name="item_backgranud_gray">#49494B</color>
+    <color name="Text_white">#fff</color>
+
+</resources>
