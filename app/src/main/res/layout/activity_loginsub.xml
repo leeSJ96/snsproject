@@ -2,99 +2,120 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Intro.LoginActivity">
+    android:orientation="vertical"
+    tools:context=".intro.LoginActivity"
+    android:id="@+id/login_layout"
+    android:background="@color/backgraund_gray">
 
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="마음 다이어리 로그인"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+ <ImageView
+     android:id="@+id/imageView2"
+     android:layout_width="200dp"
+     android:layout_height="200dp"
+     android:layout_marginTop="76dp"
+     android:src="@drawable/mainlogo1"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.497"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title">
+ <ImageView
+     android:id="@+id/imageView"
+     android:layout_width="150dp"
+     android:layout_height="50dp"
+     android:layout_marginTop="48dp"
+     android:src="@drawable/mainlogo2"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.497"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_email_input"
-            android:inputType="textEmailAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="이메일을 입력해주세요." />
+ <Button
+     android:id="@+id/facebook_login"
+     android:layout_width="383dp"
+     android:layout_height="40dp"
+     android:layout_gravity="center_horizontal"
 
-    </com.google.android.material.textfield.TextInputLayout>
+     android:background="@drawable/btn_signin_facebook"
+     android:text="@string/signin_facebook"
+     android:textColor="@color/Text_white"
+     app:backgroundTint="@null"
+     app:layout_constraintBottom_toTopOf="@+id/kakao_login_button"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.428"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/google_login"
+     app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email_layout">
+ <com.google.android.gms.common.SignInButton
+     android:id="@+id/google_login"
+     android:layout_width="match_parent"
+     android:layout_height="40dp"
+     android:layout_marginTop="4dp"
+     android:fontFamily="@font/binggrae"
+     android:text="@string/signin_google"
+     android:textColor="@color/white"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintHorizontal_bias="0.0"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/login_button">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_password_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="패스워드를 입력해주세요."
-            android:inputType="textPassword" />
+ </com.google.android.gms.common.SignInButton>
 
-    </com.google.android.material.textfield.TextInputLayout>
+ <Button
+     android:id="@+id/kakao_login_button"
+     android:layout_width="383dp"
+     android:layout_height="31dp"
+     android:layout_marginBottom="100dp"
+     android:background="@drawable/kakao_login_large_wide"
+     app:backgroundTint="@null"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintHorizontal_bias="0.571"
+     app:layout_constraintLeft_toLeftOf="parent"
+     app:layout_constraintRight_toRightOf="parent" />
 
+ <Button
+     android:id="@+id/login_button"
+     android:layout_width="383dp"
+     android:layout_height="40dp"
+     android:layout_marginTop="88dp"
+     android:backgroundTint="@color/Btn_gray"
+     android:fontFamily="@font/binggrae"
+     android:text="로그인"
+     android:textColor="@color/Text_white"
+     app:backgroundTint="@null"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-    <Button
-        android:id="@+id/login_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/white"
-        android:text="로그인하기"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password_layout" />
+ <Button
+     android:id="@+id/sign_in_button"
+     android:layout_width="178dp"
+     android:layout_height="50dp"
+     android:layout_marginStart="16dp"
+     android:layout_marginTop="32dp"
+     android:backgroundTint="@color/Btn_gray"
+     android:fontFamily="@font/binggrae"
+     android:text="익명으로 로그인"
+     android:textColor="@color/Text_white"
+     app:backgroundTint="@null"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/kakao_login_button" />
 
-    <Button
-        android:id="@+id/create_auth_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/Btn_gray"
-        android:text="계정만들기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_btn" />
-
-    <Button
-        android:id="@+id/missing_auth_btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="10dp"
-        android:backgroundTint="@color/Btn_gray"
-        android:text="계정찾기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/create_auth_btn" />
-
+ <Button
+     android:id="@+id/join_button"
+     android:layout_width="178dp"
+     android:layout_height="50dp"
+     android:layout_marginTop="32dp"
+     android:layout_marginEnd="16dp"
+     android:backgroundTint="@color/Btn_gray"
+     android:fontFamily="@font/binggrae"
+     android:text="회원 가입"
+     android:textColor="@color/Text_white"
+     app:backgroundTint="@null"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/kakao_login_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

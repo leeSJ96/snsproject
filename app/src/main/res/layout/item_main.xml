@@ -133,8 +133,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="70dp"
-            android:layout_height="46dp"
+            android:layout_width="79dp"
+            android:layout_height="53dp"
             android:layout_marginStart="4dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

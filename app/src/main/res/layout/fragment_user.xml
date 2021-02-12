@@ -28,6 +28,33 @@
         android:background="@color/backgraund_gray">
 
 
+        <TextView
+            android:id="@+id/user_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="12dp"
+            android:text="name"
+            android:textSize="25sp"
+            app:layout_constraintEnd_toStartOf="@+id/user_namechange_tv"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintStart_toEndOf="@+id/account_iv_profile"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/user_namechange_tv"
+            android:layout_width="55dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="닉네임 변경"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/textView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.47" />
+
         <ImageView
             android:id="@+id/account_iv_profile"
             android:layout_width="150dp"
@@ -38,30 +65,34 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+
         <TextView
             android:id="@+id/account_tv_follower_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
+            android:layout_marginEnd="36dp"
             android:layout_marginBottom="20dp"
             android:text="0"
             android:textColor="@color/Text_white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/account_tv_following_count"
+
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <TextView
             android:id="@+id/account_tv_following_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
             android:layout_marginBottom="20dp"
-            android:layout_marginStart="40dp"
             android:text="0"
             android:textColor="@color/Text_white"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/account_tv_follower_count"
+            app:layout_constraintHorizontal_bias="0.115"
             app:layout_constraintStart_toEndOf="@+id/account_tv_post_count"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
-        account_tv_follower_count
+
         <TextView
             android:id="@+id/account_tv_post_count"
             android:layout_width="wrap_content"
@@ -75,37 +106,27 @@
             app:layout_constraintStart_toEndOf="@+id/account_iv_profile"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-<!--        <Button-->
-<!--            android:id="@+id/acount_btn_follow_signout"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:text="팔로우"-->
-<!--            android:backgroundTint="@color/com_facebook_blue"-->
-<!--            android:textColor="#fff"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="52dp"
             android:layout_weight="1"
             android:text="팔로우"
             android:textColor="@color/Text_white"
+            app:layout_constraintEnd_toStartOf="@+id/textView3"
+            app:layout_constraintHorizontal_bias="0.517"
             app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/user_name_tv" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="64dp"
             android:layout_weight="1"
             android:text="남긴글"
             android:textColor="@color/Text_white"
@@ -116,12 +137,12 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:text="팔로워"
             android:textColor="@color/Text_white"
-            app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 

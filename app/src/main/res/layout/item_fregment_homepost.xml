@@ -102,7 +102,7 @@
                 android:id="@+id/home_post_ma_imageview"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_arrow_back_black_24dp"
@@ -126,23 +126,24 @@
                 android:id="@+id/home_post_favorite_imageview"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginStart="112dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="124dp"
                 android:padding="5dp"
+
                 android:src="@drawable/ic_arrow_back_black_24dp"
-                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/home_post_title_textview"
                 card_view:layout_constraintTop_toBottomOf="@+id/home_post_imageview_content" />
 
             <TextView
                 android:id="@+id/home_post_title_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="44dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginBottom="36dp"
                 android:textColor="@color/Text_white"
                 android:textSize="20sp"
+
                 card_view:layout_constraintBottom_toTopOf="@+id/home_post_explain_textview"
-                card_view:layout_constraintEnd_toStartOf="@+id/bottomviewitem_comment_imageview"
-                card_view:layout_constraintHorizontal_bias="0.097"
                 card_view:layout_constraintStart_toStartOf="parent"
                 tools:text="사진 제목" />
 

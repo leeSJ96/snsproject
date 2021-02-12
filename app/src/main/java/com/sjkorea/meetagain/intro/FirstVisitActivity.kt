@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -16,6 +17,7 @@ import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.MainActivity
 import com.sjkorea.meetagain.R
+import com.sjkorea.meetagain.model.AuthModel
 import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.IDDTO
@@ -24,12 +26,15 @@ import com.sjkorea.meetagain.utils.onMyTextChanged
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.activity_firstvisit.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import java.util.*
+import kotlin.collections.HashMap
 
 class FirstVisitActivity : AppCompatActivity() {
 
 
     var firestore: FirebaseFirestore? = null
     var auth: FirebaseAuth? = null
+    private val firebaseAuth = FirebaseAuth.getInstance()
 
     //    var uid = FirebaseAuth.getInstance().currentUser!!.uid
     var uid = FirebaseAuth.getInstance().currentUser?.email
@@ -83,71 +88,40 @@ class FirstVisitActivity : AppCompatActivity() {
 
     //
     private fun updateData() {
+
+        val userName = SharedPreferenceFactory.getStrValue("userName","")//유저 닉네임
+        val id  =     SharedPreferenceFactory.getStrValue("userEmail","") // 유저 이메일
+        SharedPreferenceFactory.getStrValue("userToken","")  // 유저 uid
+        val path = SharedPreferenceFactory.getStrValue("userPath", "")  // 유저 디비 위치)
+
         var contentDTO = ContentDTO()
         var map = HashMap<String, Any>()
         val nameing = name_edit.text.toString()
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
         var email = FirebaseAuth.getInstance().currentUser?.email
         Log.d(Constants.TAG, "uid = $uid")
-        map[email!!] = name_edit.text.toString()
-
-
-        firestore?.collection("user_id")?.document(email)?.set(map)
-            ?.addOnCompleteListener {
-                if (it.isSuccessful) {
+        map["name"] = nameing
 
 
 
-                    val idDTO = IdDTO()
-                    idDTO.name = name_edit.text.toString()
-                    IDDTO = nameing
+//        val pathData = "${id}_${System.currentTimeMillis()}"
+        val authModel = AuthModel()
+
+        if (path != null) {
+            firestore?.collection("user_auth")?.document(path)?.update(map)
+                ?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        SharedPreferenceFactory.putStrValue("userName", nameing )   // 유저 닉네임
+                        Toast.makeText(this, "닉네임이 변경 되었습니다", Toast.LENGTH_SHORT).show()
+                        finish()
 
 
-
-
-
-                    Log.d(Constants.TAG, "로그 : 업데이트 ")
-                    SharedPreferenceFactory.putStrValue("userName", IDDTO)
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
-                    finish()
-
-
+                    }
                 }
-            }
+        }
 
 
 
-//        contentDTO.name = nameing
-//
-//        map["name"] = nameing
-//
-//        firestore?.collection("images")?.document(uid.toString())?.set(map)
-//            ?.addOnCompleteListener {
-//                if (it.isSuccessful) {
-//
-//                    contentDTO.name = name_edit.text.toString()
-//
-//                    Log.d(Constants.TAG, "로그 : 네임 업데이트 ")
-//                }
-//            }
-
-
-//    var tsDoc = firestore?.collection("user_id")!!.document(uid)
-//    firestore?.runTransaction { transaction ->
-//        Log.d(Constants.TAG, "로그 : 업데이트2 ")
-//        val idDTO = transaction.get(tsDoc).toObject(IdDTO::class.java)
-//        idDTO?.name = name_edit.text.toString()
-//        name_edit.setText("")
-//
-//        transaction.set(tsDoc, idDTO!!)
-//        val intent = Intent(this, MainActivity::class.java)
-//        startActivity(intent)
-//        overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
-//        finish()
-//
-//    }
     }
 //}
 

@@ -4,15 +4,12 @@ import com.sjkorea.meetagain.model.IdDTO
 
 object Constants {
 
-    var USER : String? = ""
 
     var TAG : String? = "로그"
 
+    var ORDER : Int = 0
+
     var IDDTO: String? = null
-
-
-
-    const val sharedPrefFile = "app_preferences"
 
 
     const val AuthOverLap = "The email address is already in use by another account"

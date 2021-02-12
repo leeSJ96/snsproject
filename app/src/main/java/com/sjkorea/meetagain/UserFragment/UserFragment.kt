@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -17,6 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.sjkorea.meetagain.Adapter.CustomFragmentStateAdapter
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FollowDTO
 import com.sjkorea.meetagain.LikeFragment.LikeFragment
@@ -24,6 +26,8 @@ import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.WalletFragment.WalletFragment
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.databinding.FragmentUserBinding
+import com.sjkorea.meetagain.intro.FirstVisitActivity
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
@@ -43,7 +47,7 @@ class UserFragment : Fragment() {
     var followListenerRegistration: ListenerRegistration? = null
     var imageprofileListenerRegistration: ListenerRegistration? = null
     var getTitleListenerRegistration: ListenerRegistration? = null
-
+    var viewpagerRegistration: ListenerRegistration? = null
 
     //    val contentDTO: ArrayList<ContentDTO> = arrayListOf()
     private val tabTextList = arrayListOf("HOME", "CHATTING", "NEWS", "SETTING")
@@ -111,8 +115,8 @@ class UserFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        init()
 
+        init()
 //
 
 //        titlesize = arguments?.getInt("one",0)!!
@@ -131,6 +135,7 @@ class UserFragment : Fragment() {
 
 
     private fun init() {
+
         viewPager2.adapter = CustomFragmentStateAdapter(requireActivity())
         viewPager2.isSaveEnabled = false
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
@@ -145,6 +150,8 @@ class UserFragment : Fragment() {
         getProfileImages()
         getFolloerAndFollowing()
         gettitlecount()
+        profileUserName()
+        profileUserNamechange()
     }
 
     override fun onStop() {
@@ -195,9 +202,26 @@ class UserFragment : Fragment() {
                 }
             }
     }
+    private fun profileUserName(){
+
+        val userName = SharedPreferenceFactory.getStrValue("userName", null)
+        fragmentUserBinding?.userNameTv?.text = userName
+
+    }
+
+    private fun profileUserNamechange() {
+        fragmentUserBinding?.userNamechangeTv?.setOnClickListener {
+
+        val intent = Intent(activity, FirstVisitActivity::class.java)
+        startActivity(intent)
+        }
+    }
 
 
-    fun requestFollow() {
+
+
+
+    private fun requestFollow() {
 
         // Save data to my account
 
@@ -286,21 +310,6 @@ class UserFragment : Fragment() {
         }
     }
 
-    //프래그먼트 어뎁터
-    inner class CustomFragmentStateAdapter(fragmentActivity: FragmentActivity) :
-        FragmentStateAdapter(fragmentActivity) {
-        override fun getItemCount(): Int {
-            return 4
-        }
 
-        override fun createFragment(position: Int): Fragment {
-            return when (position) {
-                1 -> WalletFragment()
-                2 -> LikeFragment()
-                3 -> PostFragment()
-                else -> HistoryFragment()
-            }
-        }
-    }
 
 }

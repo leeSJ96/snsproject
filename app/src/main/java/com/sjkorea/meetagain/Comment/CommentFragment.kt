@@ -87,7 +87,8 @@ class CommentFragment() : BottomSheetDialogFragment() {
             Log.d(TAG, "onCreateView: 코멘트01")
             var comment = ContentDTO.Comment()
             Log.d(TAG, "onCreateView: 코멘트12")
-            comment.userId = FirebaseAuth.getInstance().currentUser?.email
+            val name = SharedPreferenceFactory.getStrValue("userName", null)
+            comment.userId = name
             Log.d(TAG, "onCreateView: 코멘트23")
             comment.comment = comment_edit_message.text.toString()
             Log.d(TAG, "onCreateView: 코멘트34")

@@ -15,13 +15,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.R
-import com.sjkorea.meetagain.databinding.ViewpagerHistoryItemBinding
 import com.sjkorea.meetagain.databinding.ViewpagerPostItemBinding
+
 import kotlinx.android.synthetic.main.item_post.view.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
 import kotlinx.android.synthetic.main.viewpager_post_item.*
 import kotlinx.android.synthetic.main.viewpager_post_item.view.*
 
+
+//뷰페이저 3번째
 class PostFragment : Fragment() {
     var firestore: FirebaseFirestore? = null
     var uid: String? = null

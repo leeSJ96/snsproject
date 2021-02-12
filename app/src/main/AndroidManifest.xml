@@ -30,7 +30,7 @@
                     android:windowSoftInputMode="adjustUnspecified|adjustPan">
         </activity>
 
-        <activity android:name="com.sjkorea.meetagain.intro.LoginActivitysub"
+        <activity android:name="com.sjkorea.meetagain.intro.LoginActivity"
             android:windowSoftInputMode="adjustUnspecified|adjustPan">
         </activity>
 

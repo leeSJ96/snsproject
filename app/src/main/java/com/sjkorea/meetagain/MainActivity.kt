@@ -167,7 +167,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onBackPressed() {
          var mBackWait:Long = 0
         // 뒤로가기 버튼 클릭
-        if(System.currentTimeMillis() - mBackWait >=2000 ) {
+        if(System.currentTimeMillis() - mBackWait >= 3000 ) {
             mBackWait = System.currentTimeMillis()
             Snackbar.make(main_view,"뒤로가기 버튼을 한번 더 누르면 종료됩니다.",Snackbar.LENGTH_LONG).show()
         } else {

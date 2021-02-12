@@ -1,14 +1,19 @@
 package com.sjkorea.meetagain.homeFragment
 
 
+import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -18,16 +23,18 @@ import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.OnpostListener
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.model.IdDTO
+import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.ORDER
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
-
-
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null
-    val manager = LinearLayoutManager(activity)
+    var manager = LinearLayoutManager(activity)
     var okHttpClient: OkHttpClient? = null
     var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
     var user: FirebaseAuth? = null
@@ -45,7 +52,7 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
 
         //뷰바인딩 가져오기
         // 홈 프레그먼트 -> 프래그먼트 홈 바인딩
-        val binding  = FragmentHomeBinding.inflate(inflater, container,false)
+        val binding  = FragmentHomeBinding.inflate(inflater, container, false)
         fragmentHomeBinding = binding
         firestore = FirebaseFirestore.getInstance()
         okHttpClient = OkHttpClient()
@@ -62,7 +69,9 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
         // .setOnClickListener {
         //     customDialog.show(childFragmentManager, "")
         //
-
+        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
+            postDialogWindow()
+        }
 
     }
 
@@ -71,19 +80,33 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
         var idDTO : ArrayList<IdDTO> = arrayListOf()
         val rvTransaction : FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
-        fragmentHomeBinding?.homefragmentRecyclerview?.adapter =
-            HomeViewRecyclerViewAdapter(childFragmentManager,this,contentDTOs,idDTO , comments,firestore, fcmPush, rvTransaction)
+
+
+        val adatper = HomeViewRecyclerViewAdapter(
+            childFragmentManager,
+            this,
+            contentDTOs,
+            idDTO,
+            comments,
+            firestore,
+            fcmPush,
+            rvTransaction
+        ) //RecyclerView에 설정할 adapter
+
+        fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adatper
         fragmentHomeBinding?.homefragmentRecyclerview?.layoutManager = manager
         manager.reverseLayout = true
         manager.stackFromEnd = true
-        HomeViewRecyclerViewAdapter(
-            childFragmentManager,this, contentDTOs,idDTO , comments, firestore, fcmPush, rvTransaction
-        ).contentDTOs.clear()
-        HomeViewRecyclerViewAdapter(
-            childFragmentManager,this,contentDTOs,idDTO , comments, firestore, fcmPush, rvTransaction
-        ).notifyDataSetChanged()
+
+        if (!adatper.hasObservers()) {
+            adatper.setHasStableIds(true)
+        }
+        adatper.notifyDataSetChanged()
+
+
 
     }
+
 
 
 
@@ -162,6 +185,41 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
     override fun onModify() {
         Log.d(TAG, "수정")
     }
+
+
+    // 게시글다이얼로그 정렬 파업창
+    fun postDialogWindow(){
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.custome_dialog_post_alignment)
+        dialog.show()
+        val dateOrder = dialog.findViewById(R.id.dateOrder_btn) as Button
+        dateOrder.setOnClickListener {
+            ORDER = 0
+            Log.d(Constants.TAG, "ORDER $ORDER ")
+            SharedPreferenceFactory.putStrValue("ORDER", "0")
+            dialog.dismiss()
+             }
+
+        val popularOrder = dialog.findViewById(R.id.popularOrder_btn) as Button
+        popularOrder.setOnClickListener {
+            ORDER = 1
+            Log.d(Constants.TAG, "ORDER $ORDER ")
+            SharedPreferenceFactory.putStrValue("ORDER", "1")
+            dialog.dismiss()
+             }
+
+        val sadOrder = dialog.findViewById(R.id.sadOrder_btn) as Button
+        sadOrder.setOnClickListener {
+            ORDER = 2
+            Log.d(Constants.TAG, "ORDER $ORDER ")
+            SharedPreferenceFactory.putStrValue("ORDER", "2")
+            dialog.dismiss()
+
+        }
+    }
+
+
 
 
 //    fun getProfileImage(){

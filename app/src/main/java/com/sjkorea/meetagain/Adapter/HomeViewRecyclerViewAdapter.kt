@@ -1,10 +1,6 @@
 package com.sjkorea.meetagain.Adapter
 
-import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings.Global.getString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk.getApplicationContext
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,15 +29,14 @@ import kotlinx.android.synthetic.main.activity_firstvisit.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.item_fregment_homepost.view.*
 import kotlinx.android.synthetic.main.item_main.view.*
 import java.util.*
-import java.util.Calendar.getInstance
 import kotlin.collections.ArrayList
 
 class HomeViewRecyclerViewAdapter(
-    fragmentManager: FragmentManager,
-    homeRecyclerviewInterface: HomeRecyclerviewInterface,
-    var contentDTOs: ArrayList<ContentDTO>,
+    fragmentManager: FragmentManager, homeRecyclerviewInterface: HomeRecyclerviewInterface,
+    private var contentDTOs: ArrayList<ContentDTO>,
     var idDTO: ArrayList<IdDTO>,
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
@@ -73,22 +67,8 @@ class HomeViewRecyclerViewAdapter(
         comments = ArrayList()
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
-
-
-        imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")
-            ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                contentDTOs.clear()
-                contentUidList.clear()
-                idDTO.clear()
-                if (querySnapshot == null) return@addSnapshotListener
-                for (snapshot in querySnapshot!!.documents) {
-                    var item = snapshot.toObject(ContentDTO::class.java)
-                    contentDTOs.add(item!!)
-                    contentUidList.add(snapshot.id)
-                }
-                notifyDataSetChanged()
-            }
-
+        SortPosts()
+        setHasStableIds(true)
 
     }
 
@@ -102,10 +82,7 @@ class HomeViewRecyclerViewAdapter(
     }
 
 
-    inner class CustomViewHolder(
-        itemView: View,
-        recyclerviewInterface: HomeRecyclerviewInterface
-    ) :
+    inner class CustomViewHolder(itemView: View, recyclerviewInterface: HomeRecyclerviewInterface) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
@@ -116,15 +93,30 @@ class HomeViewRecyclerViewAdapter(
             this.homeRecyclerviewInterface = recyclerviewInterface
         }
 
+        //프로필 닉네임
+        private val dataprofilename = itemView.homeviewitem_profile_name
 
-        fun bind(
-            contentDTOs: ArrayList<ContentDTO>,
-            idDTO: ArrayList<IdDTO>,
-            comments: ArrayList<ContentDTO.Comment>,
-            fragmentManager: FragmentManager
-        ) {
+        //제목
+        private val datatitle = itemView.homeviewitem_profile_textview
+
+        //메인사진
+        private val datacontext = itemView.homeviewitem_explain_textview
+
+        //좋아요 텍스트
+        private val fovorite = itemView.homeviewitem_favoritecounter_textview
+
+        //싫어요 텍스트
+        private val meaning = itemView.homeviewitem_meaningcounter_textview
+
+        //좋아요 버튼
+        private val fovoritebtn = itemView.homeviewitem_fovorite_imageview
+
+        //싫어요 버튼
+        private val meaningbtn = itemView.homeviewitem_meaning_imageview
+
+        fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager) {
             //  Profile Image 가져오기
-            firestore?.collection("profileImages")?.document(contentDTOs[position].uid!!)
+            firestore?.collection("profileImages")?.document(contentDTOs.uid!!)
                 ?.get()?.addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         val url = task.result!!["image"]
@@ -136,22 +128,17 @@ class HomeViewRecyclerViewAdapter(
                     }
                 }
 
-            //닉네임
-            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
 
-
+            //프로필 닉네임
+            dataprofilename.text = contentDTOs.name
             //제목
-            itemView.homeviewitem_profile_textview.text = contentDTOs[position].title
-
-//            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
-
+            datatitle.text = contentDTOs.title
             // 메인사진
-            Glide.with(itemView.context).load(contentDTOs[position].imageUrl)
+            Glide.with(itemView.context).load(contentDTOs.imageUrl)
                 .into(itemView.homeviewitem_imageview_content)
-
+//            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
             // 내용
-            itemView.homeviewitem_explain_textview.text = contentDTOs[position].explain
-
+            datacontext.text = contentDTOs.explain
 
 //
 //            // 유저 아이디
@@ -165,7 +152,7 @@ class HomeViewRecyclerViewAdapter(
 
             // 시간
             val curTime = System.currentTimeMillis()
-            var diffTime = (curTime - contentDTOs[position].timestamp!!) / 1000
+            var diffTime = (curTime - contentDTOs.timestamp!!) / 1000
             var msg: String? = null
             if (diffTime < TimeValue.SEC.value)
                 msg = "초 전"
@@ -178,8 +165,6 @@ class HomeViewRecyclerViewAdapter(
                     }
                 }
             }
-
-
             itemView.date.text = diffTime.toString() + msg.toString()
 //
 //            itemView.date.text = contentDTOs[po]
@@ -188,40 +173,39 @@ class HomeViewRecyclerViewAdapter(
 //            itemView.date.text = contentDTOs[position].timestamp.toString()
 
 
-            // 좋아요
-            itemView.homeviewitem_favoritecounter_textview.text =
-                "좋아요" + contentDTOs!![position].favoriteCount + "개"
-            itemView.homeviewitem_fovorite_imageview.setOnClickListener {
-                favoriteEvent(position)
-            }
             // 게시물 삭제 버튼
             itemView.btn_delete.setOnClickListener {
                 deleteData(position)
 
             }
-
+            // 좋아요
+            fovorite.text =
+                "좋아요" + contentDTOs!!.favoriteCount + "개"
+            fovoritebtn.setOnClickListener {
+                favoriteEvent(position)
+            }
             //좋아요 버튼 설정
-            if (contentDTOs[position].favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
-                itemView.homeviewitem_fovorite_imageview.setImageResource(R.drawable.heart_redc)
+                fovoritebtn.setImageResource(R.drawable.heart_redc)
             } else {
-                itemView.homeviewitem_fovorite_imageview.setImageResource(R.drawable.heart_red)
+                fovoritebtn.setImageResource(R.drawable.heart_red)
             }
 
             // 슬퍼요
-            itemView.homeviewitem_meaningcounter_textview.text =
-                "슬퍼요" + contentDTOs!![position].meaningCount + "개"
-            itemView.homeviewitem_meaning_imageview.setOnClickListener {
+            meaning.text =
+                "슬퍼요" + contentDTOs!!.meaningCount + "개"
+            meaningbtn.setOnClickListener {
                 meaningEvent(position)
             }
             //슬퍼요 버튼 설정
-            if (contentDTOs[position].meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
-                itemView.homeviewitem_meaning_imageview.setImageResource(R.drawable.heart_bluec)
+                meaningbtn.setImageResource(R.drawable.heart_bluec)
 
             } else {
 
-                itemView.homeviewitem_meaning_imageview.setImageResource(R.drawable.heart_blue)
+                meaningbtn.setImageResource(R.drawable.heart_blue)
             }
 //            //댓글 사이즈
 //            itemView.homeviewitem_commentcounter_textview.text = "댓글" + comments[position].commentCount + "개"
@@ -232,8 +216,8 @@ class HomeViewRecyclerViewAdapter(
 
                 val bundle = Bundle()
 
-                bundle.putString("destinationUid", contentDTOs[position].uid)
-                bundle.putString("userId", contentDTOs[position].name)
+                bundle.putString("destinationUid", contentDTOs.uid)
+                bundle.putString("userId", contentDTOs.name)
                 //userIdposition
                 bundle.putString("userIdposition", contentUidList[position])
 
@@ -269,6 +253,8 @@ class HomeViewRecyclerViewAdapter(
         }
     }
 
+    override fun getItemId(position: Int): Long = position.toLong()
+
 
     override fun getItemCount(): Int {
 
@@ -278,13 +264,8 @@ class HomeViewRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        var Holder: RecyclerView.ViewHolder = holder as CustomViewHolder
-        var data = contentDTOs[position]
-
-//        var viewHolder = (holder as CustomViewHolder).itemView
-        holder.bind(contentDTOs, idDTO, comments, mFragmentManager)
-
-
+        var viewHolder = (holder as CustomViewHolder).itemView
+        holder.bind(contentDTOs[position], mFragmentManager)
     }
 
 
@@ -295,6 +276,63 @@ class HomeViewRecyclerViewAdapter(
         DAY(30, 12, "달 전"),
         MONTH(12, Int.MAX_VALUE, "년 전")
     }
+
+    //게시글 정렬 순서 필터
+    private fun SortPosts(){
+        val odrder = SharedPreferenceFactory.getStrValue("ORDER", "0")
+        //싱글톤 사용 게시글 정렬
+        when (odrder) {
+            //최신순
+            "0" -> imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")
+                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    contentDTOs.clear()
+                    contentUidList.clear()
+                    idDTO.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot!!.documents) {
+                        var item = snapshot.toObject(ContentDTO::class.java)
+                        contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
+                    }
+                    notifyDataSetChanged()
+                }
+            //좋아요 많은순
+            "1" -> imagesSnapshot = firestore?.collection("images")?.orderBy("favoriteCount")
+                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    contentDTOs.clear()
+                    contentUidList.clear()
+                    idDTO.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot!!.documents) {
+                        var item = snapshot.toObject(ContentDTO::class.java)
+                        contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
+                    }
+                    notifyDataSetChanged()
+                }
+            //슬퍼요 많은순
+            else-> imagesSnapshot = firestore?.collection("images")?.orderBy("meaningCount")
+                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    contentDTOs.clear()
+                    contentUidList.clear()
+                    idDTO.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot!!.documents) {
+                        var item = snapshot.toObject(ContentDTO::class.java)
+                        contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
+                    }
+                    notifyDataSetChanged()
+                }
+
+
+        }
+
+        Log.d(Constants.TAG, "ORDER home :$odrder ")
+
+
+    }
+
 
 
     //좋아요 이벤트 기능
@@ -348,11 +386,6 @@ class HomeViewRecyclerViewAdapter(
 
     fun favoriteAlarm(destinationUid: String) {
         val alarmDTO = AlarmDTO()
-
-        var contentDTO: ArrayList<ContentDTO>
-        contentDTO = ArrayList()
-
-
 
         alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
         alarmDTO.destinationUid = destinationUid
@@ -467,11 +500,11 @@ class HomeViewRecyclerViewAdapter(
     private fun deleteData(position: Int) {
         firestore?.collection("images")?.document(contentDTOs[position].uid.toString())?.delete()
             ?.addOnSuccessListener {
-                    Toast.makeText(getApplicationContext(), "삭제성공.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(getApplicationContext(), "삭제성공.", Toast.LENGTH_SHORT).show()
 
             }
             ?.addOnFailureListener {
-                     Toast.makeText(getApplicationContext(), "삭제실패.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(getApplicationContext(), "삭제실패.", Toast.LENGTH_SHORT).show()
             }
 
 

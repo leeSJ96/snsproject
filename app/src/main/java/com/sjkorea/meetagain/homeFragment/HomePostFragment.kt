@@ -13,12 +13,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.sjkorea.meetagain.*
 import com.sjkorea.meetagain.Comment.CommentFragment
-import com.sjkorea.meetagain.ContentDTO
-import com.sjkorea.meetagain.CustomBottomDialog
-import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.databinding.ItemFregmentHomepostBinding
 import com.sjkorea.meetagain.databinding.ViewpagerPostItemBinding
+import com.sjkorea.meetagain.utils.Constants.TAG
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import kotlinx.android.synthetic.main.item_fregment_homepost.*
@@ -41,6 +41,8 @@ class HomePostFragment : Fragment() {
     var favoritess: String? = null
     var meaning: HashMap<String, Boolean> = HashMap()
     var contentUidListposition: String? = null
+    var fcmPush: FcmPush? = null
+    val contentUidList: ArrayList<String> = java.util.ArrayList()
 
     var imageprofileListenerRegistration: ListenerRegistration? = null
     var homepostListenerRegistration: ListenerRegistration? = null
@@ -64,15 +66,10 @@ class HomePostFragment : Fragment() {
 
         userId = requireArguments().getString("userId")
         Log.d(this.userId, "홈 포스트 로그 userId 받기 ")
-
-
         uid = arguments?.getString("destinationUid")
         Log.d(this.uid, "홈 포스트 로그 uid 받기 ")
-
         uidsize = arguments?.getInt("uidsize")
         Log.d(this.uid, "홈 포스트 로그 uid 받기 ")
-
-
         title =  requireArguments().getString("title")
         Log.d(this.title, "홈 포스트 로그 title 받기 ")
 
@@ -159,6 +156,23 @@ class HomePostFragment : Fragment() {
             viewpagerPostItemBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_blue)
         }
 
+        // 좋아요
+        viewpagerPostItemBinding?.homePostLike?.text =
+            "좋아요" + favoriteCount+ "개"
+        viewpagerPostItemBinding?.homePostFavoriteImageview?.setOnClickListener {
+            favoriteEvent()
+
+        }
+
+        // 슬퍼요
+        viewpagerPostItemBinding?.homePostLike?.text =
+            "슬퍼요" + favoriteCount + "개"
+        viewpagerPostItemBinding?.homePostMaImageview?.setOnClickListener {
+            Log.d(TAG, "확인:싫어요 ")
+            meaningEvent()
+        }
+
+
 
 //        // meaning
 //        homepostview.homeviewitem_meaningcounter_textview.text =
@@ -216,6 +230,90 @@ class HomePostFragment : Fragment() {
 
     }
 
+    //좋아요 이벤트 기능
+    private fun favoriteEvent() {
+        val tsDoc = firestore?.collection("images")?.document(contentUidListposition.toString())
+        firestore?.runTransaction { transaction ->
+
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+            if (contentDTO!!.favorites.containsKey(uid)) {
+                // When the button is clicked
+                contentDTO.favoriteCount = contentDTO.favoriteCount - 1
+                contentDTO.favorites.remove(uid)
+            } else {
+                // When the button is not clicked
+                contentDTO.favoriteCount = contentDTO.favoriteCount + 1
+                contentDTO.favorites[uid] = true
+                favoriteAlarm(uid)
+            }
+            transaction.set(tsDoc, contentDTO)
+        }
+    }
+
+
+    //싫어요 이벤트 기능
+    private fun meaningEvent() {
+        val tsDoc = firestore?.collection("images")?.document(contentUidListposition.toString())
+        firestore?.runTransaction { transaction ->
+            Log.d(TAG, "확인:싫어요2 ")
+            val contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
+            if (contentDTO!!.meaning.containsKey(uid)) {
+
+                // When the button is clicked
+                contentDTO.meaningCount = contentDTO.meaningCount - 1
+                contentDTO.meaning.remove(uid)
+            } else {
+
+                // When the button is not clicked
+                contentDTO.meaningCount = contentDTO.meaningCount + 1
+                contentDTO.meaning[uid] = true
+
+                meaningAlarm(uid)
+            }
+            transaction.set(tsDoc, contentDTO)
+        }
+
+    }
+    fun favoriteAlarm(destinationUid: String) {
+        val alarmDTO = AlarmDTO()
+
+        alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = user?.email
+        alarmDTO.uid = user?.uid
+        alarmDTO.kind = 0
+        alarmDTO.timestamp = System.currentTimeMillis()
+
+
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = alarmDTO.name + "님이 좋아요를 눌렀습니다"
+        fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
+    }
+
+
+    fun meaningAlarm(destinationUid: String) {
+        val alarmDTO = AlarmDTO()
+
+
+
+
+        alarmDTO.destinationUid = destinationUid
+        alarmDTO.userId = user?.email
+        alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
+        alarmDTO.uid = user?.uid
+        alarmDTO.kind = 3
+        alarmDTO.timestamp = System.currentTimeMillis()
+
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message = user?.email + "님이 힘내요를 눌렀습니다"
+        fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
+    }
 
 //
 //    //좋아요 이벤트 기능

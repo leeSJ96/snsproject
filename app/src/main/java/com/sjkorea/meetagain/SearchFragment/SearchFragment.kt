@@ -43,18 +43,9 @@ class SearchFragment : Fragment() {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-
 //
 //        searchview = LayoutInflater.from(inflater.context)
 //            .inflate(R.layout.fregment_search, container, false)
-
-
-
-
-
-
-
-
         var weatherSpeed = 0
         var weatherParticles = 0f
 
@@ -111,43 +102,12 @@ class SearchFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
 
-        // 어레이리스트에 아이템추가
-        //  val contentDTO = ArrayList<ContentDTO>()
 
-        //viewPager2.tourRV?.adapter = TourAdapter()
-        //   viewPager2.clipToPadding = false
-        // viewPager2.clipChildren = false
-        //     viewPager2.offscreenPageLimit = 3
-        //   viewPager2.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-
-        //     val compositePageTransformer = CompositePageTransformer()
-        //      compositePageTransformer.addTransformer(MarginPageTransformer(30))
-        //     compositePageTransformer.addTransformer{ page, position ->
-        //       val r = 1 - kotlin.math.abs(position)
-        //     page.scaleY = 0.85f + r * 0.25f
-        //   }
-
-        //   viewPager2.setPageTransformer(compositePageTransformer)
-        //    viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-        //      override fun onPageSelected(position: Int) {
-
-        //           sliderHandler.removeCallbacks(sliderRunnable)
-        //            sliderHandler.postDelayed(sliderRunnable, 3000)
-        //           }
-        //       })
-
-
-        //    }
-
-        //   private val sliderRunnable = Runnable {
-        //       viewPager2.currentItem = viewPager2.currentItem + 1
-        //    }
 
     }
 
     override fun onResume() {
         super.onResume()
-
 
         // 초기화 뷰
         val toursRV = fragmentSearchBinding?.root?.findViewById<RecyclerView>(R.id.tourRV)
@@ -156,10 +116,8 @@ class SearchFragment : Fragment() {
         //자동가운데 줌
         val snapHelper = LinearSnapHelper()
 
-
         fragmentSearchBinding?.root?.tourRV?.adapter = TourAdapter()
         fragmentSearchBinding?.root?.tourRV?.layoutManager = LinearLayoutManager(activity)
-
 
         snapHelper.attachToRecyclerView(toursRV)
         fragmentSearchBinding?.root?.tourRV?.isNestedScrollingEnabled = false
@@ -167,7 +125,6 @@ class SearchFragment : Fragment() {
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
         fragmentSearchBinding?.root?.tourRV?.layoutManager = layoutManager
-
 
 
     }

@@ -22,85 +22,59 @@ import java.lang.Runnable
 
 class IntroActivity : AppCompatActivity() {
 
-    var firestore: FirebaseFirestore? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
-//        val pref: SharedPreferences = getSharedPreferences("ref", Context.MODE_PRIVATE)
-//        val uid = pref.getString("userToken", null)
-//        val name = pref.getString("userName","")
-//        val email = pref.getString("userEmail","")
-//        Log.d("로그","uid $uid")
-//        Log.d("로그","name $name")
-//        Log.d("로그","email $email")
+        // 사용자가 로그인을 전에 했을 경우 자동 로그인을 하기 위해 디바이스에 저장된 데이터값을 조회한다
+        val uid = SharedPreferenceFactory.getStrValue("userToken", null)
+        val name = SharedPreferenceFactory.getStrValue("userName", null)
+        val email = SharedPreferenceFactory.getStrValue("userEmail", null)
 
-        firestore = FirebaseFirestore.getInstance()
-
-        val uid = SharedPreferenceFactory.getStrValue("userToken" ,null)
-        Log.d(Constants.TAG, "인트로 uid: $uid ")
+        Log.d("로그", "uid $uid")
+        Log.d("로그", "name $name")
+        Log.d("로그", "email $email")
 
 
+        if (uid != null && name != null && email != null) {
 
-        var idDTO = IdDTO()
-         IDDTO = SharedPreferenceFactory.getStrValue("userName" , "")
-        Log.d(Constants.TAG, "인트로 name: $IDDTO ")
-
-
-
-        val email = SharedPreferenceFactory.getStrValue("userEmail" ,"")
-        Log.d(Constants.TAG, "인트로 email: $email ")
-//        val uid = MyApplication.prefs.getString("userToken", "")
-//        val name = MyApplication.prefs.getString("userName", "")
-//        val email =  MyApplication.prefs.getString("userEmail", "")
-
-        if (uid != null) {
-
-            moveNext(uid, email)
+            moveNext(uid, email, name)
 
         } else {
 
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
+                finish()
+            }, 1500)
+
+
         }
 
 
     }
 
-    private fun moveNext(uid: String, email : String?) {
+    private fun moveNext(uid: String, email: String?, name: String?) {
 
-        val store = FirebaseFirestore.getInstance().collection("user_uid")
-        var emailValue = ""
-
-        var uidCheck = false
-
-        if(email != null) emailValue = email
+        val authStore = FirebaseFirestore.getInstance().collection("user_auth")
 
 
         Handler(Looper.getMainLooper()).postDelayed({
 
-            store.whereEqualTo(emailValue, uid,).addSnapshotListener { value, error ->
+            authStore.whereEqualTo("uid",uid).get().addOnSuccessListener { querySnapshot ->
 
-                if(value != null) {
-                    uidCheck = true
-                }
-
-                val intent = when(uidCheck) {
-                    true -> Intent(this@IntroActivity, MainActivity::class.java)
-                    false -> Intent(this@IntroActivity, LoginActivity::class.java)
-                }
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                this@IntroActivity.finish()
                 overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
+                finish()
 
-
+            }.addOnFailureListener { error ->
+                Log.d("로그","error $error")
             }
 
-        },1500)
+        }, 1500)
     }
-
 
 
 

@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -19,7 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.databinding.ActivityAddBinding
 import com.sjkorea.meetagain.model.IdDTO
+import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.IDDTO
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.activity_firstvisit.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -190,7 +193,6 @@ class AddActivity : AppCompatActivity() {
 
 
 
-
         // Callback method
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
@@ -199,8 +201,11 @@ class AddActivity : AppCompatActivity() {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
 
 
-//
-                contentDTO.name = IDDTO
+
+                val name = SharedPreferenceFactory.getStrValue("userName", null)
+                Log.d(Constants.TAG, "네임확인 : $name ")
+
+                contentDTO.name = name
                 // Insert downloadUrl of image
                 contentDTO.imageUrl = uri.toString()
 
@@ -259,9 +264,10 @@ class AddActivity : AppCompatActivity() {
         val email = FirebaseAuth.getInstance().currentUser?.email
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-
+        val name = SharedPreferenceFactory.getStrValue("userName", null)
+        Log.d(Constants.TAG, "네임확인 : $name ")
         //contentDTO 모델 리스트
-                contentDTO.name = IDDTO
+                contentDTO.name = name
                 // Insert downloadUrl of image
 
                 // Insert uid of user
