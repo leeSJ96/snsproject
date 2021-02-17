@@ -11,6 +11,10 @@ object Constants {
 
     var IDDTO: String? = null
 
+    //
+    var POSTSHOW: String? = null
+    //게시물 더보기 스니퍼 싱글톤
+    var MORESPINNER : String? = null
 
     const val AuthOverLap = "The email address is already in use by another account"
     const val EmailFormError = "he email address is badly formatted"

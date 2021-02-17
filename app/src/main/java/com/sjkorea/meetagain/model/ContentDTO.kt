@@ -1,7 +1,10 @@
 package com.sjkorea.meetagain
 
+import android.os.Parcelable
 import android.util.Log
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class ContentDTO(
     var explain: String? = null,
     var title: String? = null,
@@ -16,8 +19,9 @@ data class ContentDTO(
     var meaningCount: Int = 0,
     var meaning: HashMap<String,Boolean>  = HashMap(),
     var titlesize : Int = 0,
+    var pathData : String? = null
 
-) {
+)  : Parcelable {
 
     data class Comment(
         var uid: String? = null,

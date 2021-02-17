@@ -6,14 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.sjkorea.meetagain.UserFragment.UserFragment
+import com.sjkorea.meetagain.utils.Constants.POSTSHOW
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog.*
@@ -32,6 +31,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
     var fcmPush: FcmPush? = null
     var userId: String? = null
     var bundle = Bundle()
+    var path : String? = null
     var contentUidListposition: String? = null
 
     var followListenerRegistration: ListenerRegistration? = null
@@ -76,6 +76,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         fcmPush = FcmPush()
         contentUidListposition = requireArguments().getString("userIdposition")
+        path = requireArguments().getString("pathData")
         Log.d(contentUidListposition.toString(), " 홈 포스트 로그 contentUidListposition 받기")
 
         userId = requireArguments().getString("userId")
@@ -146,7 +147,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
         super.onDestroyView()
         if (BottomView != null) {
             val parentViewGroup = BottomView!!.getParent() as ViewGroup
-            parentViewGroup?.removeView(BottomView)
+            parentViewGroup.removeView(BottomView)
         }
     }
 
@@ -177,30 +178,40 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
         //바텀다이얼로그 == 게시글보기 버튼
         this.btitle_text.setOnClickListener {
+            dismiss()
 
-            var userFragment = UserFragment()
-            var HistoryFrag = HistoryFragmentSub()
-
+            var historyFrag = HistoryFragmentSub()
 
 //            bundle.putString("userId", userId)
             bundle.putString("destinationUid", uid)
             bundle.putString("userId", userId)
             bundle.putString("userIdposition", contentUidListposition)
-
+            bundle.putString("pathData", path)
             Log.d(contentUidListposition.toString(), "홈포스트contentUid1 로그 ")
             Log.d(uid.toString(), "로그 바텀 보내기 ")
 //            HistoryFrag.arguments = bundle
 
 
 //            userFragment.arguments = bundle
-            HistoryFrag.arguments = bundle
-            requireActivity().supportFragmentManager.beginTransaction().replace(
-                R.id.main_content,
-                HistoryFrag,
+            historyFrag.arguments = bundle
 
-                ).commit()
+            when (POSTSHOW) {
+                "mainView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.main_view,
+                    historyFrag,)
+                    .addToBackStack(null)
+                    .commit()
 
 
+                "homePostView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
+                    R.id.homepost_view,
+                    historyFrag,
+                    )
+                    .addToBackStack(null)
+                    .commit()
+
+
+            }
         }
 
         //바텀다이얼로그 == 상대방 프로필사진 보기
@@ -208,7 +219,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
             bundle.putString("destinationUid", uid)
             bundle.putString("userId", userId)
-
+            bundle.putString("pathData", path)
 
             val dialog = ProfileImageDialog(requireContext())
 
@@ -230,6 +241,8 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
             dialog.arguments = bundle
 
             dialog.show(childFragmentManager, dialog.tag)
+
+
         }
 
 
@@ -391,7 +404,10 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
                     Log.d(ContentValues.TAG, "1")
                     contentDTO.add(snapshot.toObject(ContentDTO::class.java)!!)
                     Log.d(ContentValues.TAG, "2")
-                    account_tv_post_count.text = contentDTO.size.toString()
+
+//
+//                        account_tv_post_count.text = contentDTO.size.toString()
+
                     Log.d(contentDTO.size.toString(), "size테스트")
                 }
 
@@ -411,6 +427,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
         var message = auth?.currentUser?.email + getString(R.string.alarm_follow)
         fcmPush?.sendMessage(destinationUid!!, "알림 메시지 입니다", message)
     }
+
 
 
     fun getFolloerAndFollowing() {

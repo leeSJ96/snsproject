@@ -1,50 +1,43 @@
 package com.sjkorea.meetagain.Adapter
 
+
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.facebook.FacebookSdk.getApplicationContext
+import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.*
+import com.sjkorea.meetagain.FollowFragment.FollowFragment
 import com.sjkorea.meetagain.UserFragment.HistoryFragment
 import com.sjkorea.meetagain.UserFragment.UserFragment
-import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
-import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.TAG
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
-import kotlinx.android.synthetic.main.activity_firstvisit.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.custom_dialog.view.*
-import kotlinx.android.synthetic.main.fragment_user.*
+import kotlinx.android.synthetic.main.item_follow.view.*
 import kotlinx.android.synthetic.main.item_main.view.*
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.item_main.view.date
 
-class HomeViewRecyclerViewAdapter(
-    context: HomeFragment,
-    fragmentManager: FragmentManager, homeRecyclerviewInterface: HomeRecyclerviewInterface,
+
+class FollowAdapter(
+    context: FollowFragment,
+    fragmentManager: FragmentManager, followRecyclerviewInterface: FollowFragment,
     private var contentDTOs: ArrayList<ContentDTO>,
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
     var fcmPush: FcmPush? = null,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var context: HomeFragment
+    private var context: FollowFragment
     val contentUidList: ArrayList<String>
     var imagesSnapshot: ListenerRegistration? = null
     var okHttpClient: OkHttpClient? = null
@@ -52,16 +45,14 @@ class HomeViewRecyclerViewAdapter(
     var uid: String? = null
     var name: String? = null
 
-    private var homeRecyclerviewInterface: HomeRecyclerviewInterface? = null
+    private var followRecyclerviewInterface: HomeRecyclerviewInterface? = null
     private var mFragmentManager: FragmentManager
 
     init {
-        this.homeRecyclerviewInterface = homeRecyclerviewInterface
+        this.followRecyclerviewInterface = followRecyclerviewInterface
         mFragmentManager = fragmentManager
-        this.context = context;
+        this.context = context
         fcmPush = FcmPush()
-
-
 
 
         //아이디
@@ -71,8 +62,37 @@ class HomeViewRecyclerViewAdapter(
         comments = ArrayList()
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
-        SortPosts()
+//        SortPosts()
         setHasStableIds(true)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
+        firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                var userDTO = task.result?.toObject(FollowDTO::class.java)
+                if (userDTO?.followings != null) {
+                    getCotents(userDTO?.followings)
+                }
+            }
+        }
+
+
+    }
+
+    fun getCotents(followers: MutableMap<String, Boolean>?) {
+        imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            contentDTOs.clear()
+            contentUidList.clear()
+            if (querySnapshot == null) return@addSnapshotListener
+            for (snapshot in querySnapshot!!.documents) {
+                var item = snapshot.toObject(ContentDTO::class.java)!!
+                println(item.uid)
+                if (followers?.keys?.contains(item.uid)!!) {
+                    contentDTOs.add(item)
+                    contentUidList.add(snapshot.id)
+                }
+            }
+            notifyDataSetChanged()
+        }
 
     }
 
@@ -80,8 +100,8 @@ class HomeViewRecyclerViewAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return CustomViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_main, parent, false),
-            this.homeRecyclerviewInterface!!
+            LayoutInflater.from(parent.context).inflate(R.layout.item_follow, parent, false),
+            this.followRecyclerviewInterface!!
         )
     }
 
@@ -95,28 +115,43 @@ class HomeViewRecyclerViewAdapter(
         init {
             itemView.setOnClickListener(this)
             this.homeRecyclerviewInterface = recyclerviewInterface
+
+            firestore?.collection("images")?.orderBy("timestamp")
+                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                    contentDTOs.clear()
+                    contentUidList.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot!!.documents) {
+                        var item = snapshot.toObject(ContentDTO::class.java)
+                        contentDTOs.add(item!!)
+                        contentUidList.add(snapshot.id)
+
+                    }
+                    notifyDataSetChanged()
+                }
+
         }
 
         //프로필 닉네임
-        private val dataprofilename = itemView.homeviewitem_profile_name
+        private val dataprofilename = itemView.followviewitem_profile_name
 
         //제목
-        private val datatitle = itemView.homeviewitem_profile_textview
+        private val datatitle = itemView.followviewitem_profile_textview
 
         //메인사진
-        private val datacontext = itemView.homeviewitem_explain_textview
+        private val datacontext = itemView.followviewitem_explain_textview
 
         //좋아요 텍스트
-        private val fovorite = itemView.homeviewitem_favoritecounter_textview
+        private val fovorite = itemView.followviewitem_favoritecounter_textview
 
         //싫어요 텍스트
-        private val meaning = itemView.homeviewitem_meaningcounter_textview
+        private val meaning = itemView.followviewitem_meaningcounter_textview
 
         //좋아요 버튼
-        private val fovoritebtn = itemView.homeviewitem_fovorite_imageview
+        private val fovoritebtn = itemView.followviewitem_fovorite_imageview
 
         //싫어요 버튼
-        private val meaningbtn = itemView.homeviewitem_meaning_imageview
+        private val meaningbtn = itemView.followviewitem_meaning_imageview
 
         fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager) {
             //  Profile Image 가져오기
@@ -127,7 +162,7 @@ class HomeViewRecyclerViewAdapter(
                         Glide.with(itemView.context)
                             .load(url)
                             .apply(RequestOptions().circleCrop())
-                            .into(itemView.homeviewitem_profile_image)
+                            .into(itemView.followviewitem_profile_image)
 
                     }
                 }
@@ -139,7 +174,7 @@ class HomeViewRecyclerViewAdapter(
             datatitle.text = contentDTOs.title
             // 메인사진
             Glide.with(itemView.context).load(contentDTOs.imageUrl)
-                .into(itemView.homeviewitem_imageview_content)
+                .into(itemView.followviewitem_imageview_content)
 //            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
             // 내용
             datacontext.text = contentDTOs.explain
@@ -216,7 +251,7 @@ class HomeViewRecyclerViewAdapter(
 
 
             //바텀 프래그먼트 프로필 호출
-            itemView.homeviewitem_profile_image.setOnClickListener {
+            itemView.followviewitem_profile_image.setOnClickListener {
                 Constants.POSTSHOW = "mainView"
                 val bundle = Bundle()
                 bundle.putString("pathData", contentDTOs.pathData)
@@ -237,13 +272,13 @@ class HomeViewRecyclerViewAdapter(
             }
 
             //누르면 홈포스트 프래그먼트 호출
-            itemView.home_post_item.setOnClickListener {
+            itemView.follow_post_item.setOnClickListener {
                 homePostData(adapterPosition)
 
             }
 
             //내용누르면 홈프래그먼트로 이동
-            itemView.homeviewitem_explain_textview.setOnClickListener {
+            itemView.followviewitem_explain_textview.setOnClickListener {
                 homePostData(adapterPosition)
             }
 
@@ -252,7 +287,7 @@ class HomeViewRecyclerViewAdapter(
 
 
         override fun onClick(v: View?) {
-            Log.d(TAG, "CustomViewHolder -onClick() called ")
+            Log.d(Constants.TAG, "CustomViewHolder -onClick() called ")
             this.homeRecyclerviewInterface?.onItemClicked(adapterPosition)
         }
     }
@@ -424,7 +459,7 @@ class HomeViewRecyclerViewAdapter(
 
     fun homePostData(position: Int) {
         // 데이터  넘겨줌
-        val intent = Intent(getApplicationContext(), HomePostActivity::class.java)
+        val intent = Intent(FacebookSdk.getApplicationContext(), HomePostActivity::class.java)
 
         intent.putExtra("contentDTO", contentDTOs[position])
 

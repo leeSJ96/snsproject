@@ -12,25 +12,25 @@
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/home_post_item"
+        android:id="@+id/follow_post_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
 
         <ImageView
-            android:id="@+id/homeviewitem_profile_image"
+            android:id="@+id/followviewitem_profile_image"
             android:layout_width="58dp"
             android:layout_height="53dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:scaleType="fitCenter"
             android:src="@mipmap/ic_launcher"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintStart_toEndOf="@+id/followviewitem_imageview_content"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/homeviewitem_imageview_content"
+            android:id="@+id/followviewitem_imageview_content"
             android:layout_width="149dp"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
@@ -53,13 +53,13 @@
             android:background="@drawable/round"
             android:padding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintEnd_toEndOf="@+id/followviewitem_imageview_content"
             app:layout_constraintHorizontal_bias="0.987"
             app:layout_constraintStart_toStartOf="parent">
 
 
             <TextView
-                android:id="@+id/homeviewitem_meaningcounter_textview"
+                android:id="@+id/followviewitem_meaningcounter_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="999"
@@ -81,12 +81,12 @@
             android:textColor="@color/Text_white"
             android:background="@drawable/round"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
-            app:layout_constraintEnd_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintEnd_toEndOf="@+id/followviewitem_imageview_content"
             app:layout_constraintHorizontal_bias="0.989"
             app:layout_constraintStart_toStartOf="parent">
 
             <TextView
-                android:id="@+id/homeviewitem_favoritecounter_textview"
+                android:id="@+id/followviewitem_favoritecounter_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -98,7 +98,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/homeviewitem_profile_name"
+            android:id="@+id/followviewitem_profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -106,11 +106,11 @@
             android:text="닉네임"
             android:textColor="@color/Text_white"
             android:textSize="10sp"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_profile_image"
+            app:layout_constraintStart_toEndOf="@+id/followviewitem_profile_image"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/homeviewitem_profile_textview"
+            android:id="@+id/followviewitem_profile_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -118,11 +118,11 @@
             android:text="제목"
             android:textColor="@color/Text_white"
             android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_profile_image"
-            app:layout_constraintTop_toBottomOf="@+id/homeviewitem_profile_name" />
+            app:layout_constraintStart_toEndOf="@+id/followviewitem_profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/followviewitem_profile_name" />
 
         <TextView
-            android:id="@+id/homeviewitem_explain_textview"
+            android:id="@+id/followviewitem_explain_textview"
             android:layout_width="254dp"
             android:layout_height="86dp"
             android:ellipsize="end"
@@ -135,8 +135,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content"
-            app:layout_constraintTop_toBottomOf="@+id/homeviewitem_profile_image"
+            app:layout_constraintStart_toEndOf="@+id/followviewitem_imageview_content"
+            app:layout_constraintTop_toBottomOf="@+id/followviewitem_profile_image"
             app:layout_constraintVertical_bias="0.113" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,7 +145,7 @@
             android:layout_marginStart="4dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintStart_toEndOf="@+id/followviewitem_imageview_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.995">
 
@@ -157,7 +157,7 @@
             <!--                android:padding="5dp" />-->
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/homeviewitem_fovorite_imageview"
+                android:id="@+id/followviewitem_fovorite_imageview"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="4dp"
@@ -165,13 +165,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/homeviewitem_meaning_imageview"
+                android:id="@+id/followviewitem_meaning_imageview"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginStart="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/homeviewitem_fovorite_imageview"
+                app:layout_constraintStart_toEndOf="@+id/followviewitem_fovorite_imageview"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -184,7 +184,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/textView4"
-                app:layout_constraintTop_toBottomOf="@+id/homeviewitem_meaning_imageview" />
+                app:layout_constraintTop_toBottomOf="@+id/followviewitem_meaning_imageview" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -195,7 +195,7 @@
                 android:textSize="9sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/homeviewitem_fovorite_imageview" />
+                app:layout_constraintTop_toBottomOf="@+id/followviewitem_fovorite_imageview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

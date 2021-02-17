@@ -9,14 +9,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import com.kakao.sdk.common.util.Utility
 import com.sjkorea.meetagain.AlertFragment.AlarmFragment
-import com.sjkorea.meetagain.SearchFragment.SearchFragment
+import com.sjkorea.meetagain.FollowFragment.FollowFragment
 import com.sjkorea.meetagain.UserFragment.*
 import com.sjkorea.meetagain.databinding.ActivityMainBinding
 import com.sjkorea.meetagain.homeFragment.HomeFragment
@@ -28,11 +27,13 @@ private var mAuth: FirebaseAuth? = null
 
 
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener
+     {
 
 
-
+    private var backKeyPressedTime: Long = 0
     var PICK_PROFILE_FROM_ALBUM = 10
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         action_add.setOnClickListener {
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
             R.id.action_Search -> {
-                var searchFragment = SearchFragment()
+                var searchFragment = FollowFragment()
 
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, searchFragment)
                     .commit()
@@ -76,7 +77,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
                 bundle.putString("destinationUid", uid)
                 userFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment)
+                    .commit()
                 return true
             }
 
@@ -165,14 +167,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 //    }
     //뒤로가기 2초
     override fun onBackPressed() {
-         var mBackWait:Long = 0
-        // 뒤로가기 버튼 클릭
-        if(System.currentTimeMillis() - mBackWait >= 3000 ) {
-            mBackWait = System.currentTimeMillis()
-            Snackbar.make(main_view,"뒤로가기 버튼을 한번 더 누르면 종료됩니다.",Snackbar.LENGTH_LONG).show()
-        } else {
-            finish() //액티비티 종료
-        }
+    if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+        backKeyPressedTime = System.currentTimeMillis();
+        return;
+    }
+    // 현재 표시된 Toast 취소
+    if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+        finish();
+    }
+
     }
     //로그아웃
     private fun signOut() {
@@ -185,4 +188,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
+
+
+
 }
+
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="my_array">
+        <item>   목록   </item>
+        <item>게시글 수정</item>
+        <item>게시물 삭제</item>
+    </string-array>
+
+<string-array name="frand_array">
+    <item>   목록   </item>
+    <item>신고</item>
+
+</string-array>
+</resources>

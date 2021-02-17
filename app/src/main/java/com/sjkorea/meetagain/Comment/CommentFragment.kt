@@ -32,7 +32,8 @@ class CommentFragment() : BottomSheetDialogFragment() {
     var commentuid: String? = null
     var commentuserId: String? = null
     var commentcomment: String? = null
-
+    var path :String? = null
+    private var contentDTO: ContentDTO? = ContentDTO()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +57,7 @@ class CommentFragment() : BottomSheetDialogFragment() {
 
 
 
-
+        path = requireArguments().getString("contentDTO")
         commentuid = requireArguments().getString("commentuid")
         commentuserId = requireArguments().getString("commentuserId")
         commentcomment = requireArguments().getString("commentcomment")
@@ -69,7 +70,7 @@ class CommentFragment() : BottomSheetDialogFragment() {
         val CommentRv = commentview!!.findViewById<RecyclerView>(R.id.comment_recyclerview)
         Log.d(TAG, "onCreateView: 코멘트3")
         CommentRv.adapter =
-            CommentRecyclerViewAdapter(contentUid, commentTransaction, childFragmentManager)
+            CommentRecyclerViewAdapter(path, commentTransaction, childFragmentManager)
         Log.d(TAG, "onCreateView: 코멘트4")
         CommentRv.layoutManager = LinearLayoutManager(context)
         Log.d(TAG, "onCreateView: 코멘트5")
@@ -98,7 +99,8 @@ class CommentFragment() : BottomSheetDialogFragment() {
             Log.d(TAG, "onCreateView: 코멘트56")
 
 
-            FirebaseFirestore.getInstance().collection("images").document(contentUid!!)
+
+            FirebaseFirestore.getInstance().collection("images").document(path.toString())
                 .collection("comments").document().set(comment)
             Log.d(TAG, "onCreateView: 코멘트 111")
 

@@ -3,6 +3,7 @@ package com.sjkorea.meetagain.homeFragment
 
 import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,8 +13,6 @@ import android.view.Window
 import android.widget.Button
 import androidx.fragment.app.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.ItemAnimator
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -27,7 +26,7 @@ import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.ORDER
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.item_main.*
 
 
 class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
@@ -73,24 +72,22 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
             postDialogWindow()
         }
 
+
     }
 
     override fun onResume() {
         super.onResume()
         var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
-        var idDTO : ArrayList<IdDTO> = arrayListOf()
-        val rvTransaction : FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
 
 
         val adatper = HomeViewRecyclerViewAdapter(
+            this,
             childFragmentManager,
             this,
             contentDTOs,
-            idDTO,
             comments,
             firestore,
-            fcmPush,
-            rvTransaction
+            fcmPush
         ) //RecyclerView에 설정할 adapter
 
         fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adatper
@@ -222,36 +219,12 @@ class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
 
 
 
-//    fun getProfileImage(){
-//
-//        //  Profile Image 가져오기
-//        firestore?.collection("profileImages")?.document(uid!!)
-//            ?.get()?.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//
-//                    val url = task.result!!["image"]
-//                    Glide.with(requireActivity())
-//                        .load(url)
-//                        .apply(RequestOptions().circleCrop())
-//                        .into(homeviewitem_profile_image)
-//
-//                }
-//            }
+    }
 
-//        firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-//            if(documentSnapshot == null) return@addSnapshotListener
-//            if(documentSnapshot.data != null) {
-//
-//                val url = task.result!!["image"]
-//                Glide.with(context)
-//                    .load(url)
-//                    .apply(RequestOptions().circleCrop())
-//                    .into(homeviewitem_profile_image)
-//
-//            }
-//        }
 
-}
+
+
+
 
 
 

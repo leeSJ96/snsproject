@@ -9,19 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.sjkorea.meetagain.databinding.ActivityMainBinding
 import com.sjkorea.meetagain.databinding.CustomProfileDialogBinding
-import com.sjkorea.meetagain.databinding.FragmentHomeBinding
+import com.sjkorea.meetagain.utils.Constants
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import kotlinx.android.synthetic.main.custom_profile_dialog.*
 import kotlinx.android.synthetic.main.custom_profile_dialog.view.*
 
-class ProfileImageDialog(context: Context?): DialogFragment(){
+class ProfileImageDialog(context: Context): DialogFragment(){
 
+
+    var profilecontext = context
     var profileview: View? = null
     var uid: String? = null
     var userId: String? = null
@@ -35,8 +34,6 @@ class ProfileImageDialog(context: Context?): DialogFragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
 
 
@@ -54,7 +51,7 @@ class ProfileImageDialog(context: Context?): DialogFragment(){
         userId = requireArguments().getString("userId")
         Log.d(userId.toString(), "userId 받기 ")
         uid = requireArguments().getString("destinationUid")
-        Log.d(uid.toString(), "uid 받기 ")
+        Log.d(Constants.TAG ,"uid : $uid" )
 
 
         firestore = FirebaseFirestore.getInstance()
@@ -69,14 +66,12 @@ class ProfileImageDialog(context: Context?): DialogFragment(){
         super.onActivityCreated(savedInstanceState)
 
 
-
     }
 
     override fun onResume() {
         super.onResume()
 
         getProfileImage()
-
     }
 
     fun getProfileImage() {
@@ -85,8 +80,12 @@ class ProfileImageDialog(context: Context?): DialogFragment(){
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
                     val url = documentSnapshot.data!!["image"]
-                    Glide.with(this).load(url).apply(RequestOptions()).override(1000,1000)
-                        .into(profile_dial)
+                        customProfileDialogBinding?.let { it1 ->
+                            Glide.with(profilecontext).load(url).apply(RequestOptions()).override(1000,1000)
+                                .into(it1.profileDial)
+                        }
+
+
 
                 }
             }

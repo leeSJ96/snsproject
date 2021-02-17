@@ -14,12 +14,11 @@ import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.CustomBottomDialog
 import com.sjkorea.meetagain.R
 import kotlinx.android.synthetic.main.item_comment.view.*
-import kotlinx.android.synthetic.main.item_fregment_homepost.view.*
 import kotlinx.android.synthetic.main.item_main.view.*
 
 
 class CommentRecyclerViewAdapter(
-    contentUid: String?,
+    path: String?,
     commentTransaction: FragmentTransaction,
     fragmentManager: FragmentManager
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -30,7 +29,7 @@ class CommentRecyclerViewAdapter(
     init {
         mFragmentManager = fragmentManager
 
-        FirebaseFirestore.getInstance().collection("images").document(contentUid.toString())
+        FirebaseFirestore.getInstance().collection("images").document(path.toString())
             .collection("comments").orderBy("timestamp")
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 comments.clear()
@@ -90,15 +89,6 @@ class CommentRecyclerViewAdapter(
 
         var Holder : RecyclerView.ViewHolder = holder as CommentRecyclerViewAdapter.CustomViewHolder
         holder.bind(comments,mFragmentManager)
-        //어뎁터에서 번들 보내기
-//        var bundle =Bundle()
-//        var homePostfrg = HomeFragment()
-//
-//        bundle.putInt("userId", comments.size)
-//
-//        homePostfrg.arguments = bundle
-//        commentTransaction.replace(R.id.main_content, homePostfrg)
-//        commentTransaction.commit()
 
 
         var view = holder.itemView

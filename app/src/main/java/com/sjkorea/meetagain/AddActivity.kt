@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.activity_firstvisit.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog_close.*
-import kotlinx.android.synthetic.main.item_fregment_homepost.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,9 +36,8 @@ class AddActivity : AppCompatActivity() {
     val PICTURE_REQUEST_CODE = 100
 
     private var selectedUriList: List<Uri>? = null
-
+    private var photoUri: Uri? = null
     var auth: FirebaseAuth? = null
-    var photoUri: Uri? = null
     var storage: FirebaseStorage? = null
     var firestore: FirebaseFirestore? = null
     var btnSelectImage: Button? = null
@@ -76,7 +74,7 @@ class AddActivity : AppCompatActivity() {
         }
 
         // 업로드 이벤트 처리
-        addphoto_btn_upload.setOnClickListener {
+        activityAddBinding?.addphotoBtnUpload?.setOnClickListener {
 
             when{
                 //게시글 카운트 5이상
@@ -112,7 +110,7 @@ class AddActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
         firestore = FirebaseFirestore.getInstance()
         btnSelectImage = findViewById(R.id.btn_select_image)
-        uid = auth?.currentUser?.email
+        uid = auth?.currentUser?.uid
 
         activityAddBinding?.btnSelectImage?.setOnClickListener {
 
@@ -189,7 +187,7 @@ class AddActivity : AppCompatActivity() {
 
         val email = FirebaseAuth.getInstance().currentUser?.email
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-
+        val path = "${uid}_${System.currentTimeMillis()}"
 
 
 
@@ -209,6 +207,7 @@ class AddActivity : AppCompatActivity() {
                 // Insert downloadUrl of image
                 contentDTO.imageUrl = uri.toString()
 
+                contentDTO.pathData = path
                 // Insert uid of user
                 contentDTO.uid = auth?.currentUser?.uid
 
@@ -228,7 +227,7 @@ class AddActivity : AppCompatActivity() {
 //
 //                contentDTO.createdAt =  timeDiff(contentDTO.timestamp)
 
-                firestore?.collection("images")?.document()?.set(contentDTO)
+                firestore?.collection("images")?.document(path)?.set(contentDTO)
 
 
                 setResult(Activity.RESULT_OK)
@@ -242,36 +241,19 @@ class AddActivity : AppCompatActivity() {
     //사진이 없을시  업로드 데이터
     fun contentUploadNoPhoto() {
 
-
-
-
-        // Make filename
-        val now = Date()
-        val timestamp = now.time
-        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
-        val createdAt = sdf.format(timestamp)
-
-
-//        var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//        var curTime = Timestamp.now()
-//        val timestamp = SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.KOREA).format(Date())
-//        val curDate = timestamp.format(curTime)
-
-        var imageFileName = "IMAGE_" + createdAt + "_.png"
-        val contentDTO = ContentDTO()
-        val idDTO = IdDTO()
-
-        val email = FirebaseAuth.getInstance().currentUser?.email
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-
+        val path = "${uid}_${System.currentTimeMillis()}"
+        val contentDTO = ContentDTO()
         val name = SharedPreferenceFactory.getStrValue("userName", null)
         Log.d(Constants.TAG, "네임확인 : $name ")
         //contentDTO 모델 리스트
                 contentDTO.name = name
                 // Insert downloadUrl of image
-
+                contentDTO.imageUrl = "NullPhotoLink"
                 // Insert uid of user
                 contentDTO.uid = auth?.currentUser?.uid
+
+                contentDTO.pathData = path
 
                 // Insert userId
                 contentDTO.userId = auth?.currentUser?.email
@@ -286,11 +268,7 @@ class AddActivity : AppCompatActivity() {
 
                 contentDTO.imageUrl ="https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
 
-
-//
-//                contentDTO.createdAt =  timeDiff(contentDTO.timestamp)
-
-                firestore?.collection("images")?.document()?.set(contentDTO)
+                firestore?.collection("images")?.document(path)?.set(contentDTO)
 
 
                 setResult(Activity.RESULT_OK)

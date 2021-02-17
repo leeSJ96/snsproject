@@ -29,13 +29,15 @@
 
         <ImageView
             android:id="@+id/alignment_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginEnd="4dp"
-            android:src="@color/Btn_gray"
+            android:background="@drawable/more_h"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView5" />
+            app:layout_constraintHorizontal_bias="0.835"
+            app:layout_constraintStart_toEndOf="@+id/imageView5"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

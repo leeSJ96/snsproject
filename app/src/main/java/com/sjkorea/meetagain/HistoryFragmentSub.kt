@@ -1,6 +1,8 @@
 package com.sjkorea.meetagain
 
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,17 +20,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.Adapter.HomeRecyclerviewInterface
-import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.databinding.HistorysubItemBinding
-import com.sjkorea.meetagain.databinding.ViewpagerPostItemBinding
-import com.sjkorea.meetagain.homeFragment.HomePostFragment
+import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.historysub_item.*
 import kotlinx.android.synthetic.main.historysub_item.view.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
 
 
-class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
+class HistoryFragmentSub : Fragment(), HomeRecyclerviewInterface  {
 
 
     // 내가 선택한 uid
@@ -39,19 +39,21 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
     //현재 나의 uid
     var currentUserUid: String? = null
     var contentUidList: ArrayList<String> = arrayListOf()
-    var content: String? = null
-
     var contentDTO: ArrayList<ContentDTO> = arrayListOf()
+    var content: String? = null
+    var path : String? = null
+
 
     // 뷰가 사라질때 즉 메모리에서 날라갈때 같이 날리기 위해 따로 빼두기
-    private var historysubItemBinding : HistorysubItemBinding? = null
+    private var historysubItemBinding: HistorysubItemBinding? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding  = HistorysubItemBinding.inflate(inflater, container,false)
+        val binding = HistorysubItemBinding.inflate(inflater, container, false)
         historysubItemBinding = binding
 
 //        currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -62,6 +64,7 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
         currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
         uid = arguments?.getString("destinationUid")
         Log.d(uid.toString(), "로그 히스토리서브 받기 ")
+        path = requireArguments().getString("pathData")
 //
 //        Log.d(FirebaseAuth.getInstance().currentUser?.uid.toString(), "로그히스토리받기 ")
         firestore = FirebaseFirestore.getInstance()
@@ -74,19 +77,24 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
         Log.d(TAG, "로그  히스토리서브 레이아웃매니저: ")
 
 
-
         return historysubItemBinding!!.root
     }
 
 
+
+
+
+
+
     //리사이클러뷰
-    inner class HistorySubRecyclerviewAdapter(myRecyclerviewInterface: HomeRecyclerviewInterface) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//        var contentDTO: ArrayList<ContentDTO>
+    inner class HistorySubRecyclerviewAdapter(myRecyclerviewInterface: HomeRecyclerviewInterface) :
+        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        //        var contentDTO: ArrayList<ContentDTO>
         var commentDTO: ArrayList<ContentDTO.Comment>
 
         val rvTransaction: FragmentTransaction =
             activity?.supportFragmentManager!!.beginTransaction()
-        private var myRecyclerviewInterface : HomeRecyclerviewInterface? = null
+        private var myRecyclerviewInterface: HomeRecyclerviewInterface? = null
 
         init {
             this.myRecyclerviewInterface = myRecyclerviewInterface
@@ -124,13 +132,16 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
             val width = resources.displayMetrics.widthPixels / 3
             val imageView = ImageView(parent.context)
             imageView.layoutParams = LinearLayoutCompat.LayoutParams(width, width)
-            return CustomViewHolder(imageView,this.myRecyclerviewInterface!!)
+            return CustomViewHolder(imageView, this.myRecyclerviewInterface!!)
         }
 
-        inner class CustomViewHolder(var imageView: ImageView, recyclerviewInterface: HomeRecyclerviewInterface) :
-            RecyclerView.ViewHolder(imageView),View.OnClickListener {
+        inner class CustomViewHolder(
+            var imageView: ImageView,
+            recyclerviewInterface: HomeRecyclerviewInterface
+        ) :
+            RecyclerView.ViewHolder(imageView), View.OnClickListener {
             //인터페이스
-            private lateinit var  myRecyclerviewInterface: HomeRecyclerviewInterface
+            private lateinit var myRecyclerviewInterface: HomeRecyclerviewInterface
 
 
             init {
@@ -213,15 +224,12 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
         }
 
 
-            override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-                var imageView = holder as CustomViewHolder
-                holder.bind()
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            var imageView = holder as CustomViewHolder
+            holder.bind()
 
 
-            }
-
-
-
+        }
 
 
         override fun getItemCount(): Int {
@@ -229,73 +237,82 @@ class HistoryFragmentSub : Fragment(),HomeRecyclerviewInterface {
         }
 
 
+
     }
+
+
+//
+//    fun onBackPressed() {
+//
+//        var subfrag = HistoryFragmentSub()
+//        if (subfrag != null) { //상세정보창 프래그먼트를 킨 상태면 뒤로가기했을 때 해당 프래그먼트를 삭제해줌
+//            if (requireActivity().supportFragmentManager.findFragmentById(R.id.main_view) != null) {
+//                requireActivity().supportFragmentManager.findFragmentById(R.id.main_view)?.let {
+//                    requireActivity().supportFragmentManager
+//                        .beginTransaction().remove(it).commit()
+//                };
+//            }
+//        }
+//    }
 
     override fun onItemClicked(position: Int) {
         Log.d(TAG, "HistoryFragmentSub  - onItemClicked(position: Int) called")
-        val rvTransaction : FragmentTransaction = activity?.supportFragmentManager!!.beginTransaction()
+        val rvTransaction: FragmentTransaction =
+            activity?.supportFragmentManager!!.beginTransaction()
         val titles: String = this.contentDTO[position].title ?: ""
-        var Commant: ArrayList<ContentDTO.Comment> = arrayListOf()
-        Toast.makeText(context,"$titles,ddd", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, "$titles,ddd", Toast.LENGTH_LONG).show()
 
 
-                    val bundle = Bundle()
-                    val homePostfrg = HomePostFragment()
-                    //uid
-                    bundle.putString("destinationUid", contentDTO[position].uid)
+        val intent = Intent(context, HomePostActivity::class.java)
 
-                    //userid
-                    bundle.putString("userId", contentDTO[position].name)
+        intent.putExtra("contentDTO",contentDTO[position])
 
-                    //title
-                    bundle.putString("title", contentDTO[position].title)
+        intent.putExtra("pathData",contentDTO[position].pathData)
+        //uid
+        intent.putExtra("destinationUid", contentDTO[position].uid)
 
-                    //explain
-                    bundle.putString("explain", contentDTO[position].explain)
+        //userid
+        intent.putExtra("userId", contentDTO[position].name)
 
-                    //imageUrl
-                    bundle.putString("imageUrl", contentDTO[position].imageUrl)
+        //title
+        intent.putExtra("title", contentDTO[position].title)
 
-                    //favoriteCount
-                    bundle.putInt("favoriteCount", contentDTO[position].favoriteCount)
-//
-//                //userIdposition
-//                bundle.putString("userIdposition",content)
+        //explain
+        intent.putExtra("explain", contentDTO[position].explain)
 
-//                    bundle.putString("userIdposition", titles[position].toString())
-                    //userIdposition
-                    bundle.putString("userIdposition",  content)
+        //imageUrl
+        intent.putExtra("imageUrl", contentDTO[position].imageUrl)
 
-                    //meaningCount
-                    bundle.putInt("meaningCount", contentDTO[position].meaningCount)
+        //favoriteCount
+        intent.putExtra("favoriteCount", contentDTO[position].favoriteCount)
 
-                    //좋아요버튼
-                    var hashmap = contentDTO[position].favorites
+        //userIdposition
+        intent.putExtra("userIdposition", content)
 
-                    bundle.putSerializable("favoriteshashmap", hashmap)
-                    //싫어요버튼
-                    var hashmap2 = contentDTO[position].meaning
+        //meaningCount
+        intent.putExtra("meaningCount", contentDTO[position].meaningCount)
 
-                    bundle.putSerializable("meaninghashmap", hashmap2)
+        //좋아요버튼
+        var hashmap = contentDTO[position].favorites
 
-                    bundle.putSerializable("hashmap", contentDTO[position].favorites)
+        intent.putExtra("favoriteshashmap", hashmap)
+        //싫어요버튼
+        var hashmap2 = contentDTO[position].meaning
 
-                    contentDTO[position].favorites =
-                        bundle.getSerializable("hashmap") as HashMap<String, Boolean>
+        intent.putExtra("meaninghashmap", hashmap2)
 
+        intent.putExtra("hashmap", contentDTO[position].favorites)
 
-                    //댓글부분
-//
-                    bundle.putString("commentuid", content)
+//        contentDTO[position].favorites =
+//            intent.putStringArrayListExtra("hashmap") as HashMap<String, Boolean>
 
-
-//                bundle.putString("commentuserId", commentDTO[position].userId)
-//               bundle.putString("commentcomment", commentDTO[position].comment)
-
-                    homePostfrg.arguments = bundle
-                    rvTransaction.replace(R.id.main_content, homePostfrg).commit()
+        //댓글부분
+        intent.putExtra("commentuid", content)
+        startActivity(intent)
 
 
     }
+
+
 
 }
