@@ -63,6 +63,18 @@ class HomePostActivity : AppCompatActivity() {
         contentDTO = intent.getParcelableExtra<ContentDTO>("contentDTO")
         userId = intent.getStringExtra("userId")
         uid = intent.getStringExtra("destinationUid")
+        contentUidListposition = intent.getStringExtra("userIdposition")
+        Log.d(contentUidListposition.toString(), " 홈 포스트 로그 contentUidListposition 받기")
+
+//
+//        favorites  = intent.getSerializableExtra("favoriteshashmap") as HashMap<String, Boolean>
+//        Log.d(this.favorites.toString(), "홈 포스트 로그 favorites 받기 ")
+//
+//        meaning  =  intent.getSerializableExtra("meaninghashmap") as HashMap<String, Boolean>
+//        Log.d(this.meaning.toString(), "홈 포스트 로그 favorites 받기 ")
+//
+
+
 
         //싱글톤사용 동적 스피너 체인지
         moreSpinnerChange()
@@ -89,10 +101,10 @@ class HomePostActivity : AppCompatActivity() {
             }
             //좋아요개수
             homePostActivityBinding?.homePostLike?.text =
-                "좋아요" + favoriteCount.toString() + "개"
+                "좋아요" + contentDTO?.favoriteCount.toString() + "개"
             //싫어요개수
             homePostActivityBinding?.homePostMa?.text =
-                "싫어요" + meaningCount.toString() + "개"
+                "싫어요" + contentDTO?.meaningCount.toString() + "개"
 
             //좋아요 버튼 설정
             if (favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
@@ -120,16 +132,18 @@ class HomePostActivity : AppCompatActivity() {
                 "" + favoriteCount+ "개"
             homePostActivityBinding?.homePostFavoriteImageview?.setOnClickListener {
                 favoriteEvent()
-
             }
 
             // 슬퍼요
             homePostActivityBinding?.homePostMa?.text =
-                "" + favoriteCount + "개"
+                "" + meaningCount + "개"
             homePostActivityBinding?.homePostMaImageview?.setOnClickListener {
                 Log.d(TAG, "확인:싫어요 ")
                 meaningEvent()
             }
+
+
+
         }
 
         //닉네임 따로 받아오기
@@ -138,55 +152,14 @@ class HomePostActivity : AppCompatActivity() {
         //프로필사진
         getProfileImage()
 
-        //좋아요 버튼 설정
-        if (favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
-
-            homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_redc)
-
-        } else {
-
-            homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_red)
-        }
-
-        //슬퍼요 버튼 설정
-        if (meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
-
-            homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_bluec)
-
-        } else {
-
-            homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_blue)
-        }
 
 
-//
-//        uidsize = intent.getIntExtra("uidsize", 0)
-//
-//        title =  intent.getStringExtra("title")
-//
-//        explain =  intent.getStringExtra("explain")
-//
-//        imageUrl = intent.getStringExtra("imageUrl")
-//
-//        favoriteCount =  intent.getIntExtra("favoriteCount", 0)
-//
-//        meaningCount = intent.getIntExtra("meaningCount", 0)
-//
-//        favorites  = intent.getSerializableExtra("favoriteshashmap") as HashMap<String, Boolean>
-//        Log.d(this.favorites.toString(), "홈 포스트 로그 favorites 받기 ")
-//
-//        meaning  =  intent.getSerializableExtra("meaninghashmap") as HashMap<String, Boolean>
-//        Log.d(this.meaning.toString(), "홈 포스트 로그 favorites 받기 ")
-//
-//        contentUidListposition = intent.getStringExtra("userIdposition")
-//        Log.d(contentUidListposition.toString(), " 홈 포스트 로그 contentUidListposition 받기")
 
         //댓글창
         homePostActivityBinding?.bottomviewitemCommentImageview?.setOnClickListener {
 
             val customcommentDialog = CommentFragment()
             var bundle = Bundle()
-            var uid = FirebaseAuth.getInstance().currentUser!!.uid
             bundle.putString("contentUid", contentUidListposition)
             Log.d(contentUidListposition.toString(), "홈포스트contentUid1 로그 ")
             bundle.putString("destinationUid", uid)
@@ -286,7 +259,11 @@ class HomePostActivity : AppCompatActivity() {
                         }
                         //삭제
                         else ->{
+                            //싱글톤 댓글부분
+                            Constants.LIST = 0
+                            Log.d(Constants.TAG, "Constants.LIST: ${Constants.LIST}")
                             contentDelete()
+
                         }
 
                     }
@@ -301,7 +278,7 @@ class HomePostActivity : AppCompatActivity() {
 
     //친구 스피너
     fun frandmoreSpinner(){
-        val items = resources.getStringArray(R.array.frand_array)
+        val items = resources.getStringArray(R.array.friend_array)
         val myAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, items)
 
         homePostActivityBinding?.moreSpinner?.adapter = myAdapter
@@ -369,19 +346,6 @@ class HomePostActivity : AppCompatActivity() {
         overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
 
     }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        gethomeposttitle()
-//        getProfileImage()
-//
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        imageprofileListenerRegistration?.remove()
-//        homepostListenerRegistration?.remove()
-//    }
 
     //좋아요 이벤트 기능
     private fun favoriteEvent() {
@@ -435,8 +399,8 @@ class HomePostActivity : AppCompatActivity() {
 
         alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
         alarmDTO.destinationUid = destinationUid
-        alarmDTO.userId = user?.email
-        alarmDTO.uid = user?.uid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser!!.email
+        alarmDTO.uid = FirebaseAuth.getInstance().uid
         alarmDTO.kind = 0
         alarmDTO.timestamp = System.currentTimeMillis()
 
@@ -455,9 +419,9 @@ class HomePostActivity : AppCompatActivity() {
 
 
         alarmDTO.destinationUid = destinationUid
-        alarmDTO.userId = user?.email
+        alarmDTO.userId =  FirebaseAuth.getInstance().currentUser!!.email
         alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
-        alarmDTO.uid = user?.uid
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser!!.uid
         alarmDTO.kind = 3
         alarmDTO.timestamp = System.currentTimeMillis()
 

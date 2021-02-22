@@ -1,6 +1,6 @@
 package com.sjkorea.meetagain.Adapter
 
-interface HomeRecyclerviewInterface {
+interface IHomeRecyclerview {
 
     fun onItemClicked(position: Int)
 }

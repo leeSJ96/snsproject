@@ -11,10 +11,15 @@ object Constants {
 
     var IDDTO: String? = null
 
+    //댓글 부분 더보기 싱글톤
+    var LIST : Int = 0
+
     //
     var POSTSHOW: String? = null
     //게시물 더보기 스니퍼 싱글톤
     var MORESPINNER : String? = null
+        //댓글 더보기 스니퍼 싱글톤
+        var COMMENTMORESPINNER : String? = null
 
     const val AuthOverLap = "The email address is already in use by another account"
     const val EmailFormError = "he email address is badly formatted"

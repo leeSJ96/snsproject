@@ -3,7 +3,6 @@ package com.sjkorea.meetagain.homeFragment
 
 import android.app.Dialog
 import android.content.ContentValues.TAG
-import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,19 +16,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.*
-import com.sjkorea.meetagain.Adapter.HomeRecyclerviewInterface
+import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.OnpostListener
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
-import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.ORDER
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
-import kotlinx.android.synthetic.main.item_main.*
 
 
-class HomeFragment : Fragment(),HomeRecyclerviewInterface,OnpostListener {
+class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null

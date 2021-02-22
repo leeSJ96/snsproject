@@ -1,7 +1,6 @@
 package com.sjkorea.meetagain
 
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,7 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.sjkorea.meetagain.Adapter.HomeRecyclerviewInterface
+import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.databinding.HistorysubItemBinding
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import kotlinx.android.synthetic.main.custom_dialog.*
@@ -28,7 +27,7 @@ import kotlinx.android.synthetic.main.historysub_item.view.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
 
 
-class HistoryFragmentSub : Fragment(), HomeRecyclerviewInterface  {
+class HistoryFragmentSub : Fragment(), IHomeRecyclerview  {
 
 
     // 내가 선택한 uid
@@ -87,14 +86,14 @@ class HistoryFragmentSub : Fragment(), HomeRecyclerviewInterface  {
 
 
     //리사이클러뷰
-    inner class HistorySubRecyclerviewAdapter(myRecyclerviewInterface: HomeRecyclerviewInterface) :
+    inner class HistorySubRecyclerviewAdapter(myRecyclerviewInterface: IHomeRecyclerview) :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         //        var contentDTO: ArrayList<ContentDTO>
         var commentDTO: ArrayList<ContentDTO.Comment>
 
         val rvTransaction: FragmentTransaction =
             activity?.supportFragmentManager!!.beginTransaction()
-        private var myRecyclerviewInterface: HomeRecyclerviewInterface? = null
+        private var myRecyclerviewInterface: IHomeRecyclerview? = null
 
         init {
             this.myRecyclerviewInterface = myRecyclerviewInterface
@@ -137,11 +136,11 @@ class HistoryFragmentSub : Fragment(), HomeRecyclerviewInterface  {
 
         inner class CustomViewHolder(
             var imageView: ImageView,
-            recyclerviewInterface: HomeRecyclerviewInterface
+            recyclerviewInterface: IHomeRecyclerview
         ) :
             RecyclerView.ViewHolder(imageView), View.OnClickListener {
             //인터페이스
-            private lateinit var myRecyclerviewInterface: HomeRecyclerviewInterface
+            private lateinit var myRecyclerviewInterface: IHomeRecyclerview
 
 
             init {

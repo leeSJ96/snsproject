@@ -27,8 +27,10 @@ data class ContentDTO(
         var uid: String? = null,
         var userId: String? = null,
         var comment: String? = null,
+        var name : String? = null,
         var timestamp: Long? = null,
         var commentCount: Int = 0,
+        var myPath: String? = null
     )
 }
 

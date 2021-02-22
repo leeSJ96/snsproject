@@ -7,21 +7,19 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.Adapter.FollowAdapter
-import com.sjkorea.meetagain.Adapter.HomeRecyclerviewInterface
+import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.CustomZoomClass.CenterZoomLayout
 import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.databinding.*
 import com.squareup.okhttp.OkHttpClient
-import kotlinx.android.synthetic.main.fragment_follow.*
 
 
-class FollowFragment : Fragment(), HomeRecyclerviewInterface {
+class FollowFragment : Fragment(), IHomeRecyclerview {
 
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null

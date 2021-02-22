@@ -155,7 +155,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
+        btoolbar_username.text = userId
 //        // Profile Image 가져오기
 //        firestore?.collection("profileImages")?.document(uid!!)
 //            ?.get()?.addOnCompleteListener { task ->
@@ -279,7 +279,6 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
                     contentDTO.add(snapshot.toObject(ContentDTO::class.java)!!)
                     Log.d(ContentValues.TAG, "2")
                     bottom_tv_post_count.text = contentDTO.size.toString()
-                    btoolbar_username.text = userId.toString()
                     Log.d(contentDTO.size.toString(), "bottomsize테스트")
                 }
 
@@ -309,15 +308,23 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 //    }
 
     fun getProfileImage() {
-        imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid!!)
+        imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid.toString())
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {
                     val url = documentSnapshot.data!!["image"]
-                    Glide.with(this!!).load(url).apply(RequestOptions().circleCrop())
-                        .into(BottomView!!.Bottom_profile_image)
-                    Glide.with(this!!).load(url).apply(RequestOptions().circleCrop())
-                        .into(BottomView!!.Bottom_profile_image_my)
+                    if (url != null) {
+                        BottomView?.Bottom_profile_image?.let {
+                            Glide.with(this).load(url).apply(RequestOptions().circleCrop())
+                                .into(it)
+                        }
+                        BottomView?.let {
+                            Glide.with(this).load(url).apply(RequestOptions().circleCrop())
+                                .into(it.Bottom_profile_image_my)
+                        }
+                    } else {
+
+                    }
                 }
             }
     }
@@ -431,7 +438,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
 
     fun getFolloerAndFollowing() {
-        followListenerRegistration = firestore?.collection("users")?.document(uid!!)
+        followListenerRegistration = firestore?.collection("users")?.document(uid.toString())
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
 

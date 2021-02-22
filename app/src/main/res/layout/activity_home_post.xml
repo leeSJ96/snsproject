@@ -43,7 +43,6 @@
                 card_view:layout_constraintVertical_bias="1.0" />
 
             <TextView
-
                 android:id="@+id/home_post_profile_textview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,6 +50,10 @@
                 android:textColor="@color/white"
                 android:layout_marginStart="76dp"
                 android:layout_marginEnd="208dp"
+                android:shadowRadius="1.0"
+                android:shadowDy="-1.0"
+                android:shadowColor="@color/colorPrimaryDark"
+
 
                 android:textSize="20dp"
                 card_view:layout_constraintBottom_toBottomOf="@+id/home_post_profile_image"
@@ -148,8 +151,8 @@
 
             <TextView
                 android:id="@+id/home_post_title_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="339dp"
+                android:layout_height="31dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/Text_white"
@@ -157,7 +160,7 @@
                 card_view:layout_constraintBottom_toTopOf="@+id/home_post_explain_textview"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/home_post_favorite_imageview"
-                card_view:layout_constraintVertical_bias="0.714"
+                card_view:layout_constraintVertical_bias="0.727"
                 tools:text="사진 제목" />
 
             <TextView
@@ -175,9 +178,9 @@
             <TextView
                 android:layout_width="115dp"
                 android:layout_height="23dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.451"
+                card_view:layout_constraintHorizontal_bias="0.501"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/home_post_explain_textview" />
 

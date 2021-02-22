@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
+    android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -13,11 +13,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
         android:background="@color/item_backgranud_gray"
-        android:orientation="horizontal"
-        >
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/commentviewitem_imageview_profile"
@@ -26,40 +25,61 @@
             android:layout_margin="7.5dp"
             android:src="@mipmap/ic_launcher"
             card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintHorizontal_bias="0.083"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:layout_constraintVertical_bias="1.0" />
+
 
         <TextView
             android:id="@+id/commentviewitem_textview_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="7.5dp"
             android:textColor="@color/Text_white"
             card_view:layout_constraintBottom_toTopOf="@+id/commentviewitem_textview_comment"
             card_view:layout_constraintStart_toEndOf="@+id/commentviewitem_imageview_profile"
             card_view:layout_constraintTop_toTopOf="parent"
-            card_view:layout_constraintVertical_bias="0.294"
+            card_view:layout_constraintVertical_bias="0.0"
             tools:text="id" />
 
         <TextView
             android:id="@+id/commentviewitem_textview_comment"
-            android:layout_width="wrap_content"
+            android:layout_width="212dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="12dp"
             android:textColor="@color/Text_white"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintStart_toStartOf="@+id/commentviewitem_textview_profile"
+            card_view:layout_constraintEnd_toStartOf="@+id/comment_more_spinner"
+            card_view:layout_constraintHorizontal_bias="0.867"
+            card_view:layout_constraintStart_toEndOf="@+id/commentviewitem_imageview_profile"
             tools:text="User Name" />
 
         <TextView
             android:id="@+id/comment_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7.5dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
             android:text="time"
             android:textColor="@color/Text_white"
+            android:textSize="12sp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintHorizontal_bias="1.0"
+            card_view:layout_constraintStart_toEndOf="@+id/commentviewitem_textview_comment"
+            card_view:layout_constraintTop_toBottomOf="@+id/comment_more_spinner"
+            card_view:layout_constraintVertical_bias="1.0" />
+
+        <ImageButton
+            android:id="@+id/comment_more_spinner"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/more_h"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="parent" />
 

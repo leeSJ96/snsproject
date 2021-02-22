@@ -1,6 +1,8 @@
 package com.sjkorea.meetagain.Adapter
 
 
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,26 +10,32 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.AlarmDTO
+import com.sjkorea.meetagain.AlertFragment.AlarmFragment
+import com.sjkorea.meetagain.ContentDTO
+import com.sjkorea.meetagain.CustomBottomDialog
 import com.sjkorea.meetagain.R
+import com.sjkorea.meetagain.homeFragment.HomeFragment
+import com.sjkorea.meetagain.homeFragment.HomePostActivity
+import com.sjkorea.meetagain.utils.Constants
 import kotlinx.android.synthetic.main.item_alarm.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_comment.view.commentviewitem_imageview_profile
 import kotlinx.android.synthetic.main.item_comment.view.commentviewitem_textview_profile
 
 
-class AlarmRecyclerViewAdapter(fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  , fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var alarmSnapshot : ListenerRegistration? = null
     var alarmDTOList: ArrayList<AlarmDTO> = arrayListOf()
     private var mFragmentManager: FragmentManager
 
+
     init {
-
-
 
         mFragmentManager = fragmentManager
 
@@ -56,22 +64,31 @@ class AlarmRecyclerViewAdapter(fragmentManager: FragmentManager) : RecyclerView.
     inner class CustomViewHolder(view: View?) : RecyclerView.ViewHolder(view!!){
 
         fun bind(alarmDTOList: ArrayList<AlarmDTO>, fragmentManager: FragmentManager) {
-//            //프로필창
-//            itemView.commentviewitem_imageview_profile.setOnClickListener {
-//
-//
-//                val bundle = Bundle()
-//
-//                val homepostFragmnet = HomePostFragment()
-//
-//                bundle.putString("destinationUid", alarmDTOList[position].uid)
-//                bundle.putString("userId", alarmDTOList[position].userId)
-//
-//
-//                homepostFragmnet.arguments = bundle
-//
-//                homepostFragmnet.show(fragmentManager, homepostFragmnet.tag)
-//            }
+            //프로필창
+            itemView.alarmviewitem_imageview_profile.setOnClickListener {
+
+                Constants.POSTSHOW = "mainView"
+
+                val bundle = Bundle()
+
+                bundle.putString("destinationUid", alarmDTOList[position].uid)
+                bundle.putString("userId", alarmDTOList[position].name)
+
+                val bottomSheetDialogFragment = CustomBottomDialog()
+                bottomSheetDialogFragment.arguments = bundle
+                bottomSheetDialogFragment.show(fragmentManager, bottomSheetDialogFragment.tag)
+
+
+            }
+
+
+            // 포스트창
+            itemView.alarm_layout.setOnClickListener {
+
+
+                homePostData(adapterPosition)
+
+            }
         }
 
 
@@ -150,6 +167,50 @@ class AlarmRecyclerViewAdapter(fragmentManager: FragmentManager) : RecyclerView.
             }
         }
 //        .commentviewitem_textview_comment.visibility = View.INVISIBLE
+
+    }
+
+    fun homePostData(position: Int) {
+//        // 데이터  넘겨줌
+//        val intent = Intent(FacebookSdk.getApplicationContext(), HomePostActivity::class.java)
+//
+//        intent.putExtra("contentDTO", contentArray[position])
+//
+//        //uid
+//        intent.putExtra("destinationUid", contentArray[position].uid)
+//
+//        //userid
+//        intent.putExtra("userId", contentArray[position].name)
+//
+//        //title
+//        intent.putExtra("title", contentArray[position].title)
+//
+//        //explain
+//        intent.putExtra("explain", contentArray[position].explain)
+//
+//        //imageUrl
+//        intent.putExtra("imageUrl", contentArray[position].imageUrl)
+//
+//        //favoriteCount
+//        intent.putExtra("favoriteCount", contentArray[position].favoriteCount)
+//
+//        //userIdposition
+//        intent.putExtra("userIdposition", contentUidList[position])
+//
+//        //meaningCount
+//        intent.putExtra("meaningCount", contentArray[position].meaningCount)
+//
+//        //좋아요버튼
+//        var hashmap = contentArray[position].favorites
+//
+//        intent.putExtra("favoriteshashmap", hashmap)
+//        //싫어요버튼
+//        var hashmap2 = contentArray[position].meaning
+//
+//        intent.putExtra("meaninghashmap", hashmap2)
+//        //putSerializable
+//        intent.putExtra("hashmap", contentArray[position].favorites)
+//        context.startActivity(intent)
 
     }
 

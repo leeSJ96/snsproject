@@ -6,9 +6,19 @@
         <item>게시물 삭제</item>
     </string-array>
 
-<string-array name="frand_array">
+<string-array name="friend_array">
     <item>   목록   </item>
     <item>신고</item>
+</string-array>
+    <string-array name="myComment_array">
+        <item>   목록   </item>
+        <item>댓글 삭제</item>
 
 </string-array>
+
+    <string-array name="friendComment_array">
+        <item>   목록   </item>
+        <item>신고</item>
+
+    </string-array>
 </resources>

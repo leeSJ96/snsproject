@@ -45,7 +45,7 @@ class FollowAdapter(
     var uid: String? = null
     var name: String? = null
 
-    private var followRecyclerviewInterface: HomeRecyclerviewInterface? = null
+    private var followRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
 
     init {
@@ -65,25 +65,28 @@ class FollowAdapter(
 //        SortPosts()
         setHasStableIds(true)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val path = "${uid}_${System.currentTimeMillis()}"
 
+
+        //유저 데이터에 유아이디 문서를 가져와라
         firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var userDTO = task.result?.toObject(FollowDTO::class.java)
                 if (userDTO?.followings != null) {
-                    getCotents(userDTO?.followings)
+                    getCotents(userDTO.followings)
                 }
             }
         }
 
 
     }
-
+    //
     fun getCotents(followers: MutableMap<String, Boolean>?) {
         imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             contentDTOs.clear()
             contentUidList.clear()
             if (querySnapshot == null) return@addSnapshotListener
-            for (snapshot in querySnapshot!!.documents) {
+            for (snapshot in querySnapshot.documents) {
                 var item = snapshot.toObject(ContentDTO::class.java)!!
                 println(item.uid)
                 if (followers?.keys?.contains(item.uid)!!) {
@@ -106,11 +109,11 @@ class FollowAdapter(
     }
 
 
-    inner class CustomViewHolder(itemView: View, recyclerviewInterface: HomeRecyclerviewInterface) :
+    inner class CustomViewHolder(itemView: View, recyclerviewInterface: IHomeRecyclerview) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        private var homeRecyclerviewInterface: HomeRecyclerviewInterface? = null
+        private var homeRecyclerviewInterface: IHomeRecyclerview? = null
 
         init {
             itemView.setOnClickListener(this)
@@ -440,9 +443,6 @@ class FollowAdapter(
 
     fun meaningAlarm(destinationUid: String) {
         val alarmDTO = AlarmDTO()
-
-
-
 
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = user?.email

@@ -75,7 +75,7 @@ class ProfileImageDialog(context: Context): DialogFragment(){
     }
 
     fun getProfileImage() {
-        imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid!!)
+        imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid.toString())
             ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if (documentSnapshot == null) return@addSnapshotListener
                 if (documentSnapshot.data != null) {

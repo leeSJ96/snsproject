@@ -79,7 +79,7 @@ class WalletFragment : Fragment() {
                     }else {
                         Snackbar.make(frag_layout, "로그아웃 되었습니다.", Snackbar.LENGTH_LONG).show();
                     }
-                    val intent = Intent(context, IntroActivity::class.java)
+                    val intent = Intent(context, LoginActivity::class.java)
                     startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP))
                 }
             })
