@@ -69,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:fontFamily="@font/gmarketsans_ttf_edium"
         android:elevation="5dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
@@ -95,7 +96,7 @@
             android:layout_marginBottom="30dp">
 
             <TextView
-
+                android:fontFamily="@font/gmarketsans_ttf_bold"
                 android:id="@+id/btoolbar_username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -118,6 +119,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_bold"
             android:id="@+id/bottom_tv_post_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -127,6 +129,7 @@
             android:textColor="@color/Text_white" />
 
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_edium"
             android:id="@+id/btitle_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,6 +138,7 @@
             android:text="게시글보기" />
 
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_bold"
             android:id="@+id/bottom_tv_following_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -144,12 +148,14 @@
             android:textColor="@color/Text_white" />
 
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_edium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
             android:textColor="@color/Text_white"
             android:text="팔로우" />
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_bold"
             android:id="@+id/bottom_tv_follower_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,6 +165,7 @@
             android:textColor="@color/Text_white" />
 
         <TextView
+            android:fontFamily="@font/gmarketsans_ttf_edium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"

@@ -3,6 +3,8 @@ package com.sjkorea.meetagain.Adapter
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.facebook.FacebookSdk
+import com.facebook.FacebookSdk.getApplicationContext
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -22,36 +25,52 @@ import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.item_alarm.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_comment.view.commentviewitem_imageview_profile
 import kotlinx.android.synthetic.main.item_comment.view.commentviewitem_textview_profile
 
 
-class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  , fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AlarmRecyclerViewAdapter( fragmentManager: FragmentManager,) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var alarmSnapshot : ListenerRegistration? = null
-    var alarmDTOList: ArrayList<AlarmDTO> = arrayListOf()
+    var alarmDTOList: ArrayList<AlarmDTO>
     private var mFragmentManager: FragmentManager
-
+    private var contentArray: ArrayList<ContentDTO> = arrayListOf()
 
     init {
 
         mFragmentManager = fragmentManager
-
+        alarmDTOList = java.util.ArrayList()
         var uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         alarmSnapshot = FirebaseFirestore.getInstance().collection("alarms").whereEqualTo("destinationUid", uid)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 alarmDTOList.clear()
+
                 if (querySnapshot == null) return@addSnapshotListener
                 for (snapshot in querySnapshot.documents) {
                     alarmDTOList.add(snapshot.toObject(AlarmDTO::class.java)!!)
-                }
 
+                }
                 alarmDTOList.sortByDescending { it.timestamp }
                 notifyDataSetChanged()
             }
+
+          FirebaseFirestore.getInstance().collection("images").whereEqualTo("uid", uid)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                contentArray.clear()
+                if (querySnapshot == null) return@addSnapshotListener
+                for (snapshot in querySnapshot.documents) {
+                    contentArray.add(snapshot.toObject(ContentDTO::class.java)!!)
+                    Log.d(Constants.TAG, "contentArray2 : $contentArray ")
+                }
+
+                notifyDataSetChanged()
+            }
+
+
     }
 
 
@@ -82,13 +101,13 @@ class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  
             }
 
 
-            // 포스트창
-            itemView.alarm_layout.setOnClickListener {
-
-
-                homePostData(adapterPosition)
-
-            }
+//            // 포스트창
+//            itemView.alarm_layout.setOnClickListener {
+//
+//
+//                homePostData(adapterPosition,itemView)
+//
+//            }
         }
 
 
@@ -107,7 +126,7 @@ class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  
 
         val commentTextView = holder.itemView.alarmviewitem_textview_profile
         val profileImage = holder.itemView.alarmviewitem_imageview_profile
-
+        val alarmLayout = holder.itemView.alarm_layout
         val view = holder.itemView
 
 
@@ -126,6 +145,7 @@ class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  
                 }
             }
         }
+
 
 
         view.alarm_time.text = diffTime.toString() + msg.toString()
@@ -170,47 +190,48 @@ class AlarmRecyclerViewAdapter(private var contentArray: ArrayList<ContentDTO>  
 
     }
 
-    fun homePostData(position: Int) {
-//        // 데이터  넘겨줌
-//        val intent = Intent(FacebookSdk.getApplicationContext(), HomePostActivity::class.java)
-//
-//        intent.putExtra("contentDTO", contentArray[position])
-//
-//        //uid
-//        intent.putExtra("destinationUid", contentArray[position].uid)
-//
-//        //userid
-//        intent.putExtra("userId", contentArray[position].name)
-//
-//        //title
-//        intent.putExtra("title", contentArray[position].title)
-//
-//        //explain
-//        intent.putExtra("explain", contentArray[position].explain)
-//
-//        //imageUrl
-//        intent.putExtra("imageUrl", contentArray[position].imageUrl)
-//
-//        //favoriteCount
-//        intent.putExtra("favoriteCount", contentArray[position].favoriteCount)
-//
-//        //userIdposition
-//        intent.putExtra("userIdposition", contentUidList[position])
-//
-//        //meaningCount
-//        intent.putExtra("meaningCount", contentArray[position].meaningCount)
-//
-//        //좋아요버튼
-//        var hashmap = contentArray[position].favorites
-//
-//        intent.putExtra("favoriteshashmap", hashmap)
-//        //싫어요버튼
-//        var hashmap2 = contentArray[position].meaning
-//
-//        intent.putExtra("meaninghashmap", hashmap2)
-//        //putSerializable
-//        intent.putExtra("hashmap", contentArray[position].favorites)
-//        context.startActivity(intent)
+    fun homePostData(position: Int,view:View) {
+
+
+        val intent = Intent(getApplicationContext(), HomePostActivity::class.java)
+
+
+        //uid
+        intent.putExtra("destinationUid", alarmDTOList[position].uid)
+
+        //userid
+        intent.putExtra("userId", alarmDTOList[position].name)
+
+        //title
+        intent.putExtra("title", alarmDTOList[position].title)
+
+        //explain
+        intent.putExtra("explain", alarmDTOList[position].explain)
+
+        //imageUrl
+        intent.putExtra("imageUrl", alarmDTOList[position].imageUrl)
+
+        //favoriteCount
+        intent.putExtra("favoriteCount", alarmDTOList[position].favoriteCount)
+
+        var uidPosition = SharedPreferenceFactory.getStrValue("contentUidList","")
+        //userIdposition
+        intent.putExtra("userIdposition", uidPosition )
+
+        //meaningCount
+        intent.putExtra("meaningCount", alarmDTOList[position].meaningCount)
+
+        //좋아요버튼
+        var hashmap = alarmDTOList[position].favorites
+
+        intent.putExtra("favoriteshashmap", hashmap)
+        //싫어요버튼
+        var hashmap2 = alarmDTOList[position].meaning
+
+        intent.putExtra("meaninghashmap", hashmap2)
+        //putSerializable
+        intent.putExtra("hashmap", alarmDTOList[position].favorites)
+        view.context.startActivity(intent)
 
     }
 

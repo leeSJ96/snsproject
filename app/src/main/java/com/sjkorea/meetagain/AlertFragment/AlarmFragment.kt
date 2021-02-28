@@ -33,7 +33,7 @@ class AlarmFragment : Fragment() {
         val binding  = FragmentAlarmBinding.inflate(inflater, container,false)
         fragmentAlarmBinding = binding
 
-            fragmentAlarmBinding?.alarmfragmentRecyclerview?.adapter = AlarmRecyclerViewAdapter(contentDTOs,childFragmentManager,)
+            fragmentAlarmBinding?.alarmfragmentRecyclerview?.adapter = AlarmRecyclerViewAdapter(childFragmentManager,)
         fragmentAlarmBinding?.alarmfragmentRecyclerview?.layoutManager = LinearLayoutManager(activity)
 
         return fragmentAlarmBinding!!.root

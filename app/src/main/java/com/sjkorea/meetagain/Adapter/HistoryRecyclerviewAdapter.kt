@@ -370,7 +370,7 @@ class HistoryRecyclerviewAdapter(
         intent.putExtra("meaninghashmap", hashmap2)
         //putSerializable
         intent.putExtra("hashmap", contentArray[position].favorites)
-        context.startActivity(intent);
+        context.startActivity(intent)
 
     }
 

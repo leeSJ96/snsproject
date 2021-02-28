@@ -173,34 +173,46 @@ class AddUpdateActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICTURE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
 
-                //기존 이미지 지우기
-                activityUpdateBinding?.ImageP1?.setImageResource(0)
-                activityUpdateBinding?.ImageP2?.setImageResource(0)
-                activityUpdateBinding?.ImageP3?.setImageResource(0)
-
-                //ClipData 또는 Uri를 가져온다
-                photoUri = data!!.data
+            if(resultCode == Activity.RESULT_OK){
+                // This is path to the seleted image
+                photoUri = data?.data
+                activityUpdateBinding?.ImageP1?.setImageURI(photoUri)
                 photoUse = true
-                val clipData = data.clipData
 
-                //이미지 URI 를 이용하여 이미지뷰에 순서대로 세팅한다.
-                if (clipData != null) {
-                    for (i in 0..2) {
-                        if (i < clipData.itemCount) {
-                            val urione = clipData.getItemAt(i).uri
-                            when (i) {
-                                0 -> activityUpdateBinding?.ImageP1?.setImageURI(urione)
-                                1 -> activityUpdateBinding?.ImageP2?.setImageURI(urione)
-                                2 -> activityUpdateBinding?.ImageP3?.setImageURI(urione)
-                            }
-                        }
-                    }
-                } else if (photoUri != null) {
-                    Image_p1.setImageURI(photoUri)
-                }
+            }else{
+                // Exit the addPhotoActivity if you leave the album without selecting it
+                finish()
             }
+
+//            if (resultCode == RESULT_OK) {
+//
+//                    //기존 이미지 지우기
+//                    activityUpdateBinding?.ImageP1?.setImageResource(0)
+//                    activityUpdateBinding?.ImageP2?.setImageResource(0)
+//                    activityUpdateBinding?.ImageP3?.setImageResource(0)
+//
+//                    //ClipData 또는 Uri를 가져온다
+//                    photoUri = data!!.data
+//                    photoUse = true
+//                    val clipData = data.clipData
+//
+//                    //이미지 URI 를 이용하여 이미지뷰에 순서대로 세팅한다.
+//                    if (clipData != null) {
+//                        for (i in 0..2) {
+//                            if (i < clipData.itemCount) {
+//                                val urione = clipData.getItemAt(i).uri
+//                                when (i) {
+//                                    0 -> activityUpdateBinding?.ImageP1?.setImageURI(urione)
+//                                    1 -> activityUpdateBinding?.ImageP2?.setImageURI(urione)
+//                                    2 -> activityUpdateBinding?.ImageP3?.setImageURI(urione)
+//                                }
+//                            }
+//                        }
+//                    } else if (photoUri != null) {
+//                        Image_p1.setImageURI(photoUri)
+//                    }
+//            }
         }
     }
 

@@ -4,26 +4,31 @@ package com.sjkorea.meetagain.homeFragment
 import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import androidx.fragment.app.*
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.sjkorea.meetagain.*
-import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
+import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.Adapter.OnpostListener
+import com.sjkorea.meetagain.ContentDTO
+import com.sjkorea.meetagain.FcmPush
+import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.ORDER
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
+import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
@@ -32,12 +37,14 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
     var imagesSnapshot: ListenerRegistration? = null
     var manager = LinearLayoutManager(activity)
     var okHttpClient: OkHttpClient? = null
-    var contentDTOs: ArrayList<ContentDTO> = arrayListOf()
+    var contentArray: ArrayList<ContentDTO> = arrayListOf()
     var user: FirebaseAuth? = null
     var uid: String? = null
-
+    var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
     // 뷰가 사라질때 즉 메모리에서 날라갈때 같이 날리기 위해 따로 빼두기
     private var fragmentHomeBinding : FragmentHomeBinding? = null
+    // lateinit 을 통해 나중에 메모리에 올라가도 된다.
+    private lateinit var homeAdapter: HomeViewRecyclerViewAdapter
 
 
     override fun onCreateView(
@@ -65,39 +72,66 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
         // .setOnClickListener {
         //     customDialog.show(childFragmentManager, "")
         //
-        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
-            postDialogWindow()
-        }
+
+
 
 
     }
 
     override fun onResume() {
         super.onResume()
-        var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
 
 
-        val adatper = HomeViewRecyclerViewAdapter(
+
+        val adapter = HomeViewRecyclerViewAdapter(
             this,
             childFragmentManager,
             this,
-            contentDTOs,
+            contentArray,
             comments,
             firestore,
             fcmPush
         ) //RecyclerView에 설정할 adapter
 
-        fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adatper
+        fragmentHomeBinding?.swipe?.setOnRefreshListener {
+
+//            contentArray.clear()
+//            this.homeAdapter.clearList()
+//            contentArray.addAll(contentArray)
+//            homeAdapter.submitList(contentArray)
+//            homeAdapter.notifyDataSetChanged()
+
+            swipe.isRefreshing = false
+        }
+
+
+        fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adapter
         fragmentHomeBinding?.homefragmentRecyclerview?.layoutManager = manager
         manager.reverseLayout = true
         manager.stackFromEnd = true
 
-        if (!adatper.hasObservers()) {
-            adatper.setHasStableIds(true)
+        var recyclerViewState: Parcelable
+        recyclerViewState =   fragmentHomeBinding?.homefragmentRecyclerview?.layoutManager?.onSaveInstanceState()!!
+
+
+        if(recyclerViewState != null)
+            fragmentHomeBinding?.homefragmentRecyclerview?.layoutManager?.onRestoreInstanceState(
+                recyclerViewState
+            );
+
+        //마지막위치로 포지션
+//        rv.scrollToPosition(messageData.size()-1);
+
+        if (!adapter.hasObservers()) {
+            adapter.setHasStableIds(true)
         }
-        adatper.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
+        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
+            postDialogWindow()
 
+        }
 
     }
 
@@ -184,30 +218,42 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
     // 게시글다이얼로그 정렬 파업창
     fun postDialogWindow(){
         val dialog = Dialog(requireContext())
+
+
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.custome_dialog_post_alignment)
         dialog.show()
+
         val dateOrder = dialog.findViewById(R.id.dateOrder_btn) as Button
         dateOrder.setOnClickListener {
             ORDER = 0
+
             Log.d(Constants.TAG, "ORDER $ORDER ")
             SharedPreferenceFactory.putStrValue("ORDER", "0")
+
+
             dialog.dismiss()
+
              }
 
         val popularOrder = dialog.findViewById(R.id.popularOrder_btn) as Button
         popularOrder.setOnClickListener {
             ORDER = 1
+
             Log.d(Constants.TAG, "ORDER $ORDER ")
             SharedPreferenceFactory.putStrValue("ORDER", "1")
+
             dialog.dismiss()
              }
 
         val sadOrder = dialog.findViewById(R.id.sadOrder_btn) as Button
         sadOrder.setOnClickListener {
             ORDER = 2
+
             Log.d(Constants.TAG, "ORDER $ORDER ")
             SharedPreferenceFactory.putStrValue("ORDER", "2")
+
+
             dialog.dismiss()
 
         }

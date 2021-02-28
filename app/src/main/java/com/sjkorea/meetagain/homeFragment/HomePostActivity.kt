@@ -66,27 +66,88 @@ class HomePostActivity : AppCompatActivity() {
         contentUidListposition = intent.getStringExtra("userIdposition")
         Log.d(contentUidListposition.toString(), " 홈 포스트 로그 contentUidListposition 받기")
 
-//
-//        favorites  = intent.getSerializableExtra("favoriteshashmap") as HashMap<String, Boolean>
-//        Log.d(this.favorites.toString(), "홈 포스트 로그 favorites 받기 ")
-//
-//        meaning  =  intent.getSerializableExtra("meaninghashmap") as HashMap<String, Boolean>
-//        Log.d(this.meaning.toString(), "홈 포스트 로그 favorites 받기 ")
-//
+        //uid
+        var alarmUid = intent.getStringExtra("destinationUid")
+        //title
+        var alarmTitle =  intent.getStringExtra("title")
+        //explain
+        var alarmExplain = intent.getStringExtra("explain")
+        //imageUrl
+        var alarmImageUrl = intent.getStringExtra("imageUrl")
+        //favoriteCount
+        var alarmFavoriteCount = intent.getIntExtra("favoriteCount",0)
+        Log.d(Constants.TAG, "alarmFavoriteCount: $alarmFavoriteCount ")
+        //name
+        var uidPosition = SharedPreferenceFactory.getStrValue("contentUidList","")
+        //userIdposition
+        var alarmUserIdposition = intent.getStringExtra("userIdposition")
+        //meaningCount
+        var alarmMeaningCount = intent.getIntExtra("meaningCount",0)
 
+        var alarmHashmapt = intent.getStringExtra("favoriteshashmap")
+
+        var alarmHashmap2 = intent.getStringExtra("meaninghashmap")
 
 
         //싱글톤사용 동적 스피너 체인지
         moreSpinnerChange()
 
 
-        //메뉴 스피너버튼
+        //알람데이터 적용
+        homePostActivityBinding?.homePostTitleTextview?.text = alarmTitle
 
-        //어댑터의 아이템은 안드로이드 스튜디오에서 제공해 주는 기본인
-        //android.R.layout.simple_spinner_dropdown_item 을 사용했습니다.
+        homePostActivityBinding?.homePostExplainTextview?.text = alarmExplain
+
+        homePostActivityBinding?.homePostImageviewContent?.let {
+
+            Glide.with(applicationContext).load(alarmImageUrl)
+                .into(it)
+        }
+        //좋아요개수
+        homePostActivityBinding?.homePostLike?.text =
+            "좋아요" + alarmFavoriteCount.toString() + "개"
+        //싫어요개수
+        homePostActivityBinding?.homePostMa?.text =
+            "싫어요" + alarmMeaningCount.toString() + "개"
+
+        //좋아요 버튼 설정
+        if (favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+
+            homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_redc)
+
+        } else {
+
+            homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_red)
+        }
+
+        //슬퍼요 버튼 설정
+        if (meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+
+            homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_bluec)
+
+        } else {
+
+            homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_blue)
+        }
 
 
+        // 좋아요
+        homePostActivityBinding?.homePostLike?.text =
+            "" + alarmFavoriteCount.toString()+ "개"
+        homePostActivityBinding?.homePostFavoriteImageview?.setOnClickListener {
+            favoriteEvent()
+        }
 
+        // 슬퍼요
+        homePostActivityBinding?.homePostMa?.text =
+            "" + alarmMeaningCount.toString() + "개"
+        homePostActivityBinding?.homePostMaImageview?.setOnClickListener {
+            Log.d(TAG, "확인:싫어요 ")
+            meaningEvent()
+        }
+
+
+        //홈데이터 적용
         contentDTO?.apply {
 
             // 제목 텍스트

@@ -13,6 +13,9 @@ object Constants {
 
     //댓글 부분 더보기 싱글톤
     var LIST : Int = 0
+    //uid싱글톤
+    var UID : String? = null
+
 
     //
     var POSTSHOW: String? = null

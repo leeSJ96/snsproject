@@ -16,6 +16,7 @@ import com.sjkorea.meetagain.CustomBottomDialog
 import com.sjkorea.meetagain.intro.LoginActivity
 import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.intro.IntroActivity
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.viewpager_wallet_item.*
 
 class WalletFragment : Fragment() {
@@ -53,14 +54,31 @@ class WalletFragment : Fragment() {
 
         }
 
-        zzzzzz.setOnClickListener {
-                customDialog.show(childFragmentManager, "")
+        revokeAccess_btn.setOnClickListener {
+            revokeAccessAD()
 
             }
 
     }
 
+    //회원탈퇴
+    fun revokeAccessAD() {
+        AlertDialog.Builder(context)
+            .setTitle("회원탈퇴").setMessage(" 정말 회원탈퇴하시겠습니까? \n [ 기록된 정보는 사라집니다 ]  ")
+            .setPositiveButton("회원탈퇴", DialogInterface.OnClickListener { dialog, whichButton ->
 
+                SharedPreferenceFactory.clearAllValue()
+
+                deleteId()
+                //인트로화면으로 이동
+                val i = Intent(context, IntroActivity::class.java)
+                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(i)
+            })
+            .setNegativeButton("취소",
+                DialogInterface.OnClickListener { dialog, whichButton -> })
+            .show()
+    }
 
     //로그아웃구문
     fun btn_logout() {
@@ -90,6 +108,19 @@ class WalletFragment : Fragment() {
 
     }
 
+    fun deleteId(){
+        FirebaseAuth.getInstance().currentUser!!.delete().addOnCompleteListener { task ->
+            if(task.isSuccessful){
+                Snackbar.make(frag_layout, "아이디 삭제가 완료되었습니다", Snackbar.LENGTH_LONG).show()
+
+
+
+            }else{
+                Snackbar.make(frag_layout, task.exception.toString(), Snackbar.LENGTH_LONG).show()
+
+            }
+        }
+    }
 
 
 

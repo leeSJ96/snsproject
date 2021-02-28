@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".intro.IntroActivity">
+    tools:context=".intro.IntroActivity"
+    android:background="#121213"
+    >
 
     <TextView
         android:id="@+id/intro_tv"

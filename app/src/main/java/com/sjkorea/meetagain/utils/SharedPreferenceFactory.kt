@@ -37,7 +37,7 @@ object SharedPreferenceFactory {
         val editor =  getSharedPreferences().edit()
         editor.clear()
         editor.apply()
-        editor.commit()
+
     }
 
 }

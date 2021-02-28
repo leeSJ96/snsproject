@@ -1,6 +1,7 @@
 package com.sjkorea.meetagain
 
 import android.content.ContentValues
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants.POSTSHOW
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -180,38 +182,46 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
         this.btitle_text.setOnClickListener {
             dismiss()
 
-            var historyFrag = HistoryFragmentSub()
+            val intent = Intent(context, HistorySubActivity::class.java)
 
+            intent.putExtra("userId", userId)
+            intent.putExtra("destinationUid", uid)
+            intent.putExtra("userIdposition", contentUidListposition)
+            intent.putExtra("pathData", path)
+            startActivity(intent)
+
+//            var historyFrag = HistoryFragmentSub()
+//
+////            bundle.putString("userId", userId)
+//            bundle.putString("destinationUid", uid)
 //            bundle.putString("userId", userId)
-            bundle.putString("destinationUid", uid)
-            bundle.putString("userId", userId)
-            bundle.putString("userIdposition", contentUidListposition)
-            bundle.putString("pathData", path)
-            Log.d(contentUidListposition.toString(), "홈포스트contentUid1 로그 ")
-            Log.d(uid.toString(), "로그 바텀 보내기 ")
-//            HistoryFrag.arguments = bundle
-
-
-//            userFragment.arguments = bundle
-            historyFrag.arguments = bundle
-
-            when (POSTSHOW) {
-                "mainView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
-                    R.id.main_view,
-                    historyFrag,)
-                    .addToBackStack(null)
-                    .commit()
-
-
-                "homePostView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
-                    R.id.homepost_view,
-                    historyFrag,
-                    )
-                    .addToBackStack(null)
-                    .commit()
-
-
-            }
+//            bundle.putString("userIdposition", contentUidListposition)
+//            bundle.putString("pathData", path)
+//            Log.d(contentUidListposition.toString(), "홈포스트contentUid1 로그 ")
+//            Log.d(uid.toString(), "로그 바텀 보내기 ")
+////            HistoryFrag.arguments = bundle
+//
+//
+////            userFragment.arguments = bundle
+//            historyFrag.arguments = bundle
+//
+//            when (POSTSHOW) {
+//                "mainView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
+//                    R.id.main_view,
+//                    historyFrag,)
+//                    .addToBackStack(null)
+//                    .commit()
+//
+//
+//                "homePostView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
+//                    R.id.homepost_view,
+//                    historyFrag,
+//                    )
+//                    .addToBackStack(null)
+//                    .commit()
+//
+//
+//            }
         }
 
         //바텀다이얼로그 == 상대방 프로필사진 보기

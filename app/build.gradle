@@ -98,6 +98,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     //카드뷰
     implementation "androidx.cardview:cardview:1.0.0"
+    //리사이클러뷰
+    implementation "androidx.recyclerview:recyclerview:1.2.0-beta01"
     //퍼미션
     implementation 'gun0912.ted:tedpermission:2.2.3'
     //뷰페이저
@@ -118,11 +120,12 @@ dependencies {
     //날씨Ui
     implementation 'com.github.MatteoBattilana:WeatherView:3.0.0'
     //로티애니메이션
-    implementation "com.airbnb.android:lottie:3.4.0"
+    implementation 'com.airbnb.android:lottie:3.6.1'
     // 코루틴
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
-
+    //새로고침 스와이프
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
 
 

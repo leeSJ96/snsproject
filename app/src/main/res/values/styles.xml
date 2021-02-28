@@ -1,17 +1,29 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.Meetagain" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#C6B6DD</item>
         <item name="colorPrimaryDark">#4F5577</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!--custom font-family 적용-->
+        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
+        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
+        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
+        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
+        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
+
     </style>
 
-    <style name="AppThemeMaterial" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppThemeMaterial" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">#FFFFFF</item>
         <item name="colorPrimaryDark">#4F5577</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+
+
+
     </style>
 
     //커스텀바텀다이로그
@@ -22,5 +34,6 @@
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
-    
+
+
 </resources>

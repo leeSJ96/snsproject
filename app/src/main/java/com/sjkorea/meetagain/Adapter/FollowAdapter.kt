@@ -32,7 +32,7 @@ import kotlinx.android.synthetic.main.item_main.view.date
 class FollowAdapter(
     context: FollowFragment,
     fragmentManager: FragmentManager, followRecyclerviewInterface: FollowFragment,
-    private var contentDTOs: ArrayList<ContentDTO>,
+    var contentDTOs: ArrayList<ContentDTO>,
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
     var fcmPush: FcmPush? = null,
@@ -54,14 +54,14 @@ class FollowAdapter(
         this.context = context
         fcmPush = FcmPush()
 
-
         //아이디
         user = FirebaseAuth.getInstance().currentUser
-        contentDTOs = java.util.ArrayList()
         contentUidList = java.util.ArrayList()
         comments = ArrayList()
+        contentDTOs = java.util.ArrayList()
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
+        firestore = FirebaseFirestore.getInstance()
 //        SortPosts()
         setHasStableIds(true)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -390,7 +390,7 @@ class FollowAdapter(
                 // When the button is not clicked
                 contentDTO.favoriteCount = contentDTO.favoriteCount + 1
                 contentDTO.favorites[uid] = true
-                favoriteAlarm(contentDTOs[position].uid!!)
+                favoriteAlarm(contentDTOs[position].uid!!,position)
             }
             transaction.set(tsDoc, contentDTO)
         }
@@ -416,14 +416,14 @@ class FollowAdapter(
                 contentDTO.meaningCount = contentDTO.meaningCount + 1
                 contentDTO.meaning[uid] = true
 
-                meaningAlarm(contentDTOs[position].uid!!)
+                meaningAlarm(contentDTOs[position].uid!!,position)
             }
             transaction.set(tsDoc, contentDTO)
         }
 
     }
 
-    fun favoriteAlarm(destinationUid: String) {
+    fun favoriteAlarm(destinationUid: String,position: Int) {
         val alarmDTO = AlarmDTO()
 
         alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
@@ -432,6 +432,15 @@ class FollowAdapter(
         alarmDTO.uid = user?.uid
         alarmDTO.kind = 0
         alarmDTO.timestamp = System.currentTimeMillis()
+        alarmDTO.title = contentDTOs[position].title
+        alarmDTO.imageUrl = contentDTOs[position].imageUrl
+        alarmDTO.explain = contentDTOs[position].explain
+        alarmDTO.favoriteCount = contentDTOs[position].favoriteCount
+        alarmDTO.meaningCount = contentDTOs[position].meaningCount
+        var hashmap = contentDTOs[position].favorites
+        alarmDTO.meaning = hashmap
+        var hashmap2 = contentDTOs[position].meaning
+        alarmDTO.favorites = hashmap2
 
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
@@ -441,7 +450,7 @@ class FollowAdapter(
     }
 
 
-    fun meaningAlarm(destinationUid: String) {
+    fun meaningAlarm(destinationUid: String,position: Int) {
         val alarmDTO = AlarmDTO()
 
         alarmDTO.destinationUid = destinationUid
@@ -450,6 +459,16 @@ class FollowAdapter(
         alarmDTO.uid = user?.uid
         alarmDTO.kind = 3
         alarmDTO.timestamp = System.currentTimeMillis()
+        alarmDTO.title = contentDTOs[position].title
+        alarmDTO.imageUrl = contentDTOs[position].imageUrl
+        alarmDTO.explain = contentDTOs[position].explain
+        alarmDTO.favoriteCount = contentDTOs[position].favoriteCount
+        alarmDTO.meaningCount = contentDTOs[position].meaningCount
+        var hashmap = contentDTOs[position].favorites
+        alarmDTO.meaning = hashmap
+        var hashmap2 = contentDTOs[position].meaning
+        alarmDTO.favorites = hashmap2
+
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
@@ -501,8 +520,6 @@ class FollowAdapter(
 
 //        contentDTOs[position].favorites =
 //            intent.putStringArrayListExtra("hashmap"HashMap) as HashMap<String, Boolean>
-
-
     }
 
 //    enum class TimeValue(val value: Int,val maximum : Int, val msg : String) {

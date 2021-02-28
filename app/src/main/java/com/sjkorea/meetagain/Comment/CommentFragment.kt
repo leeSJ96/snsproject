@@ -15,6 +15,7 @@ import com.sjkorea.meetagain.*
 import com.sjkorea.meetagain.Adapter.CommentRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.IDeletePosition
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.UID
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_home_post.*
 import kotlinx.android.synthetic.main.custom_dialog_comments.*
@@ -35,9 +36,11 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
     var commentcomment: String? = null
     var postpath :String? = null
     var uid : String? = null
+
     private var contentDTO: ContentDTO? = ContentDTO()
     private var deleteDialog: DeleteDialog? = null
     private var commentTime: Long = 0
+    var myuid = FirebaseAuth.getInstance().currentUser!!.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +77,7 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
         super.onResume()
 
         inputText()
-
+        moreSpinnerChange()
         commentview?.let { getData(it) }
 
 
@@ -129,9 +132,35 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
 
     }
 
+    //친구-본인 상황별웬절
+    fun moreSpinnerChange(){
+
+
+
+    }
+
     private fun getData(view: View) {
 
         val commentArray = ArrayList<ContentDTO.Comment>()
+
+
+
+        //본인 유아이디 가져오기 확인
+        FirebaseFirestore.getInstance().collection("images").document(postpath.toString())
+            .collection("comments").whereEqualTo("uid",myuid)?.get()
+
+            ?.addOnCompleteListener {
+                if(it.isSuccessful){
+                    for(dc in it.result!!.documents){
+                        var contentDTO =dc.toObject(ContentDTO.Comment::class.java)
+
+                        SharedPreferenceFactory.putStrValue("commentUid", contentDTO?.uid)
+                        Log.d(Constants.TAG, "contentDTO uid: ${contentDTO?.uid} ")
+                    }
+                }
+            }
+
+
 
         FirebaseFirestore.getInstance().collection("images").document(postpath.toString())
             .collection("comments").orderBy("timestamp")

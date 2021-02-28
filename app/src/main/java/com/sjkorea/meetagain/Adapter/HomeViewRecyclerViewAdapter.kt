@@ -35,7 +35,7 @@ import kotlin.collections.ArrayList
 class HomeViewRecyclerViewAdapter(
     context: HomeFragment,
     fragmentManager: FragmentManager, homeRecyclerviewInterface: IHomeRecyclerview,
-    private var contentArray: ArrayList<ContentDTO>,
+    var contentArray: ArrayList<ContentDTO>,
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
     var fcmPush: FcmPush? = null,
@@ -187,7 +187,7 @@ class HomeViewRecyclerViewAdapter(
                 favoriteEvent(position)
             }
             //좋아요 버튼 설정
-            if (contentDTOs.favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.favorites.containsKey(FirebaseAuth.getInstance().currentUser?.uid)) {
 
                 fovoritebtn.setImageResource(R.drawable.heart_redc)
             } else {
@@ -201,7 +201,7 @@ class HomeViewRecyclerViewAdapter(
                 meaningEvent(position)
             }
             //슬퍼요 버튼 설정
-            if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser?.uid)) {
 
                 meaningbtn.setImageResource(R.drawable.heart_bluec)
 
@@ -222,6 +222,7 @@ class HomeViewRecyclerViewAdapter(
                 bundle.putString("userId", contentDTOs.name)
                 //userIdposition
                 bundle.putString("userIdposition", contentUidList[position])
+                SharedPreferenceFactory.putStrValue("contentUidList",contentUidList[position])
 
                 val bottomSheetDialogFragment = CustomBottomDialog()
                 bottomSheetDialogFragment.arguments = bundle
@@ -284,6 +285,8 @@ class HomeViewRecyclerViewAdapter(
                         contentArray.add(item!!)
                         contentUidList.add(snapshot.id)
                     }
+
+
                     notifyDataSetChanged()
                 }
             //좋아요 많은순
@@ -297,6 +300,7 @@ class HomeViewRecyclerViewAdapter(
                         contentArray.add(item!!)
                         contentUidList.add(snapshot.id)
                     }
+
                     notifyDataSetChanged()
                 }
             //슬퍼요 많은순
@@ -451,6 +455,20 @@ class HomeViewRecyclerViewAdapter(
         intent.putExtra("hashmap", contentArray[position].favorites)
         context.startActivity(intent);
 
+    }
+
+    // 즉 총알을 넣는다.
+    fun submitList(contentArray: ArrayList<ContentDTO>) {
+        this.contentArray = contentArray
+    }
+
+    fun addList(contentArray: ArrayList<ContentDTO>){
+        this.contentArray.addAll(contentArray)
+    }
+
+    // 비운다.
+    fun clearList() {
+        this.contentArray.clear()
     }
 
 }

@@ -42,7 +42,7 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
         val binding  = FragmentFollowBinding.inflate(inflater, container,false)
         fragmentFollowBinding = binding
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         firestore = FirebaseFirestore.getInstance()
 
@@ -88,8 +88,8 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
     }
 
     override fun onDestroyView() {
-        fragmentFollowBinding = null
         super.onDestroyView()
+        fragmentFollowBinding = null
     }
 
     override fun onItemClicked(position: Int) {

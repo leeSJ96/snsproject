@@ -17,6 +17,8 @@ import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.CustomBottomDialog
 import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.TAG
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.item_comment.view.*
 
 
@@ -30,6 +32,7 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
     init {
         mFragmentManager = fragmentManager
         this.iClickInterface = clickInterface
+
     }
 
 
@@ -63,7 +66,6 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
         private var clickInterface = clickInterface
 
         fun bind(dateList: ContentDTO.Comment, fragmentManager: FragmentManager ) {
-
 
             FirebaseFirestore.getInstance().collection("profileImages")
                 .document(dateList.uid!!).get().addOnCompleteListener { task ->
@@ -128,6 +130,31 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
                 Constants.LIST = 1
                 Log.d(Constants.TAG, "Constants.LIST: ${Constants.LIST}")
                 this.clickInterface.onClickListener(adapterPosition, dateList)
+            }
+
+            var uid = SharedPreferenceFactory.getStrValue("commentUid", "")
+            Log.d(Constants.TAG, "comment adapter uid : $uid ")
+
+
+            if (dateList.uid == uid)
+
+                Constants.COMMENTMORESPINNER = "my"
+
+            else{
+                Constants.COMMENTMORESPINNER = "friend"
+
+            }
+            Log.d(Constants.TAG, "COMMENTMORESPINNER: ${Constants.COMMENTMORESPINNER} ")
+            when(Constants.COMMENTMORESPINNER){
+
+                "my"->{
+                    dateMore.visibility = View.VISIBLE
+                }
+
+                "friend"->{
+                    dateMore.visibility = View.INVISIBLE
+                }
+
             }
 
         }

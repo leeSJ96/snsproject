@@ -42,33 +42,19 @@
 
             <TextView
                 android:id="@+id/alarmviewitem_textview_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="254dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:textColor="@color/Text_white"
                 android:textSize="12sp"
-
+                android:maxLines="4"
+                android:ellipsize="end"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.2"
                 card_view:layout_constraintStart_toEndOf="@+id/alarmviewitem_imageview_profile"
                 card_view:layout_constraintTop_toTopOf="parent"
                 tools:text="id" />
-
-            <TextView
-                android:id="@+id/alarmviewitem_textview_comment"
-                android:layout_width="197dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="12dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textColor="@color/Text_white"
-                card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.35"
-                card_view:layout_constraintStart_toEndOf="@+id/alarmviewitem_imageview_profile"
-                card_view:layout_constraintTop_toBottomOf="@+id/alarmviewitem_textview_profile"
-                card_view:layout_constraintVertical_bias="0.909"
-                tools:text="User Name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

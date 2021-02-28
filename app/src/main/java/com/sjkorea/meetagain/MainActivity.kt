@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.action_Search -> {
                 var searchFragment = FollowFragment()
 
+
                 supportFragmentManager.beginTransaction().replace(R.id.main_content, searchFragment)
                     .commit()
 

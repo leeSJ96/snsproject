@@ -225,7 +225,7 @@ class UserFragment : Fragment() {
 
         // Save data to my account
 
-        var tsDocFollowing = firestore!!.collection("users").document(currentUserUid!!)
+        var tsDocFollowing = firestore!!.collection("users").document(currentUserUid.toString())
         firestore?.runTransaction { transaction ->
 
             var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java)
@@ -255,7 +255,7 @@ class UserFragment : Fragment() {
         }
 
         // Save data to third person
-        var tsDocFollower = firestore!!.collection("users").document(uid!!)
+        var tsDocFollower = firestore!!.collection("users").document(uid.toString())
         firestore?.runTransaction { transaction ->
 
             var followDTO = transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)
@@ -286,7 +286,7 @@ class UserFragment : Fragment() {
     }
 
     fun getFolloerAndFollowing(){
-        followListenerRegistration = firestore?.collection("users")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+        followListenerRegistration = firestore?.collection("users")?.document(uid.toString())?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
             if (documentSnapshot==null) return@addSnapshotListener
 
             var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
