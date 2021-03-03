@@ -22,6 +22,7 @@ import com.sjkorea.meetagain.UserFragment.HistoryFragment
 import com.sjkorea.meetagain.UserFragment.UserFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.FOLLOWDATA
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.item_follow.view.*
@@ -44,6 +45,7 @@ class FollowAdapter(
     var user: FirebaseUser? = null
     var uid: String? = null
     var name: String? = null
+    var userid : String? =null
 
     private var followRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
@@ -62,18 +64,20 @@ class FollowAdapter(
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
         firestore = FirebaseFirestore.getInstance()
-//        SortPosts()
+
         setHasStableIds(true)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-        val path = "${uid}_${System.currentTimeMillis()}"
-
 
         //유저 데이터에 유아이디 문서를 가져와라
         firestore?.collection("users")?.document(uid!!)?.get()?.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 var userDTO = task.result?.toObject(FollowDTO::class.java)
-                if (userDTO?.followings != null) {
+                Log.d(Constants.TAG,  "userDTO:$userDTO ")
+                if (userDTO != null) {
                     getCotents(userDTO.followings)
+
+                } else{
+
                 }
             }
         }
@@ -82,16 +86,19 @@ class FollowAdapter(
     }
     //
     fun getCotents(followers: MutableMap<String, Boolean>?) {
-        imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+        firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
             contentDTOs.clear()
             contentUidList.clear()
             if (querySnapshot == null) return@addSnapshotListener
             for (snapshot in querySnapshot.documents) {
                 var item = snapshot.toObject(ContentDTO::class.java)!!
-                println(item.uid)
                 if (followers?.keys?.contains(item.uid)!!) {
+                    Log.d(Constants.TAG, "item.uid: ${item.uid}")
                     contentDTOs.add(item)
                     contentUidList.add(snapshot.id)
+
+                } else{
+
                 }
             }
             notifyDataSetChanged()
@@ -103,7 +110,7 @@ class FollowAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         return CustomViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_follow, parent, false),
+            LayoutInflater.from(parent.context).inflate(R.layout.item_followsub, parent, false),
             this.followRecyclerviewInterface!!
         )
     }
@@ -118,20 +125,6 @@ class FollowAdapter(
         init {
             itemView.setOnClickListener(this)
             this.homeRecyclerviewInterface = recyclerviewInterface
-
-            firestore?.collection("images")?.orderBy("timestamp")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                        contentUidList.add(snapshot.id)
-
-                    }
-                    notifyDataSetChanged()
-                }
 
         }
 
@@ -164,6 +157,8 @@ class FollowAdapter(
                         val url = task.result!!["image"]
                         Glide.with(itemView.context)
                             .load(url)
+                            .placeholder(R.drawable.icon_noimage1)
+                            .error(R.drawable.icon_noimage1)
                             .apply(RequestOptions().circleCrop())
                             .into(itemView.followviewitem_profile_image)
 
@@ -171,8 +166,25 @@ class FollowAdapter(
                 }
 
 
-            //프로필 닉네임
-            dataprofilename.text = contentDTOs.name
+//            //프로필 닉네임
+//            dataprofilename.text = contentDTOs.name
+
+
+            firestore?.collection("profileName")?.document(contentDTOs.uid!!)
+                ?.get()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val nameValue = task.result!!["name"]
+                        userid = nameValue.toString()
+                        Log.d(Constants.TAG, "userid1: $userid")
+                        dataprofilename.text = nameValue.toString()
+
+                    }
+                }?.addOnFailureListener {
+
+
+                }
+
+
             //제목
             datatitle.text = contentDTOs.title
             // 메인사진
@@ -259,7 +271,7 @@ class FollowAdapter(
                 val bundle = Bundle()
                 bundle.putString("pathData", contentDTOs.pathData)
                 bundle.putString("destinationUid", contentDTOs.uid)
-                bundle.putString("userId", contentDTOs.name)
+                bundle.putString("userId", userid)
                 //userIdposition
                 bundle.putString("userIdposition", contentUidList[position])
 
@@ -299,8 +311,13 @@ class FollowAdapter(
 
 
     override fun getItemCount(): Int {
-
+        if (contentDTOs.size < 1){
+            FOLLOWDATA = 0
+        }else{
+            FOLLOWDATA = 1
+        }
         return contentDTOs.size
+
     }
 
 
@@ -318,60 +335,6 @@ class FollowAdapter(
         DAY(30, 12, "달 전"),
         MONTH(12, Int.MAX_VALUE, "년 전")
     }
-
-    //게시글 정렬 순서 필터
-    private fun SortPosts(){
-        val odrder = SharedPreferenceFactory.getStrValue("ORDER", "0")
-        //싱글톤 사용 게시글 정렬
-        when (odrder) {
-            //최신순
-            "0" -> imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-                    notifyDataSetChanged()
-                }
-            //좋아요 많은순
-            "1" -> imagesSnapshot = firestore?.collection("images")?.orderBy("favoriteCount")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-                    notifyDataSetChanged()
-                }
-            //슬퍼요 많은순
-            else-> imagesSnapshot = firestore?.collection("images")?.orderBy("meaningCount")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentDTOs.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentDTOs.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-                    notifyDataSetChanged()
-                }
-
-
-        }
-
-        Log.d(Constants.TAG, "ORDER home :$odrder ")
-
-
-    }
-
 
 
     //좋아요 이벤트 기능
@@ -518,36 +481,8 @@ class FollowAdapter(
         intent.putExtra("hashmap", contentDTOs[position].favorites)
         context.startActivity(intent);
 
-//        contentDTOs[position].favorites =
-//            intent.putStringArrayListExtra("hashmap"HashMap) as HashMap<String, Boolean>
     }
 
-//    enum class TimeValue(val value: Int,val maximum : Int, val msg : String) {
-//        SEC(60,60,"분 전"),
-//        MIN(60,24,"시간 전"),
-//        HOUR(24,30,"일 전"),
-//        DAY(30,12,"달 전"),
-//        MONTH(12,Int.MAX_VALUE,"년 전")
-//    }
-//
-//    fun timeDiff(time : Long):String{
-//
-//
-//        val curTime = System.currentTimeMillis()
-//        var diffTime = (curTime- timestampz) / 1000
-//        var msg: String? = null
-//        if(diffTime < TimeValue.SEC.value )
-//            msg= "방금 전"
-//        else {
-//            for (i in TimeValue.values()) {
-//                diffTime /= i.value
-//                if (diffTime < i.maximum) {
-//                    msg=i.msg
-//                    break
-//                }
-//            }
-//        }
-//    }
 
 
 }

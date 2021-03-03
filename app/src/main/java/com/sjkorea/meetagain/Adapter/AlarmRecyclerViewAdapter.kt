@@ -156,7 +156,8 @@ class AlarmRecyclerViewAdapter( fragmentManager: FragmentManager,) : RecyclerVie
             .document(alarmDTOList[position].uid.toString()).get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val url = task.result!!["image"]
-                    Glide.with(view.context).load(url).apply(RequestOptions().circleCrop())
+                    Glide.with(view.context).load(url).apply(RequestOptions().circleCrop()) .placeholder(R.drawable.icon_noimage1)
+                        .error(R.drawable.icon_noimage1)
                         .into(profileImage)
                 }
             }
@@ -164,25 +165,69 @@ class AlarmRecyclerViewAdapter( fragmentManager: FragmentManager,) : RecyclerVie
         when (alarmDTOList[position].kind) {
 
             0 -> {
-                val str_0 = alarmDTOList[position].name + "님이 좋아요를 눌렀습니다."
-                commentTextView.text = str_0
+
+                FirebaseFirestore.getInstance().collection("profileName").document(alarmDTOList[position].uid.toString())
+                    ?.get()?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val nameValue = task.result!!["name"]
+                            Log.d(Constants.TAG, "commentNameValue: $nameValue")
+                            commentTextView.text = nameValue.toString() + "님이 좋아요를 눌렀습니다."
+
+                        }
+                    }
+
+//                val str_0 = alarmDTOList[position].name + "님이 좋아요를 눌렀습니다."
+//                commentTextView.text = str_0
             }
 
             1 -> {
-                val str_1 =
-                    alarmDTOList[position].name + " " + "님이 댓글을 남겼습니다.\n\n" + "댓글내용 : " + alarmDTOList[position].message
-                commentTextView.text = str_1
+
+
+                FirebaseFirestore.getInstance().collection("profileName").document(alarmDTOList[position].uid.toString())
+                    ?.get()?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val nameValue = task.result!!["name"]
+                            Log.d(Constants.TAG, "commentNameValue: $nameValue")
+                            commentTextView.text = nameValue.toString() + " " + "님이 댓글을 남겼습니다.\n\n" + "댓글내용 : " + alarmDTOList[position].message
+
+                        }
+                    }
+
+
+//                val str_1 =
+//                    alarmDTOList[position].name + " " + "님이 댓글을 남겼습니다.\n\n" + "댓글내용 : " + alarmDTOList[position].message
+//                commentTextView.text = str_1
             }
 
             2 -> {
-                val str_2 =
-                    alarmDTOList[position].name + "님이 당신의 팬이 되었습니다."
-                commentTextView.text = str_2
+                FirebaseFirestore.getInstance().collection("profileName").document(alarmDTOList[position].uid.toString())
+                    ?.get()?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val nameValue = task.result!!["name"]
+                            Log.d(Constants.TAG, "commentNameValue: $nameValue")
+                            commentTextView.text = nameValue.toString() + "님이 당신의 팬이 되었습니다."
+
+                        }
+                    }
+
+//                val str_2 =
+//                    alarmDTOList[position].name + "님이 당신의 팬이 되었습니다."
+//                commentTextView.text = str_2
             }
 
             3 -> {
-                val str_3 = alarmDTOList[position].name + "님이 싫어요를 눌렀습니다."
-                commentTextView.text = str_3
+                FirebaseFirestore.getInstance().collection("profileName").document(alarmDTOList[position].uid.toString())
+                    ?.get()?.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val nameValue = task.result!!["name"]
+                            Log.d(Constants.TAG, "commentNameValue: $nameValue")
+                            commentTextView.text = nameValue.toString() + "님이 슬퍼요를 눌렀습니다."
+
+                        }
+                    }
+
+//                val str_3 = alarmDTOList[position].name + "님이 슬퍼요를 눌렀습니다."
+//                commentTextView.text = str_3
 
             }
         }

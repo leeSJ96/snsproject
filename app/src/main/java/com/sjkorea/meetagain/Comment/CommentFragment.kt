@@ -212,11 +212,6 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
     }
 
 
-
-
-
-
-
     fun commentDelete(comment: ContentDTO.Comment){
         var postpath = postpath
         var path = comment.myPath
@@ -239,65 +234,5 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
         }
     }
 
-
-//    inner class CommentRecyclerViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//        var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
-//
-//
-//        init {
-//
-//
-//            FirebaseFirestore.getInstance().collection("images").document(contentUid!!)
-//                .collection("comments").orderBy("timestamp")
-//                .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//                    comments.clear()
-//
-//                    if (querySnapshot == null)
-//                        return@addSnapshotListener
-//
-//                    for (snapshot in querySnapshot.documents!!) {
-//                        comments.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
-//                    }
-//
-//                    notifyDataSetChanged()
-//
-//                }
-//        }
-//
-//
-//        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-//            var view =
-//                LayoutInflater.from(parent.context).inflate(R.layout.item_comment, parent, false)
-//            return CustomViewHolder(view)
-//        }
-//
-//        private inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)
-//
-//        override fun getItemCount(): Int {
-//            return comments.size
-//        }
-//
-//        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//
-//
-//            var view = holder.itemView
-//            view.commentviewitem_textview_comment.text = comments[position].comment
-//            view.commentviewitem_textview_profile.text = comments[position].userId
-//
-//            FirebaseFirestore.getInstance().collection("profileImages")
-//                .document(comments[position].uid!!).get().addOnCompleteListener { task ->
-//
-//                    if (task.isSuccessful) {
-//                        var url = task.result!!["image"]
-//                        Glide.with(holder.itemView.context).load(url)
-//                            .apply(RequestOptions().circleCrop())
-//                            .into(view.commentviewitem_imageview_profile)
-//                    }
-//                }
-//        }
-//
-//
-//    }
-//
 
 }

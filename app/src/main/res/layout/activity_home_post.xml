@@ -4,8 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="675dp"
-    android:layout_margin="10dp"
+    android:layout_height="wrap_content"
     android:id="@+id/homepost_view"
     android:background="@color/item_backgranud_gray">
 
@@ -36,7 +35,7 @@
                 android:layout_margin="7.5dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="2dp"
-                android:src="@mipmap/ic_launcher"
+                android:src="@drawable/icon_noimage1"
                 card_view:layout_constraintBottom_toTopOf="@+id/home_post_imageview_content"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toTopOf="parent"
@@ -79,7 +78,7 @@
 
             <ImageView
                 android:id="@+id/home_post_imageview_content"
-                android:layout_width="393dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:adjustViewBounds="true"
@@ -154,12 +153,12 @@
                 android:id="@+id/home_post_title_textview"
                 android:layout_width="339dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
                 android:layout_marginBottom="8dp"
                 android:textColor="@color/Text_white"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toTopOf="@+id/home_post_explain_textview"
+                card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
                 card_view:layout_constraintTop_toBottomOf="@+id/home_post_favorite_imageview"
                 card_view:layout_constraintVertical_bias="0.727"

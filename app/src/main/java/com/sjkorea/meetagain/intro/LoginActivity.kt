@@ -120,13 +120,25 @@ class LoginActivity : AppCompatActivity() {
 
         val authStore = FirebaseFirestore.getInstance().collection("user_auth")
 
-        authStore.whereEqualTo("uid",userUid).get().addOnSuccessListener { querySnapshot ->
+        authStore.whereEqualTo("uid", userUid).get().addOnSuccessListener { querySnapshot ->
 
-            for(i in querySnapshot) {
-                SharedPreferenceFactory.putStrValue("userName", i.data["name"].toString())   // 유저 닉네임
-                SharedPreferenceFactory.putStrValue("userEmail", i.data["email"].toString()) // 유저 이메일
-                SharedPreferenceFactory.putStrValue("userToken", i.data["uid"].toString())  // 유저 uid
-                SharedPreferenceFactory.putStrValue("userPath", i.data["path"].toString())  // 유저 디비 위치
+            for (i in querySnapshot) {
+                SharedPreferenceFactory.putStrValue(
+                    "userName",
+                    i.data["name"].toString()
+                )   // 유저 닉네임
+                SharedPreferenceFactory.putStrValue(
+                    "userEmail",
+                    i.data["email"].toString()
+                ) // 유저 이메일
+                SharedPreferenceFactory.putStrValue(
+                    "userToken",
+                    i.data["uid"].toString()
+                )  // 유저 uid
+                SharedPreferenceFactory.putStrValue(
+                    "userPath",
+                    i.data["path"].toString()
+                )  // 유저 디비 위치
             }
 
             val intent = Intent(this, MainActivity::class.java)
@@ -139,14 +151,16 @@ class LoginActivity : AppCompatActivity() {
 
         }.addOnFailureListener {
 
-            Log.d("로그","error $it")
-            Toast.makeText(this,"로그인 실패 / Server error", Toast.LENGTH_SHORT).show()
+            Log.d("로그", "error $it")
+            Toast.makeText(this, "로그인 실패 / Server error", Toast.LENGTH_SHORT).show()
 
             login_btn.isEnabled = true
             login_btn.text = "로그인하기"
 
         }
 
+        val nameStore = FirebaseFirestore.getInstance().collection("profileName")
+        nameStore.whereEqualTo("uid", userUid).get().addOnSuccessListener { querySnapshot ->
+        }
     }
-
 }

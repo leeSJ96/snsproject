@@ -6,13 +6,13 @@
         android:id="@+id/action_home"
 
         android:icon="@drawable/bottom_btn1m"
-        android:title="홈"/>
+       />
 
     <item
         android:id="@+id/action_Search"
 
-        android:icon="@drawable/bottom_btn2m"
-        android:title="검색"
+        android:icon="@drawable/icon_follow"
+
         />
     <item android:id="@+id/placeholder"
         android:title=""/>
@@ -21,13 +21,13 @@
         android:id="@+id/action_Notice"
 
         android:icon="@drawable/bottom_btn4m"
-        android:title="기록"
+
         />
     <item
         android:id="@+id/action_User"
 
         android:icon="@drawable/bottom_btn5m"
-        android:title="내정보"
+
         />
 
 

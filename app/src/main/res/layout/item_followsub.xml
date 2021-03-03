@@ -11,7 +11,7 @@
     app:cardElevation="10dp">
 
     <ImageView
-        android:id="@+id/homeviewitem_imageview_content"
+        android:id="@+id/followviewitem_imageview_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -23,7 +23,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/home_post_item"
+        android:id="@+id/follow_post_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/homeviewitem_profile_textview"
+                android:id="@+id/followviewitem_profile_textview"
                 android:layout_width="254dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="2dp"
@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout5">
 
             <TextView
-                android:id="@+id/homeviewitem_explain_textview"
+                android:id="@+id/followviewitem_explain_textview"
                 android:layout_width="254dp"
                 android:layout_height="160dp"
                 android:ellipsize="end"
@@ -109,7 +109,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/homeviewitem_profile_image"
+                    android:id="@+id/followviewitem_profile_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:scaleType="fitCenter"
@@ -128,7 +128,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/homeviewitem_profile_image">
 
                     <TextView
-                        android:id="@+id/homeviewitem_profile_name"
+                        android:id="@+id/followviewitem_profile_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
@@ -160,7 +160,7 @@
                     >
 
                     <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/homeviewitem_fovorite_imageview"
+                        android:id="@+id/followviewitem_fovorite_imageview"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginBottom="10dp"
@@ -183,7 +183,7 @@
                         app:layout_constraintStart_toStartOf="parent">
 
                         <TextView
-                            android:id="@+id/homeviewitem_favoritecounter_textview"
+                            android:id="@+id/followviewitem_favoritecounter_textview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
@@ -203,7 +203,7 @@
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:id="@+id/homeviewitem_meaning_imageview"
+                        android:id="@+id/followviewitem_meaning_imageview"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginBottom="10dp"
@@ -226,7 +226,7 @@
 
 
                         <TextView
-                            android:id="@+id/homeviewitem_meaningcounter_textview"
+                            android:id="@+id/followviewitem_meaningcounter_textview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"

@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
+import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.POSTSHOW
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -157,7 +158,20 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        btoolbar_username.text = userId
+
+
+//        btoolbar_username.text = userId
+
+        firestore?.collection("profileName")?.document(uid.toString())
+            ?.get()?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val nameValue = task.result!!["name"]
+                    userId = nameValue.toString()
+                    Log.d(Constants.TAG, "userId3: $userId ")
+                    btoolbar_username.text = nameValue.toString()
+
+                }
+            }
 //        // Profile Image 가져오기
 //        firestore?.collection("profileImages")?.document(uid!!)
 //            ?.get()?.addOnCompleteListener { task ->
@@ -325,11 +339,13 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
                     val url = documentSnapshot.data!!["image"]
                     if (url != null) {
                         BottomView?.Bottom_profile_image?.let {
-                            Glide.with(this).load(url).apply(RequestOptions().circleCrop())
+                            Glide.with(this).load(url).apply(RequestOptions() .placeholder(R.drawable.icon_noimage1)
+                                .error(R.drawable.icon_noimage1).circleCrop())
                                 .into(it)
                         }
                         BottomView?.let {
-                            Glide.with(this).load(url).apply(RequestOptions().circleCrop())
+                            Glide.with(this).load(url) .placeholder(R.drawable.icon_noimage1)
+                                .error(R.drawable.icon_noimage1).apply(RequestOptions().circleCrop())
                                 .into(it.Bottom_profile_image_my)
                         }
                     } else {

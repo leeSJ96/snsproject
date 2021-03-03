@@ -15,6 +15,7 @@ import com.sjkorea.meetagain.model.AuthModel
 import com.sjkorea.meetagain.utils.Constants.AuthOverLap
 import com.sjkorea.meetagain.utils.Constants.EmailFormError
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
+import kotlinx.android.synthetic.main.activity_firstvisit.*
 import kotlinx.android.synthetic.main.activity_join.*
 import java.util.*
 import java.util.regex.Pattern
@@ -69,13 +70,26 @@ class JoinActivity : AppCompatActivity(), InputFilter {
                     Snackbar.make(join_layout, "아이디 값이 비었습니다.", Snackbar.LENGTH_SHORT).show()
                 }
 
+                email_input.length() > 20 -> {
+                    Snackbar.make(join_layout, "아이디는 최대 20자까지 작성가능합니다.", Snackbar.LENGTH_SHORT).show()
+                }
+
                 name_input.length() < 1 -> {
                     Snackbar.make(join_layout, "닉네임 값이 비었습니다.", Snackbar.LENGTH_SHORT).show()
                 }
-
+                name_input.length() > 8 -> {
+                    Snackbar.make(join_layout, "닉네임은 최대 8자까지 작성가능합니다.", Snackbar.LENGTH_SHORT).show()
+                }
+                //패스워드
                 password_input.length() < 6 -> {
                     Snackbar.make(join_layout, "패스워드는 최소 6자 이상으로 작성해야 합니다.", Snackbar.LENGTH_SHORT).show()
                 }
+
+                password_input.length() > 12 -> {
+                    Snackbar.make(join_layout, "패스워드는 최대 12자까지 작성가능합니다.", Snackbar.LENGTH_SHORT).show()
+                }
+
+
 
                 password_input.text.toString() != password2_input.text.toString() -> {
                     Snackbar.make(join_layout, "패스워드가 틀립니다.", Snackbar.LENGTH_SHORT).show()
@@ -112,6 +126,9 @@ class JoinActivity : AppCompatActivity(), InputFilter {
 
                 nameData == null || nameData.size() == 0 -> {
 
+
+
+
                     firebaseAuth.createUserWithEmailAndPassword(emailValue, pwValue).addOnCompleteListener(this) { task ->
 
                         if (task.isSuccessful) {
@@ -134,6 +151,8 @@ class JoinActivity : AppCompatActivity(), InputFilter {
                         }
 
                     }
+
+
 
                 }
                 else -> {
@@ -181,6 +200,22 @@ class JoinActivity : AppCompatActivity(), InputFilter {
             path = pathData
             timeStamp = Date().toString()
         }
+
+        var map = HashMap<String, Any>()
+        map["name"] = userName.toString()
+
+
+        var uid = FirebaseAuth.getInstance().currentUser!!.uid //파일 업로드
+        FirebaseFirestore.getInstance().collection("profileName").document(uid).set(map)
+            ?.addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    SharedPreferenceFactory.putStrValue("userMainName", userName )   // 유저 닉네임
+                    finish()
+
+
+                }
+            }
 
 
         authStore.document(pathData).set(authModel).addOnSuccessListener {

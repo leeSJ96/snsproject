@@ -6,10 +6,7 @@ import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -60,7 +57,6 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
         firestore = FirebaseFirestore.getInstance()
         okHttpClient = OkHttpClient()
         fcmPush = FcmPush()
-
 
         return fragmentHomeBinding!!.root
     }
@@ -234,7 +230,7 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
 
             dialog.dismiss()
 
-             }
+        }
 
         val popularOrder = dialog.findViewById(R.id.popularOrder_btn) as Button
         popularOrder.setOnClickListener {
@@ -244,7 +240,7 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
             SharedPreferenceFactory.putStrValue("ORDER", "1")
 
             dialog.dismiss()
-             }
+        }
 
         val sadOrder = dialog.findViewById(R.id.sadOrder_btn) as Button
         sadOrder.setOnClickListener {
@@ -262,17 +258,5 @@ class HomeFragment : Fragment(),IHomeRecyclerview,OnpostListener {
 
 
 
-    }
-
-
-
-
-
-
-
-
-
-
-
-
+}
 

@@ -181,6 +181,7 @@ class UserFragment : Fragment() {
                     Log.d(TAG, "1")
                     contentDTO.add(snapshot.toObject(ContentDTO::class.java)!!)
                     Log.d(TAG, "2")
+
                     account_tv_post_count.text = contentDTO.size.toString()
                     Log.d(contentDTO.size.toString(), "size테스트")
                 }
@@ -197,6 +198,8 @@ class UserFragment : Fragment() {
                 if (documentSnapshot.data != null) {
                     val url = documentSnapshot.data!!["image"]
                     Glide.with(requireActivity()).load(url).apply(RequestOptions().circleCrop())
+                        .placeholder(R.drawable.icon_noimage1)
+                        .error(R.drawable.icon_noimage1)
                         .into(account_iv_profile)
 
                 }

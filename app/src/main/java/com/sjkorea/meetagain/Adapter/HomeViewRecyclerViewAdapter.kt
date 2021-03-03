@@ -47,6 +47,7 @@ class HomeViewRecyclerViewAdapter(
     var user: FirebaseUser? = null
     var uid: String? = null
     var name: String? = null
+    var userid : String? =null
 
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
@@ -125,14 +126,33 @@ class HomeViewRecyclerViewAdapter(
                         Glide.with(itemView.context)
                             .load(url)
                             .apply(RequestOptions().circleCrop())
+                            .placeholder(R.drawable.icon_noimage1)
+                            .error(R.drawable.icon_noimage1)
                             .into(itemView.homeviewitem_profile_image)
 
                     }
                 }
 
 
-            //프로필 닉네임
-            dataprofilename.text = contentDTOs.name
+          //프로필 닉네임
+//          dataprofilename.text = contentDTOs.name\
+
+
+            firestore?.collection("profileName")?.document(contentDTOs.uid!!)
+                ?.get()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val nameValue = task.result!!["name"]
+                        userid = nameValue.toString()
+                        Log.d(Constants.TAG, "userid1: $userid")
+                        dataprofilename.text = nameValue.toString()
+
+                    }
+                }?.addOnFailureListener {
+
+
+                }
+
+
             //제목
             datatitle.text = contentDTOs.title
             // 메인사진
@@ -216,10 +236,14 @@ class HomeViewRecyclerViewAdapter(
             //바텀 프래그먼트 프로필 호출
             itemView.homeviewitem_profile_image.setOnClickListener {
                 Constants.POSTSHOW = "mainView"
+
+
                 val bundle = Bundle()
                 bundle.putString("pathData", contentDTOs.pathData)
                 bundle.putString("destinationUid", contentDTOs.uid)
-                bundle.putString("userId", contentDTOs.name)
+//                bundle.putString("userId", contentDTOs.name)
+                bundle.putString("userId", userid)
+                Log.d(Constants.TAG, "userid2: $userid")
                 //userIdposition
                 bundle.putString("userIdposition", contentUidList[position])
                 SharedPreferenceFactory.putStrValue("contentUidList",contentUidList[position])
@@ -258,6 +282,38 @@ class HomeViewRecyclerViewAdapter(
         return contentArray.size
     }
 
+//    private fun hideAndShowUi(hideCheck: Boolean) {
+//
+//        when (hideCheck) {
+//
+//            true -> {
+//
+//                loading_progress.visibility = View.VISIBLE
+//                btn_save.isEnabled = false
+//                btn_img_input.isEnabled = false
+//                back_btn.isEnabled = false
+//                edit_title.isEnabled = false
+//                edit_content.isEnabled = false
+//                date_title.isEnabled = false
+//
+//            }
+//
+//            false -> {
+//
+//                loading_progress.visibility = View.INVISIBLE
+//                btn_save.isEnabled = true
+//                btn_img_input.isEnabled = true
+//                back_btn.isEnabled = true
+//                edit_title.isEnabled = true
+//                edit_content.isEnabled = true
+//                date_title.isEnabled = true
+//
+//            }
+//
+//        }
+//
+//    }
+
 
 
     //시간
@@ -280,7 +336,7 @@ class HomeViewRecyclerViewAdapter(
                     contentArray.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentArray.add(item!!)
                         contentUidList.add(snapshot.id)
@@ -295,7 +351,7 @@ class HomeViewRecyclerViewAdapter(
                     contentArray.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentArray.add(item!!)
                         contentUidList.add(snapshot.id)
@@ -309,7 +365,7 @@ class HomeViewRecyclerViewAdapter(
                     contentArray.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
+                    for (snapshot in querySnapshot.documents) {
                         var item = snapshot.toObject(ContentDTO::class.java)
                         contentArray.add(item!!)
                         contentUidList.add(snapshot.id)
@@ -470,5 +526,6 @@ class HomeViewRecyclerViewAdapter(
     fun clearList() {
         this.contentArray.clear()
     }
+
 
 }

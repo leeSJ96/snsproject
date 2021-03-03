@@ -34,7 +34,7 @@ import java.util.*
 class AddActivity : AppCompatActivity() {
 
     val PICTURE_REQUEST_CODE = 100
-
+    private var commentTime: Long = 0
     private var selectedUriList: List<Uri>? = null
     private var photoUri: Uri? = null
     var auth: FirebaseAuth? = null
@@ -76,28 +76,40 @@ class AddActivity : AppCompatActivity() {
         // 업로드 이벤트 처리
         activityAddBinding?.addphotoBtnUpload?.setOnClickListener {
 
-            when{
-                //게시글 카운트 5이상
-                addphoto_edit_mamo.text.count() < 5 -> {
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                    Snackbar.make(add_back, "제목을 5자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
-                }
-                //게시글 카운트 5이상
-                addphoto_edit_explain.text.count() < 8 -> {
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                    Snackbar.make(add_back, "내용을 8자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
-                }
-                else -> {
 
-                    if (photoUse) {
-                        //사진이 있을경우
-                        contentUpload()
 
-                    }else {
-                        //사진이 없을경우
-                        contentUploadNoPhoto()
+            if (System.currentTimeMillis() >= commentTime + 5000) {
+                commentTime = System.currentTimeMillis()
+
+                when{
+                    //게시글 카운트 5이상
+                    addphoto_edit_mamo.text.count() < 5 -> {
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                        Snackbar.make(add_back, "제목을 5자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
                     }
+                    //게시글 카운트 5이상
+                    addphoto_edit_explain.text.count() < 8 -> {
+                        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                        Snackbar.make(add_back, "내용을 8자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
+                    }
+                    else -> {
+
+                        if (photoUse) {
+                            //사진이 있을경우
+                            contentUpload()
+
+                        }else {
+                            //사진이 없을경우
+                            contentUploadNoPhoto()
+                        }
+                    }
+
                 }
+
+            }else{   Snackbar.make(add_back, "천천히 눌러주세요", Snackbar.LENGTH_SHORT).show()
+
+
+
 
             }
 
@@ -179,6 +191,10 @@ class AddActivity : AppCompatActivity() {
 //            }
         }
     }
+
+
+
+
 
     //사진이 있을시 업로드 데이터
     fun contentUpload() {

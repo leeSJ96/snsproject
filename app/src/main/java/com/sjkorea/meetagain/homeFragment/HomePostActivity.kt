@@ -57,7 +57,7 @@ class HomePostActivity : AppCompatActivity() {
 
         var binding: ActivityHomePostBinding = ActivityHomePostBinding.inflate(layoutInflater)
         homePostActivityBinding = binding
-        setContentView(homePostActivityBinding!!.root)
+
 
         firestore = FirebaseFirestore.getInstance()
         contentDTO = intent.getParcelableExtra<ContentDTO>("contentDTO")
@@ -208,8 +208,19 @@ class HomePostActivity : AppCompatActivity() {
         }
 
         //닉네임 따로 받아오기
-        //프로필 닉네임
-        homePostActivityBinding?.homePostProfileTextview?.text = userId.toString()
+//        //프로필 닉네임
+//        homePostActivityBinding?.homePostProfileTextview?.text = userId.toString()
+
+        firestore?.collection("profileName")?.document(alarmUid.toString())
+            ?.get()?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val nameValue = task.result!!["name"]
+                    userId = nameValue.toString()
+                    Log.d(Constants.TAG, "userId3: $userId ")
+                    homePostActivityBinding?.homePostProfileTextview?.text = nameValue.toString()
+
+                }
+            }
         //프로필사진
         getProfileImage()
 
@@ -249,7 +260,7 @@ class HomePostActivity : AppCompatActivity() {
 
 
 
-
+        setContentView(homePostActivityBinding!!.root)
 
 //        getProfileImage()
     }
@@ -501,7 +512,10 @@ class HomePostActivity : AppCompatActivity() {
                     val url = documentSnapshot.data!!["image"]
 
                     homePostActivityBinding?.homePostProfileImage?.let {
-                        Glide.with(applicationContext).load(url).apply(RequestOptions().circleCrop())
+                        Glide.with(applicationContext).load(url)
+                            .placeholder(R.drawable.icon_noimage1)
+                            .error(R.drawable.icon_noimage1)
+                            .apply(RequestOptions().circleCrop())
                             .into(it)
 
                     }

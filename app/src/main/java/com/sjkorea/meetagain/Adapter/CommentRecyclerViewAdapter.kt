@@ -76,6 +76,8 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
 
                         if (url != null) {
                             Glide.with(itemView.context).load(url)
+                                .placeholder(R.drawable.icon_noimage1)
+                                .error(R.drawable.icon_noimage1)
                                 .apply(RequestOptions().circleCrop())
                                 .into(dateImg)
                         }
@@ -83,7 +85,19 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
                 }
 
 
-            dateNameTv.text = dateList.name
+//            dateNameTv.text = dateList.name
+
+            FirebaseFirestore.getInstance().collection("profileName")?.document(dateList.uid.toString())
+                ?.get()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val nameValue = task.result!!["name"]
+                        Log.d(Constants.TAG, "commentNameValue: $nameValue")
+                        dateNameTv.text  = nameValue.toString()
+
+                    }
+                }
+
+
             dateTv.text = dateList.comment
 
             // 시간

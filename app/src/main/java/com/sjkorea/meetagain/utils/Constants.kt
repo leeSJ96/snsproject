@@ -16,6 +16,9 @@ object Constants {
     //uid싱글톤
     var UID : String? = null
 
+    //Follow데이터 유무확인
+    var FOLLOWDATA : Int? = 0
+
 
     //
     var POSTSHOW: String? = null

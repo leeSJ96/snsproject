@@ -1,30 +1,26 @@
 package com.sjkorea.meetagain.intro
 
-import android.content.ContentValues
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.ContentDTO
-import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.MainActivity
 import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.model.AuthModel
-import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.IDDTO
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.sjkorea.meetagain.utils.onMyTextChanged
-import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.activity_firstvisit.*
+import kotlinx.android.synthetic.main.activity_join.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import java.util.*
 import kotlin.collections.HashMap
@@ -48,6 +44,13 @@ class FirstVisitActivity : AppCompatActivity() {
         setContentView(R.layout.activity_firstvisit)
         firestore = FirebaseFirestore.getInstance()
 
+        //키보드위스낵바
+        val inputMethodManager =
+            this.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(
+            this.getWindow().getDecorView().getRootView().getWindowToken(), 0
+        )
+
         val uid = SharedPreferenceFactory.getStrValue("userToken", "")
         val email = SharedPreferenceFactory.getStrValue("userEmail", "")
 
@@ -59,7 +62,7 @@ class FirstVisitActivity : AppCompatActivity() {
 //
 //        Log.d("로그", "email $email")
 //        Log.d("로그", "uid $uid ")
-
+        //닉네임 제한
         name_edit.onMyTextChanged {
 
             if (it.toString().count() > 0) {
@@ -70,17 +73,29 @@ class FirstVisitActivity : AppCompatActivity() {
                 start_btn.visibility = View.INVISIBLE
             }
 
-            if (it.toString().count() == 15) {
-                Snackbar.make(scrollView, "15자까지만 입력 가능합니다", Snackbar.LENGTH_SHORT).show()
-            }
+
 
         }
-
+        //확인 버튼
         start_btn.setOnClickListener {
-//
-            updateData()
-//            nameSaveDB(email!!, uid!!)
+            Log.d(Constants.TAG, "start_btn 확인: ")
+
+            when {
+                name_edit.length() < 1 -> {
+                    Snackbar.make(scrollView, "닉네임 값이 비었습니다.", Snackbar.LENGTH_SHORT).show()
+                }
+                name_edit.length() > 8 -> {
+                    Snackbar.make(scrollView, "닉네임은 최대 8자까지 작성가능합니다.", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+                else-> {
+                    updateData()
+                }
+
+            }
         }
+
+
 
 
     }
@@ -89,11 +104,11 @@ class FirstVisitActivity : AppCompatActivity() {
     //
     private fun updateData() {
 
-        val userName = SharedPreferenceFactory.getStrValue("userName","")//유저 닉네임
-        val id  =     SharedPreferenceFactory.getStrValue("userEmail","") // 유저 이메일
-        SharedPreferenceFactory.getStrValue("userToken","")  // 유저 uid
+        val userName = SharedPreferenceFactory.getStrValue("userName", "")//유저 닉네임
+        val id  =     SharedPreferenceFactory.getStrValue("userEmail", "") // 유저 이메일
+        SharedPreferenceFactory.getStrValue("userToken", "")  // 유저 uid
         val path = SharedPreferenceFactory.getStrValue("userPath", "")  // 유저 디비 위치)
-
+        var uid = FirebaseAuth.getInstance().currentUser!!.uid
         var contentDTO = ContentDTO()
         var map = HashMap<String, Any>()
         val nameing = name_edit.text.toString()
@@ -111,7 +126,7 @@ class FirstVisitActivity : AppCompatActivity() {
                 ?.addOnCompleteListener {
                     if (it.isSuccessful) {
 
-                        SharedPreferenceFactory.putStrValue("userName", nameing )   // 유저 닉네임
+                        SharedPreferenceFactory.putStrValue("userName", nameing)   // 유저 닉네임
                         Toast.makeText(this, "닉네임이 변경 되었습니다", Toast.LENGTH_SHORT).show()
                         finish()
 
@@ -119,7 +134,18 @@ class FirstVisitActivity : AppCompatActivity() {
                     }
                 }
         }
+        if (path != null) {
+        FirebaseFirestore.getInstance().collection("profileName").document(uid).set(map)
+            ?.addOnCompleteListener {
+                if (it.isSuccessful) {
 
+                    SharedPreferenceFactory.putStrValue("userMainName", nameing)   // 유저 닉네임
+                    finish()
+
+
+                }
+            }
+        }
 
 
     }

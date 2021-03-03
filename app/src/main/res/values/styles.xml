@@ -5,6 +5,8 @@
         <item name="colorPrimary">#C6B6DD</item>
         <item name="colorPrimaryDark">#4F5577</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+
 
         <!--custom font-family 적용-->
         <item name="android:textViewStyle">@style/customTextViewFontStyle</item>

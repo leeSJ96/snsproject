@@ -242,9 +242,6 @@ class HistorySubActivity: AppCompatActivity() , IHomeRecyclerview  {
     override fun onItemClicked(position: Int) {
         Log.d(TAG, "HistoryFragmentSub  - onItemClicked(position: Int) called")
 
-        val titles: String = this.contentDTO[position].title ?: ""
-        Toast.makeText(this, "$titles,ddd", Toast.LENGTH_LONG).show()
-
 
         val intent = Intent(this, HomePostActivity::class.java)
 

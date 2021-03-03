@@ -1,6 +1,7 @@
 package com.sjkorea.meetagain.FollowFragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,10 @@ import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.CustomZoomClass.CenterZoomLayout
 import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.databinding.*
+import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.FOLLOWDATA
 import com.squareup.okhttp.OkHttpClient
+import kotlinx.android.synthetic.main.fragment_follow.*
 
 
 class FollowFragment : Fragment(), IHomeRecyclerview {
@@ -66,25 +70,36 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
         super.onResume()
 
 
-        // 레이아웃 매니저 초기화
-        val layoutManager = CenterZoomLayout(requireActivity())
-
 
         val adapter = FollowAdapter(this, childFragmentManager, this, contentDTOs, comments, firestore, fcmPush)
         fragmentFollowBinding?.tourRV?.adapter = adapter
-        fragmentFollowBinding?.tourRV?.layoutManager = LinearLayoutManager(activity)
+        fragmentFollowBinding?.tourRV?.layoutManager = manager
+        manager.reverseLayout = true
+        manager.stackFromEnd = true
 
 
-        fragmentFollowBinding?.tourRV?.isNestedScrollingEnabled = false
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
-        layoutManager.reverseLayout = true
-        layoutManager.stackFromEnd = true
+        Log.d(Constants.TAG, "FOLLOWDATA: $FOLLOWDATA")
+        when(Constants.FOLLOWDATA){
+            0->  IvVisibility()
+
+
+            1->  rvVisibility()
+        }
 
 
         if (!adapter.hasObservers()) {
             adapter.setHasStableIds(true)
         }
         adapter.notifyDataSetChanged()
+    }
+    fun rvVisibility(){
+        fragmentFollowBinding?.noData?.visibility = View.INVISIBLE
+        fragmentFollowBinding?.tourRV?.visibility = View.VISIBLE
+    }
+    fun IvVisibility(){
+        fragmentFollowBinding?.noData?.visibility = View.VISIBLE
+        fragmentFollowBinding?.tourRV?.visibility = View.INVISIBLE
+
     }
 
     override fun onDestroyView() {
