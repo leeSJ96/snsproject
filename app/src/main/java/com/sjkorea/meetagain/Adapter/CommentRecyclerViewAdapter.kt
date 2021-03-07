@@ -5,24 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.CustomBottomDialog
 import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.TAG
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.item_comment.view.*
 
 
-class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.Comment>,  fragmentManager: FragmentManager, clickInterface : IDeletePosition,
+class CommentRecyclerViewAdapter(
+    private val commentArray: ArrayList<ContentDTO.Comment>,
+    fragmentManager: FragmentManager,
+    clickInterface: IDeletePosition,
 ) : RecyclerView.Adapter<CommentRecyclerViewAdapter.CustomViewHolder>() {
 
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
@@ -34,6 +33,7 @@ class CommentRecyclerViewAdapter(private val commentArray: ArrayList<ContentDTO.
         this.iClickInterface = clickInterface
 
     }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {

@@ -302,8 +302,11 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
                     Log.d(ContentValues.TAG, "1")
                     contentDTO.add(snapshot.toObject(ContentDTO::class.java)!!)
                     Log.d(ContentValues.TAG, "2")
-                    bottom_tv_post_count.text = contentDTO.size.toString()
-                    Log.d(contentDTO.size.toString(), "bottomsize테스트")
+
+                    if ( bottom_tv_post_count != null) {
+                        bottom_tv_post_count.text = contentDTO.size.toString()
+                        Log.d(contentDTO.size.toString(), "bottomsize테스트")
+                    }
                 }
 
             }
@@ -457,7 +460,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-        var message = auth?.currentUser?.email + getString(R.string.alarm_follow)
+        var message = alarmDTO.name + getString(R.string.alarm_follow)
         fcmPush?.sendMessage(destinationUid!!, "알림 메시지 입니다", message)
     }
 

@@ -253,7 +253,7 @@ class AddUpdateActivity : AppCompatActivity() {
                     it.userId = auth?.currentUser?.email
                     it.explain = addphoto_edit_explain.text.toString()
                     it.title = addphoto_edit_mamo.text.toString()
-                    it.timestamp = System.currentTimeMillis()
+
                 }
                 Log.d("로그", "링크 ${contentDTO!!.pathData}")
 
@@ -310,8 +310,7 @@ class AddUpdateActivity : AppCompatActivity() {
                             it.explain = addphoto_edit_explain.text.toString()
 
                             it.title = addphoto_edit_mamo.text.toString()
-                            // Insert timestamp
-                            it.timestamp = System.currentTimeMillis()
+
                         }
 
 
@@ -366,8 +365,7 @@ class AddUpdateActivity : AppCompatActivity() {
 
             it.title = addphoto_edit_mamo.text.toString()
 
-            // Insert timestamp
-            it.timestamp = System.currentTimeMillis()
+
 
             it.imageUrl =
                 "https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"

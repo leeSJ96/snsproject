@@ -105,10 +105,10 @@ class HomePostActivity : AppCompatActivity() {
         }
         //좋아요개수
         homePostActivityBinding?.homePostLike?.text =
-            "좋아요" + alarmFavoriteCount.toString() + "개"
-        //싫어요개수
+            "힘내요" + alarmFavoriteCount.toString() + "개"
+        //힘내요개수
         homePostActivityBinding?.homePostMa?.text =
-            "싫어요" + alarmMeaningCount.toString() + "개"
+            "힘내요" + alarmMeaningCount.toString() + "개"
 
         //좋아요 버튼 설정
         if (favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
@@ -120,7 +120,7 @@ class HomePostActivity : AppCompatActivity() {
             homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_red)
         }
 
-        //슬퍼요 버튼 설정
+        //힘내요 버튼 설정
         if (meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
             homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_bluec)
@@ -138,11 +138,11 @@ class HomePostActivity : AppCompatActivity() {
             favoriteEvent()
         }
 
-        // 슬퍼요
+        // 힘내요
         homePostActivityBinding?.homePostMa?.text =
             "" + alarmMeaningCount.toString() + "개"
         homePostActivityBinding?.homePostMaImageview?.setOnClickListener {
-            Log.d(TAG, "확인:싫어요 ")
+            Log.d(TAG, "확인:힘내요 ")
             meaningEvent()
         }
 
@@ -177,7 +177,7 @@ class HomePostActivity : AppCompatActivity() {
                 homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_red)
             }
 
-            //슬퍼요 버튼 설정
+            //힘내요 버튼 설정
             if (meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
                 homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_bluec)
@@ -195,7 +195,7 @@ class HomePostActivity : AppCompatActivity() {
                 favoriteEvent()
             }
 
-            // 슬퍼요
+            // 힘내요
             homePostActivityBinding?.homePostMa?.text =
                 "" + meaningCount + "개"
             homePostActivityBinding?.homePostMaImageview?.setOnClickListener {
@@ -571,7 +571,7 @@ class HomePostActivity : AppCompatActivity() {
                         homePostActivityBinding?.homePostFavoriteImageview?.setImageResource(R.drawable.heart_red)
                     }
 
-                    //슬퍼요 버튼 설정
+                    //힘내요 버튼 설정
                     if (meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
                         homePostActivityBinding?.homePostMaImageview?.setImageResource(R.drawable.heart_bluec)

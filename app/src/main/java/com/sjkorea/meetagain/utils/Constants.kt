@@ -1,14 +1,17 @@
 package com.sjkorea.meetagain.utils
 
+import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.model.IdDTO
 
 object Constants {
 
 
+
+
     var TAG : String? = "로그"
 
     var ORDER : Int = 0
-
+    var ODRDER : String = "0"
     var IDDTO: String? = null
 
     //댓글 부분 더보기 싱글톤
@@ -18,6 +21,10 @@ object Constants {
 
     //Follow데이터 유무확인
     var FOLLOWDATA : Int? = 0
+
+    var ST : String = "timestamp"
+    var SORT  = FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp")
+    var SORTT = "0"
 
 
     //

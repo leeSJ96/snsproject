@@ -1,6 +1,7 @@
 package com.sjkorea.meetagain.FollowFragment
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.sjkorea.meetagain.Adapter.FavoriteViewRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.FollowAdapter
 import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
 import com.sjkorea.meetagain.ContentDTO
@@ -36,6 +39,8 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
 
     private var fragmentFollowBinding : FragmentFollowBinding? = null
+    private lateinit var adapter: FollowAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +56,29 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
         firestore = FirebaseFirestore.getInstance()
 
 
+        adapter = FollowAdapter(this, childFragmentManager, this, contentDTOs, comments, firestore, fcmPush)
+        fragmentFollowBinding?.tourRV?.adapter = adapter
+        fragmentFollowBinding?.tourRV?.layoutManager = manager
+        manager.reverseLayout = true
+        manager.stackFromEnd = true
 
+
+        if (!adapter.hasObservers()) {
+            adapter.setHasStableIds(true)
+        }
+        adapter.notifyDataSetChanged()
+
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
+
+        var recyclerViewState: Parcelable
+        recyclerViewState =
+            fragmentFollowBinding?.tourRV?.layoutManager?.onSaveInstanceState()!!
+
+
+        if (recyclerViewState != null)
+            fragmentFollowBinding?.tourRV?.layoutManager?.onRestoreInstanceState(
+                recyclerViewState
+            );
 //        return searchview
         return fragmentFollowBinding?.root
 
@@ -71,13 +98,6 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
 
 
 
-        val adapter = FollowAdapter(this, childFragmentManager, this, contentDTOs, comments, firestore, fcmPush)
-        fragmentFollowBinding?.tourRV?.adapter = adapter
-        fragmentFollowBinding?.tourRV?.layoutManager = manager
-        manager.reverseLayout = true
-        manager.stackFromEnd = true
-
-
         Log.d(Constants.TAG, "FOLLOWDATA: $FOLLOWDATA")
         when(Constants.FOLLOWDATA){
             0->  IvVisibility()
@@ -87,10 +107,6 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
         }
 
 
-        if (!adapter.hasObservers()) {
-            adapter.setHasStableIds(true)
-        }
-        adapter.notifyDataSetChanged()
     }
     fun rvVisibility(){
         fragmentFollowBinding?.noData?.visibility = View.INVISIBLE

@@ -1,7 +1,5 @@
 package com.sjkorea.meetagain.Adapter
 
-
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,37 +10,47 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.facebook.FacebookSdk
+import com.facebook.FacebookSdk.getApplicationContext
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.MetadataChanges
 import com.sjkorea.meetagain.*
-import com.sjkorea.meetagain.UserFragment.HistoryFragment
-import com.sjkorea.meetagain.UserFragment.UserFragment
+import com.sjkorea.meetagain.homeFragment.FavoriteFragment
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
+import com.sjkorea.meetagain.homeFragment.MeaningFragment
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.ODRDER
+import com.sjkorea.meetagain.utils.Constants.TAG
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
+import kotlinx.android.synthetic.main.activity_firstvisit.*
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.custom_dialog.view.*
+import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.item_main.view.*
-import kotlinx.android.synthetic.main.item_mysub.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
-class HistoryRecyclerviewAdapter(
-    context: HistoryFragment,
+
+class FavoriteViewRecyclerViewAdapter(
+    context:  FavoriteFragment,
     fragmentManager: FragmentManager, homeRecyclerviewInterface: IHomeRecyclerview,
-    private var contentArray: ArrayList<ContentDTO>,
+    var contentArray: ArrayList<ContentDTO>,
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
     var fcmPush: FcmPush? = null,
-) : RecyclerView.Adapter<HistoryRecyclerviewAdapter.CustomViewHolder>() {
-    private var context: HistoryFragment
-    val contentUidList: ArrayList<String>
+    var contentUidList: ArrayList<String>,
+) : RecyclerView.Adapter<FavoriteViewRecyclerViewAdapter.CustomViewHolder>() {
+    private var context: FavoriteFragment
     var imagesSnapshot: ListenerRegistration? = null
     var okHttpClient: OkHttpClient? = null
     var user: FirebaseUser? = null
     var uid: String? = null
     var name: String? = null
+    var userid: String? = null
 
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
@@ -52,34 +60,33 @@ class HistoryRecyclerviewAdapter(
         mFragmentManager = fragmentManager
         this.context = context
         fcmPush = FcmPush()
-
         //아이디
         user = FirebaseAuth.getInstance().currentUser
-        contentArray = java.util.ArrayList()
-        contentUidList = java.util.ArrayList()
+//        contentArray = java.util.ArrayList()
+//        contentUidList = java.util.ArrayList()
         comments = ArrayList()
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
-        SortPosts()
+//        SortPosts()
+//        SortPosts()
         setHasStableIds(true)
+//        Sortnotify()
+
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
 
         return CustomViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_mysub, parent, false),
+            LayoutInflater.from(parent.context).inflate(R.layout.item_sub, parent, false),
             this.homeRecyclerviewInterface!!
         )
     }
 
-    override fun onBindViewHolder(
-        holder: HistoryRecyclerviewAdapter.CustomViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
+
         holder.bind(contentArray[position], mFragmentManager)
     }
-
 
 
     inner class CustomViewHolder(itemView: View, recyclerviewInterface: IHomeRecyclerview) :
@@ -91,42 +98,84 @@ class HistoryRecyclerviewAdapter(
         init {
             itemView.setOnClickListener(this)
             this.homeRecyclerviewInterface = recyclerviewInterface
+
         }
 
-
+        //프로필 닉네임
+        private val dataprofilename = itemView.homeviewitem_profile_name
 
         //제목
-        private val datatitle = itemView.historyviewitem_profile_textview
+        private val datatitle = itemView.homeviewitem_profile_textview
 
         //메인사진
-        private val datacontext = itemView.historyviewitem_explain_textview
+        private val datacontext = itemView.homeviewitem_explain_textview
 
         //좋아요 텍스트
-        private val fovorite = itemView.historyviewitem_favoritecounter_textview
+        private val fovorite = itemView.homeviewitem_favoritecounter_textview
 
         //힘내요 텍스트
-        private val meaning = itemView.historyviewitem_meaningcounter_textview
+        private val meaning = itemView.homeviewitem_meaningcounter_textview
 
         //좋아요 버튼
-        private val fovoritebtn = itemView.historyviewitem_fovorite_imageview
+        private val fovoritebtn = itemView.homeviewitem_fovorite_imageview
 
         //힘내요 버튼
-        private val meaningbtn = itemView.historyviewitem_meaning_imageview
-        //시간
-        private val date = itemView.historydate
+        private val meaningbtn = itemView.homeviewitem_meaning_imageview
 
 
         fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager) {
+            //  Profile Image 가져오기
+            firestore?.collection("profileImages")?.document(contentDTOs.uid!!)
+                ?.get()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val url = task.result!!["image"]
+                        Glide.with(itemView.context)
+                            .load(url)
+                            .apply(RequestOptions().circleCrop())
+                            .placeholder(R.drawable.icon_noimage1)
+                            .error(R.drawable.icon_noimage1)
+                            .into(itemView.homeviewitem_profile_image)
+                    }
+                }
+
+
+            //프로필 닉네임
+//          dataprofilename.text = contentDTOs.name\
+
+
+            firestore?.collection("profileName")?.document(contentDTOs.uid!!)
+                ?.get()?.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val nameValue = task.result!!["name"]
+                        userid = nameValue.toString()
+//                        Log.d(Constants.TAG, "userid1: $userid")
+                        dataprofilename.text = nameValue.toString()
+
+                    }
+                }?.addOnFailureListener {
+
+
+                }
 
 
             //제목
             datatitle.text = contentDTOs.title
             // 메인사진
             Glide.with(itemView.context).load(contentDTOs.imageUrl)
-                .into(itemView.historyviewitem_imageview_content)
-
+                .into(itemView.homeviewitem_imageview_content)
+//            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
             // 내용
             datacontext.text = contentDTOs.explain
+
+//
+//            // 유저 아이디
+//            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
+
+//            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+//            val formatter = SimpleDateFormat("yyy년\nMM월 dd일")
+//
+//            val outputDateString = formatter.format(parser.parse(contentDTOs[position].timestamp.toString()))
+
 
             // 시간
             val curTime = System.currentTimeMillis()
@@ -143,7 +192,7 @@ class HistoryRecyclerviewAdapter(
                     }
                 }
             }
-            date.text = diffTime.toString() + msg.toString()
+            itemView.date.text = diffTime.toString() + msg.toString()
 //
 //            itemView.date.text = contentDTOs[po]
 //            itemView.date.text =  contentDTOs[position].timestamp.toString()
@@ -163,7 +212,7 @@ class HistoryRecyclerviewAdapter(
                 favoriteEvent(position)
             }
             //좋아요 버튼 설정
-            if (contentDTOs.favorites.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.favorites.containsKey(FirebaseAuth.getInstance().currentUser?.uid)) {
 
                 fovoritebtn.setImageResource(R.drawable.heart_redc)
             } else {
@@ -177,7 +226,7 @@ class HistoryRecyclerviewAdapter(
                 meaningEvent(position)
             }
             //힘내요 버튼 설정
-            if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
+            if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser?.uid)) {
 
                 meaningbtn.setImageResource(R.drawable.heart_bluec)
 
@@ -189,34 +238,88 @@ class HistoryRecyclerviewAdapter(
 //            itemView.homeviewitem_commentcounter_textview.text = "댓글" + comments[position].commentCount + "개"
 
 
+            //바텀 프래그먼트 프로필 호출
+            itemView.homeviewitem_profile_image.setOnClickListener {
+                Constants.POSTSHOW = "mainView"
+
+
+                val bundle = Bundle()
+                bundle.putString("pathData", contentDTOs.pathData)
+                bundle.putString("destinationUid", contentDTOs.uid)
+//                bundle.putString("userId", contentDTOs.name)
+                bundle.putString("userId", userid)
+                Log.d(Constants.TAG, "userid2: $userid")
+                //userIdposition
+                bundle.putString("userIdposition", contentUidList[position])
+                SharedPreferenceFactory.putStrValue("contentUidList", contentUidList[position])
+
+                val bottomSheetDialogFragment = CustomBottomDialog()
+                bottomSheetDialogFragment.arguments = bundle
+                bottomSheetDialogFragment.show(fragmentManager, bottomSheetDialogFragment.tag)
+            }
 
             //누르면 홈포스트 프래그먼트 호출
-            itemView.history_post_item.setOnClickListener {
+            itemView.home_post_item.setOnClickListener {
                 homePostData(adapterPosition)
 
             }
 
             //내용누르면 홈프래그먼트로 이동
-            itemView.historyviewitem_explain_textview.setOnClickListener {
+            itemView.homeviewitem_explain_textview.setOnClickListener {
                 homePostData(adapterPosition)
             }
 
 
         }
 
+
         override fun onClick(v: View?) {
-            Log.d(Constants.TAG, "CustomViewHolder -onClick() called ")
+            Log.d(TAG, "CustomViewHolder -onClick() called ")
             this.homeRecyclerviewInterface?.onItemClicked(adapterPosition)
         }
     }
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long =
+        position.toLong()
 
 
     override fun getItemCount(): Int {
 
         return contentArray.size
     }
+
+//    private fun hideAndShowUi(hideCheck: Boolean) {
+//
+//        when (hideCheck) {
+//
+//            true -> {
+//
+//                loading_progress.visibility = View.VISIBLE
+//                btn_save.isEnabled = false
+//                btn_img_input.isEnabled = false
+//                back_btn.isEnabled = false
+//                edit_title.isEnabled = false
+//                edit_content.isEnabled = false
+//                date_title.isEnabled = false
+//
+//            }
+//
+//            false -> {
+//
+//                loading_progress.visibility = View.INVISIBLE
+//                btn_save.isEnabled = true
+//                btn_img_input.isEnabled = true
+//                back_btn.isEnabled = true
+//                edit_title.isEnabled = true
+//                edit_content.isEnabled = true
+//                date_title.isEnabled = true
+//
+//            }
+//
+//        }
+//
+//    }
+
 
     //시간
     enum class TimeValue(val value: Int, val maximum: Int, val msg: String) {
@@ -227,26 +330,72 @@ class HistoryRecyclerviewAdapter(
         MONTH(12, Int.MAX_VALUE, "년 전")
     }
 
-    //게시글 정렬 순서 필터
-    private fun SortPosts(){
 
-        var uid = FirebaseAuth.getInstance().uid
-            firestore?.collection("images")?.whereEqualTo("uid", uid)
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+
+
+
+    //게시글 정렬 순서 필터
+    private fun SortPosts() {
+        Constants.SORTT = SharedPreferenceFactory.getStrValue("SORTT", "0").toString()
+        //싱글톤 사용 게시글 정렬
+        when (Constants.SORTT) {
+            //최신순
+            "0" -> FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp")
+                ?.addSnapshotListener(MetadataChanges.INCLUDE) { querySnapshot, firebaseFirestoreException ->
                     contentArray.clear()
                     contentUidList.clear()
                     if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot!!.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentArray.add(item!!)
-                        Log.d(Constants.TAG, "historytoday size ${contentArray.size}")
+                    for (snapshot in querySnapshot.documents) {
+                        var item1 = snapshot.toObject(ContentDTO::class.java)
+                            contentArray.add(item1!!)
                         contentUidList.add(snapshot.id)
+
+
+
                     }
+
                     notifyDataSetChanged()
+
                 }
 
 
+            //좋아요 많은순
+            "1" -> FirebaseFirestore.getInstance().collection("images")?.orderBy("favoriteCount")
+                ?.addSnapshotListener(MetadataChanges.INCLUDE) { querySnapshot, firebaseFirestoreException ->
+                    contentArray.clear()
+                    contentUidList.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot.documents) {
+                        var item2 = snapshot.toObject(ContentDTO::class.java)
+                            contentArray.add(item2!!)
+                            contentUidList.add(snapshot.id)
+
+
+                    }
+                    notifyDataSetChanged()
+
+                }
+            //힘내요 많은순
+            else -> FirebaseFirestore.getInstance().collection("images")?.orderBy("meaningCount")
+                ?.addSnapshotListener(MetadataChanges.INCLUDE) { querySnapshot, firebaseFirestoreException ->
+                    contentArray.clear()
+                    contentUidList.clear()
+                    if (querySnapshot == null) return@addSnapshotListener
+                    for (snapshot in querySnapshot.documents) {
+                        var item3 = snapshot.toObject(ContentDTO::class.java)
+                            contentArray.add(item3!!)
+                            contentUidList.add(snapshot.id)
+
+                    }
+                    notifyDataSetChanged()
+                }
+        }
+
+        Log.d(Constants.TAG, "ORDER home :$ODRDER ")
+
+
     }
+
 
     //좋아요 이벤트 기능
     private fun favoriteEvent(position: Int) {
@@ -318,6 +467,9 @@ class HistoryRecyclerviewAdapter(
     fun meaningAlarm(destinationUid: String) {
         val alarmDTO = AlarmDTO()
 
+
+
+
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = user?.email
         alarmDTO.name = SharedPreferenceFactory.getStrValue("userName", null)
@@ -327,13 +479,13 @@ class HistoryRecyclerviewAdapter(
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-        var message = user?.email + "님이 힘내요를 눌렀습니다"
+        var message = alarmDTO.name + "님이 힘내요를 눌렀습니다"
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
     }
 
     fun homePostData(position: Int) {
         // 데이터  넘겨줌
-        val intent = Intent(FacebookSdk.getApplicationContext(), HomePostActivity::class.java)
+        val intent = Intent(getApplicationContext(), HomePostActivity::class.java)
 
         intent.putExtra("contentDTO", contentArray[position])
 
@@ -371,10 +523,23 @@ class HistoryRecyclerviewAdapter(
         intent.putExtra("meaninghashmap", hashmap2)
         //putSerializable
         intent.putExtra("hashmap", contentArray[position].favorites)
-        context.startActivity(intent)
+        context.startActivity(intent);
 
     }
 
+    // 즉 총알을 넣는다.
+    fun submitList(contentArray: ArrayList<ContentDTO>) {
+        this.contentArray = contentArray
+    }
+
+    fun addList(contentArray: ArrayList<ContentDTO>) {
+        this.contentArray.addAll(contentArray)
+    }
+
+    // 비운다.
+    fun clearList() {
+        this.contentArray.clear()
+    }
 
 
 }

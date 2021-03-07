@@ -140,13 +140,13 @@ class FollowAdapter(
         //좋아요 텍스트
         private val fovorite = itemView.followviewitem_favoritecounter_textview
 
-        //싫어요 텍스트
+        //힘내요 텍스트
         private val meaning = itemView.followviewitem_meaningcounter_textview
 
         //좋아요 버튼
         private val fovoritebtn = itemView.followviewitem_fovorite_imageview
 
-        //싫어요 버튼
+        //힘내요 버튼
         private val meaningbtn = itemView.followviewitem_meaning_imageview
 
         fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager) {
@@ -246,13 +246,13 @@ class FollowAdapter(
                 fovoritebtn.setImageResource(R.drawable.heart_red)
             }
 
-            // 슬퍼요
+            // 힘내요
             meaning.text =
-                "슬퍼요" + contentDTOs!!.meaningCount + "개"
+                "힘내요" + contentDTOs!!.meaningCount + "개"
             meaningbtn.setOnClickListener {
                 meaningEvent(position)
             }
-            //슬퍼요 버튼 설정
+            //힘내요 버튼 설정
             if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser!!.uid)) {
 
                 meaningbtn.setImageResource(R.drawable.heart_bluec)
@@ -360,7 +360,7 @@ class FollowAdapter(
     }
 
 
-    //싫어요 이벤트 기능
+    //힘내요 이벤트 기능
     private fun meaningEvent(position: Int) {
         val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
         firestore?.runTransaction { transaction ->
@@ -435,7 +435,7 @@ class FollowAdapter(
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-        var message = user?.email + "님이 힘내요를 눌렀습니다"
+        var message = alarmDTO.name + "님이 힘내요를 눌렀습니다"
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
     }
 
@@ -473,7 +473,7 @@ class FollowAdapter(
         var hashmap = contentDTOs[position].favorites
 
         intent.putExtra("favoriteshashmap", hashmap)
-        //싫어요버튼
+        //힘내요버튼
         var hashmap2 = contentDTOs[position].meaning
 
         intent.putExtra("meaninghashmap", hashmap2)

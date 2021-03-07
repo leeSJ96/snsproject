@@ -39,8 +39,8 @@
     <ImageView
         android:src="@drawable/icon_noimage1"
         android:id="@+id/Bottom_profile_image_my"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -51,8 +51,8 @@
 
     <ImageView
         android:id="@+id/Bottom_profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
@@ -62,7 +62,7 @@
         android:layout_marginTop="25dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="25dp"
-        android:layout_weight="1.5"
+
         android:src="@drawable/icon_noimage1"
          />
 
@@ -71,19 +71,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:fontFamily="@font/gmarketsans_ttf_edium"
-        android:elevation="5dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_vertical"
+        android:layout_marginStart="-98dp"
         android:layout_marginTop="61dp"
-        android:layout_marginEnd="35dp"
         android:layout_marginBottom="59dp"
+        android:layout_toEndOf="@+id/Bottom_profile_image_my"
         android:layout_weight="1"
-        android:text="팔로우"
         android:backgroundTint="@color/Btn_gray"
-        app:backgroundTint="@null"
-        android:textColor="@color/Text_white" />
+        android:elevation="5dp"
+        android:fontFamily="@font/gmarketsans_ttf_edium"
+        android:text="팔로우"
+        android:textColor="@color/Text_white"
+        app:backgroundTint="@null" />
 </RelativeLayout>
 
 

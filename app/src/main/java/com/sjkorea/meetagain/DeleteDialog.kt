@@ -17,9 +17,6 @@ class DeleteDialog(context: Context) : Dialog(context) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.delete_dialog)
 
-
-
-
     }
 
     fun deleteSetting(pathData: String, completeResult: (deleteSet: Boolean) -> Unit) {
@@ -30,7 +27,6 @@ class DeleteDialog(context: Context) : Dialog(context) {
         yes_btn.setOnClickListener {
 
             Log.d("로그", "yesClick")
-
 
 
             fireStore.delete().addOnSuccessListener {

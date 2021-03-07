@@ -27,6 +27,7 @@ import com.sjkorea.meetagain.WalletFragment.WalletFragment
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.databinding.FragmentUserBinding
 import com.sjkorea.meetagain.intro.FirstVisitActivity
+import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.fragment_user.*
@@ -183,7 +184,7 @@ class UserFragment : Fragment() {
                     Log.d(TAG, "2")
 
                     account_tv_post_count.text = contentDTO.size.toString()
-                    Log.d(contentDTO.size.toString(), "size테스트")
+                    Log.d(Constants.TAG, "size테스트${contentDTO.size.toString()}")
                 }
 
             }

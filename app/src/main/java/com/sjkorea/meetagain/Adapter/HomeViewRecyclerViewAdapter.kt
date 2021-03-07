@@ -2,6 +2,7 @@ package com.sjkorea.meetagain.Adapter
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,8 +17,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.*
-import com.sjkorea.meetagain.UserFragment.HistoryFragment
-import com.sjkorea.meetagain.UserFragment.UserFragment
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
@@ -32,6 +31,7 @@ import kotlinx.android.synthetic.main.item_main.view.*
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class HomeViewRecyclerViewAdapter(
     context: HomeFragment,
     fragmentManager: FragmentManager, homeRecyclerviewInterface: IHomeRecyclerview,
@@ -39,16 +39,17 @@ class HomeViewRecyclerViewAdapter(
     var comments: ArrayList<ContentDTO.Comment>,
     var firestore: FirebaseFirestore? = null,
     var fcmPush: FcmPush? = null,
-) : RecyclerView.Adapter<HomeViewRecyclerViewAdapter.CustomViewHolder>() {
+    var contentUidList: ArrayList<String>,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var context: HomeFragment
-    val contentUidList: ArrayList<String>
     var imagesSnapshot: ListenerRegistration? = null
     var okHttpClient: OkHttpClient? = null
     var user: FirebaseUser? = null
     var uid: String? = null
     var name: String? = null
-    var userid : String? =null
+    var userid: String? = null
 
+    private var recyclerViewState: Parcelable? = null
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
 
@@ -57,17 +58,20 @@ class HomeViewRecyclerViewAdapter(
         mFragmentManager = fragmentManager
         this.context = context
         fcmPush = FcmPush()
-
         //아이디
         user = FirebaseAuth.getInstance().currentUser
-        contentArray = java.util.ArrayList()
-        contentUidList = java.util.ArrayList()
+//        contentArray = java.util.ArrayList()
+//        contentUidList = java.util.ArrayList()
         comments = ArrayList()
         fcmPush = FcmPush()
         okHttpClient = OkHttpClient()
-        SortPosts()
+//        SortPosts()
+//        SortPosts()
         setHasStableIds(true)
+//        Sortnotify()
+
     }
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
@@ -78,12 +82,19 @@ class HomeViewRecyclerViewAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        holder.bind(contentArray[position], mFragmentManager)
+        // switch
+        when (holder) {
+            is CustomViewHolder -> {
+
+                if (contentArray.size > 0) {
+                    holder.bind(contentArray[position], mFragmentManager)
+                }
+            }
+        }
+
     }
-
-
     inner class CustomViewHolder(itemView: View, recyclerviewInterface: IHomeRecyclerview) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -93,6 +104,7 @@ class HomeViewRecyclerViewAdapter(
         init {
             itemView.setOnClickListener(this)
             this.homeRecyclerviewInterface = recyclerviewInterface
+
         }
 
         //프로필 닉네임
@@ -107,13 +119,13 @@ class HomeViewRecyclerViewAdapter(
         //좋아요 텍스트
         private val fovorite = itemView.homeviewitem_favoritecounter_textview
 
-        //싫어요 텍스트
+        //힘내요 텍스트
         private val meaning = itemView.homeviewitem_meaningcounter_textview
 
         //좋아요 버튼
         private val fovoritebtn = itemView.homeviewitem_fovorite_imageview
 
-        //싫어요 버튼
+        //힘내요 버튼
         private val meaningbtn = itemView.homeviewitem_meaning_imageview
 
 
@@ -129,12 +141,11 @@ class HomeViewRecyclerViewAdapter(
                             .placeholder(R.drawable.icon_noimage1)
                             .error(R.drawable.icon_noimage1)
                             .into(itemView.homeviewitem_profile_image)
-
                     }
                 }
 
 
-          //프로필 닉네임
+            //프로필 닉네임
 //          dataprofilename.text = contentDTOs.name\
 
 
@@ -143,7 +154,7 @@ class HomeViewRecyclerViewAdapter(
                     if (task.isSuccessful) {
                         val nameValue = task.result!!["name"]
                         userid = nameValue.toString()
-                        Log.d(Constants.TAG, "userid1: $userid")
+//                        Log.d(Constants.TAG, "userid1: $userid")
                         dataprofilename.text = nameValue.toString()
 
                     }
@@ -214,13 +225,13 @@ class HomeViewRecyclerViewAdapter(
                 fovoritebtn.setImageResource(R.drawable.heart_red)
             }
 
-            // 슬퍼요
+            // 힘내요
             meaning.text =
-                "슬퍼요" + contentDTOs!!.meaningCount + "개"
+                "힘내요" + contentDTOs!!.meaningCount + "개"
             meaningbtn.setOnClickListener {
                 meaningEvent(position)
             }
-            //슬퍼요 버튼 설정
+            //힘내요 버튼 설정
             if (contentDTOs.meaning.containsKey(FirebaseAuth.getInstance().currentUser?.uid)) {
 
                 meaningbtn.setImageResource(R.drawable.heart_bluec)
@@ -246,7 +257,7 @@ class HomeViewRecyclerViewAdapter(
                 Log.d(Constants.TAG, "userid2: $userid")
                 //userIdposition
                 bundle.putString("userIdposition", contentUidList[position])
-                SharedPreferenceFactory.putStrValue("contentUidList",contentUidList[position])
+                SharedPreferenceFactory.putStrValue("contentUidList", contentUidList[position])
 
                 val bottomSheetDialogFragment = CustomBottomDialog()
                 bottomSheetDialogFragment.arguments = bundle
@@ -274,45 +285,16 @@ class HomeViewRecyclerViewAdapter(
         }
     }
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long =
+        position.toLong()
 
 
     override fun getItemCount(): Int {
-
         return contentArray.size
     }
 
-//    private fun hideAndShowUi(hideCheck: Boolean) {
-//
-//        when (hideCheck) {
-//
-//            true -> {
-//
-//                loading_progress.visibility = View.VISIBLE
-//                btn_save.isEnabled = false
-//                btn_img_input.isEnabled = false
-//                back_btn.isEnabled = false
-//                edit_title.isEnabled = false
-//                edit_content.isEnabled = false
-//                date_title.isEnabled = false
-//
-//            }
-//
-//            false -> {
-//
-//                loading_progress.visibility = View.INVISIBLE
-//                btn_save.isEnabled = true
-//                btn_img_input.isEnabled = true
-//                back_btn.isEnabled = true
-//                edit_title.isEnabled = true
-//                edit_content.isEnabled = true
-//                date_title.isEnabled = true
-//
-//            }
-//
-//        }
-//
-//    }
+
+
 
 
 
@@ -324,63 +306,6 @@ class HomeViewRecyclerViewAdapter(
         DAY(30, 12, "달 전"),
         MONTH(12, Int.MAX_VALUE, "년 전")
     }
-
-    //게시글 정렬 순서 필터
-    private fun SortPosts(){
-        val odrder = SharedPreferenceFactory.getStrValue("ORDER", "0")
-        //싱글톤 사용 게시글 정렬
-        when (odrder) {
-            //최신순
-            "0" -> imagesSnapshot = firestore?.collection("images")?.orderBy("timestamp")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentArray.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentArray.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-
-
-                    notifyDataSetChanged()
-                }
-            //좋아요 많은순
-            "1" -> imagesSnapshot = firestore?.collection("images")?.orderBy("favoriteCount")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentArray.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentArray.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-
-                    notifyDataSetChanged()
-                }
-            //슬퍼요 많은순
-            else-> imagesSnapshot = firestore?.collection("images")?.orderBy("meaningCount")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    contentArray.clear()
-                    contentUidList.clear()
-                    if (querySnapshot == null) return@addSnapshotListener
-                    for (snapshot in querySnapshot.documents) {
-                        var item = snapshot.toObject(ContentDTO::class.java)
-                        contentArray.add(item!!)
-                        contentUidList.add(snapshot.id)
-                    }
-                    notifyDataSetChanged()
-                }
-
-
-        }
-
-        Log.d(Constants.TAG, "ORDER home :$odrder ")
-
-
-    }
-
 
 
     //좋아요 이벤트 기능
@@ -406,7 +331,7 @@ class HomeViewRecyclerViewAdapter(
     }
 
 
-    //싫어요 이벤트 기능
+    //힘내요 이벤트 기능
     private fun meaningEvent(position: Int) {
         val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
         firestore?.runTransaction { transaction ->
@@ -465,7 +390,7 @@ class HomeViewRecyclerViewAdapter(
 
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
-        var message = user?.email + "님이 힘내요를 눌렀습니다"
+        var message = alarmDTO.name + "님이 힘내요를 눌렀습니다"
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
     }
 
@@ -503,7 +428,7 @@ class HomeViewRecyclerViewAdapter(
         var hashmap = contentArray[position].favorites
 
         intent.putExtra("favoriteshashmap", hashmap)
-        //싫어요버튼
+        //힘내요버튼
         var hashmap2 = contentArray[position].meaning
 
         intent.putExtra("meaninghashmap", hashmap2)
@@ -518,7 +443,7 @@ class HomeViewRecyclerViewAdapter(
         this.contentArray = contentArray
     }
 
-    fun addList(contentArray: ArrayList<ContentDTO>){
+    fun addList(contentArray: ArrayList<ContentDTO>) {
         this.contentArray.addAll(contentArray)
     }
 

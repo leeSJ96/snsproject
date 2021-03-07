@@ -60,10 +60,11 @@
 
             <TextView
                 android:id="@+id/user_namechange_tv"
-                android:layout_width="55dp"
+                android:layout_width="60dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:padding="3dp"
+                android:gravity="center"
                 android:text="닉네임 변경"
                 android:textSize="10sp"
                 android:layout_margin="5dp"
@@ -73,95 +74,95 @@
                 app:layout_constraintVertical_bias="0.47" />
         </LinearLayout>
 
+
         <ImageView
             android:id="@+id/account_iv_profile"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginStart="28dp"
+
+            android:layout_marginStart="16dp"
             android:padding="10dp"
             android:src="@drawable/icon_noimage1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
         <TextView
             android:id="@+id/account_tv_follower_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="36dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:text="0"
             android:textColor="@color/Text_white"
             app:layout_constraintBottom_toBottomOf="parent"
-
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+             />
 
         <TextView
             android:id="@+id/account_tv_following_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:text="0"
             android:textColor="@color/Text_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/account_tv_follower_count"
-            app:layout_constraintHorizontal_bias="0.115"
+
             app:layout_constraintStart_toEndOf="@+id/account_tv_post_count"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+          />
 
         <TextView
             android:id="@+id/account_tv_post_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:text="0"
             android:textColor="@color/Text_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/account_iv_profile"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            />
 
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:text="팔로우"
             android:textColor="@color/Text_white"
+            app:layout_constraintBottom_toTopOf="@+id/account_tv_following_count"
             app:layout_constraintEnd_toStartOf="@+id/textView3"
             app:layout_constraintHorizontal_bias="0.517"
             app:layout_constraintStart_toEndOf="@+id/textView2"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+           />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="64dp"
-            android:layout_weight="1"
+
             android:text="남긴글"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/Text_white"
-            app:layout_constraintStart_toEndOf="@+id/account_iv_profile"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/account_tv_post_count"
+            app:layout_constraintStart_toEndOf="@+id/account_iv_profile" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
             android:layout_marginEnd="20dp"
-            android:layout_weight="1"
+            android:layout_marginBottom="10dp"
             android:text="팔로워"
             android:textColor="@color/Text_white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/account_tv_follower_count"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,9 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.*
@@ -34,8 +36,8 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
     var commentuid: String? = null
     var commentuserId: String? = null
     var commentcomment: String? = null
-    var postpath :String? = null
-    var uid : String? = null
+    var postpath: String? = null
+    var uid: String? = null
 
     private var contentDTO: ContentDTO? = ContentDTO()
     private var deleteDialog: DeleteDialog? = null
@@ -82,13 +84,14 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
 
 
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
 
     }
 
-    private fun inputText(){
+    private fun inputText() {
         val uid = SharedPreferenceFactory.getStrValue("userToken", "")
         val timeStamp = System.currentTimeMillis()
         val myPath = "${uid}_${timeStamp}"
@@ -97,44 +100,49 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
 
         comment_btn_send?.setOnClickListener {
 
-            if (System.currentTimeMillis() >= commentTime + 5000){
-                commentTime = System.currentTimeMillis()
 
-            Log.d(TAG, "onCreateView: 코멘트01")
-            var comment = ContentDTO.Comment()
-            Log.d(TAG, "onCreateView: 코멘트12")
-            val name = SharedPreferenceFactory.getStrValue("userName", null)
-            comment.userId = FirebaseAuth.getInstance().currentUser!!.email
-            Log.d(TAG, "onCreateView: 코멘트23")
-            comment.comment = comment_edit_message.text.toString()
-            Log.d(TAG, "onCreateView: 코멘트34")
-            comment.uid = FirebaseAuth.getInstance().currentUser!!.uid
-                comment.name = name
-            Log.d(TAG, "onCreateView: 코멘트45")
-            comment.timestamp = System.currentTimeMillis()
-            Log.d(TAG, "onCreateView: 코멘트56")
-            comment.myPath = myPath
+            if (comment_edit_message?.text?.count()!! < 1) {
+                Toast.makeText(context, "댓글 내용을 작성해주세요", Toast.LENGTH_SHORT).show()
+            } else {
+
+                if (System.currentTimeMillis() >= commentTime + 5000) {
+                    commentTime = System.currentTimeMillis()
+
+                    Log.d(TAG, "onCreateView: 코멘트01")
+                    var comment = ContentDTO.Comment()
+                    Log.d(TAG, "onCreateView: 코멘트12")
+                    val name = SharedPreferenceFactory.getStrValue("userName", null)
+                    comment.userId = FirebaseAuth.getInstance().currentUser!!.email
+                    Log.d(TAG, "onCreateView: 코멘트23")
+                    comment.comment = comment_edit_message.text.toString()
+                    Log.d(TAG, "onCreateView: 코멘트34")
+                    comment.uid = FirebaseAuth.getInstance().currentUser!!.uid
+                    comment.name = name
+                    Log.d(TAG, "onCreateView: 코멘트45")
+                    comment.timestamp = System.currentTimeMillis()
+                    Log.d(TAG, "onCreateView: 코멘트56")
+                    comment.myPath = myPath
 
 
-            FirebaseFirestore.getInstance().collection("images").document(postpath.toString())
-                .collection("comments").document(myPath).set(comment)
-            Log.d(TAG, "onCreateView: 코멘트 111")
+                    FirebaseFirestore.getInstance().collection("images")
+                        .document(postpath.toString())
+                        .collection("comments").document(myPath).set(comment)
+                    Log.d(TAG, "onCreateView: 코멘트 111")
 
-            commentAlarm(destinationUid!!, comment_edit_message.text.toString())
-            comment_edit_message.setText("")
+                    commentAlarm(destinationUid!!, comment_edit_message.text.toString())
+                    comment_edit_message.setText("")
 
-            }else{
-                Toast.makeText(context, "5초뒤에 다시 보내주세요", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "5초뒤에 다시 보내주세요", Toast.LENGTH_SHORT).show()
+                }
             }
         }
-
 
 
     }
 
     //친구-본인 상황별웬절
-    fun moreSpinnerChange(){
-
+    fun moreSpinnerChange() {
 
 
     }
@@ -144,15 +152,14 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
         val commentArray = ArrayList<ContentDTO.Comment>()
 
 
-
         //본인 유아이디 가져오기 확인
         FirebaseFirestore.getInstance().collection("images").document(postpath.toString())
-            .collection("comments").whereEqualTo("uid",myuid)?.get()
+            .collection("comments").whereEqualTo("uid", myuid)?.get()
 
             ?.addOnCompleteListener {
-                if(it.isSuccessful){
-                    for(dc in it.result!!.documents){
-                        var contentDTO =dc.toObject(ContentDTO.Comment::class.java)
+                if (it.isSuccessful) {
+                    for (dc in it.result!!.documents) {
+                        var contentDTO = dc.toObject(ContentDTO.Comment::class.java)
 
                         SharedPreferenceFactory.putStrValue("commentUid", contentDTO?.uid)
                         Log.d(Constants.TAG, "contentDTO uid: ${contentDTO?.uid} ")
@@ -165,24 +172,24 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
         FirebaseFirestore.getInstance().collection("images").document(postpath.toString())
             .collection("comments").orderBy("timestamp")
             .addSnapshotListener { querySnapShot, firebaseFirestoreException ->
-            if (querySnapShot == null) return@addSnapshotListener
-            commentArray.clear()
+                if (querySnapShot == null) return@addSnapshotListener
+                commentArray.clear()
 
-            for (snapshot in querySnapShot.documents) {
-                commentArray.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
-            }
-            Log.d("로그", "calendar size ${commentArray.size}")
-            if (commentArray.size > 0) {
-                //코드 안정성
-                if(isAdded) {
-                    view.comment_recyclerview.adapter =
-                        CommentRecyclerViewAdapter(commentArray, childFragmentManager, this)
-                    view.comment_recyclerview.layoutManager = LinearLayoutManager(App.instance)
+                for (snapshot in querySnapShot.documents) {
+                    commentArray.add(snapshot.toObject(ContentDTO.Comment::class.java)!!)
                 }
-            } else {
+                Log.d("로그", "calendar size ${commentArray.size}")
+                if (commentArray.size > 0) {
+                    //코드 안정성
+                    if (isAdded) {
+                        view.comment_recyclerview.adapter =
+                            CommentRecyclerViewAdapter(commentArray, childFragmentManager, this)
+                        view.comment_recyclerview.layoutManager = LinearLayoutManager(App.instance)
+                    }
+                } else {
 
+                }
             }
-        }
 
         view.comment_recyclerview.adapter?.notifyDataSetChanged()
 
@@ -203,7 +210,7 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
 
         var message =
-            contentDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
+            alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
     }
 
@@ -212,7 +219,7 @@ class CommentFragment : BottomSheetDialogFragment(), IDeletePosition {
     }
 
 
-    fun commentDelete(comment: ContentDTO.Comment){
+    fun commentDelete(comment: ContentDTO.Comment) {
         var postpath = postpath
         var path = comment.myPath
 

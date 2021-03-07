@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.squareup.okhttp.*
 import java.io.IOException
 
-class FcmPush() {
+class FcmPush {
     val JSON = MediaType.parse("application/json; charset=utf-8")
     val url = "https://fcm.googleapis.com/fcm/send"
     var serverKey = "AAAA6NpcpME:APA91bGsKsyDSXqVPl0mqKnCh1IcrFoIIzS7eYnl1b7o0D6ecwj2ST5qaxlAY-4yHWJvo2GHf9suIuHynAlSYFZJjrOtbjpdfcdMWc4zDmlh6Lzum-7LOMtIWarjj2E_EmeXoKGR6gF9"

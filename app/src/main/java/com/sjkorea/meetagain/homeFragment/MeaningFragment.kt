@@ -1,32 +1,36 @@
 package com.sjkorea.meetagain.homeFragment
 
 
+import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.util.Log
 import android.view.*
-import android.widget.Toast
+import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
-import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
-import com.sjkorea.meetagain.Adapter.OnpostListener
+import com.sjkorea.meetagain.Adapter.*
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FcmPush
+import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.SORTT
+import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefreshLayout.OnRefreshListener{
+class MeaningFragment : Fragment(), IHomeRecyclerview, OnpostListener {
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null
@@ -38,15 +42,13 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
     var uid: String? = null
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
     var tr: Boolean? = null
-    var LIST_STATE_KEY = "list_state"
 
-    private var recyclerViewState: Parcelable? = null
 
 
     // 뷰가 사라질때 즉 메모리에서 날라갈때 같이 날리기 위해 따로 빼두기
     private var fragmentHomeBinding: FragmentHomeBinding? = null
     // lateinit 을 통해 나중에 메모리에 올라가도 된다.
-    private lateinit var adapter: HomeViewRecyclerViewAdapter
+    private lateinit var adapter: MeaningViewRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,11 +63,8 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
         firestore = FirebaseFirestore.getInstance()
         okHttpClient = OkHttpClient()
         fcmPush = FcmPush()
-        retainInstance = true;
-        //스와이프리프레시시
-        fragmentHomeBinding?.swipeRefresh?.setOnRefreshListener(this)
 
-        adapter = HomeViewRecyclerViewAdapter(
+        adapter = MeaningViewRecyclerViewAdapter(
             this,
             childFragmentManager,
             this,
@@ -75,6 +74,14 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
             fcmPush, contentUidList
         )
 
+        if (!adapter.hasObservers()) {
+            adapter.setHasStableIds(true)
+        }
+        adapter.setHasStableIds(true)
+//        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
+//            postDialogWindow()
+//
+//        }
 
         fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adapter
 
@@ -83,10 +90,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
         manager.reverseLayout = true
         manager.stackFromEnd = true
 
-
-        if (!adapter.hasObservers()) {
-            adapter.setHasStableIds(true)
-        }
+        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
         var recyclerViewState: Parcelable
         recyclerViewState =
@@ -99,9 +103,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
             );
 
 
-
-
-
         return fragmentHomeBinding!!.root
     }
 
@@ -109,13 +110,12 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-
-        timestampData()
+        // .setOnClickListener {
+        //     customDialog.show(childFragmentManager, "")
+        //
+        getData()
 
     }
-
-
-
 
     override fun onResume() {
         super.onResume()
@@ -125,7 +125,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
 
 
 
-//
 //        fragmentHomeBinding?.swipe?.setOnRefreshListener {
 //
 ////            contentArray.clear()
@@ -154,21 +153,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
 
     }
 
-    private fun saveRecyclerViewState() {
-        // LayoutManager를 불러와 Parcelable 변수에 리사이클러뷰 상태를 Bundle 형태로 저장한다
-        recyclerViewState = homefragment_recyclerview.layoutManager!!.onSaveInstanceState()
-
-    }
-
-    private fun setSavedRecyclerViewState() {
-        homefragment_recyclerview.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-    }
-
-
-
-
-
-
 
     override fun onStop() {
         super.onStop()
@@ -182,6 +166,8 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
 
     override fun onItemClicked(position: Int) {
         Log.d(TAG, "HomeFragment = onItemClicked() called ")
+
+
     }
 
     //게시글 관리 파업창
@@ -195,44 +181,9 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
     }
 
 
+    fun getData() {
 
-    fun timestampData() {
-
-        FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
-            contentArray.clear()
-            contentUidList.clear()
-            if (querySnapshot == null) return@addSnapshotListener
-            for (snapshot in querySnapshot.documents) {
-                var item1 = snapshot.toObject(ContentDTO::class.java)
-
-
-                    contentArray.add(item1!!)
-                    contentUidList.add(snapshot.id)
-
-
-
-            }
-
-            fragmentHomeBinding?.homefragmentRecyclerview?.adapter?.notifyDataSetChanged()
-
-
-
-            Log.d(Constants.TAG, "SORT:${ Constants.SORT.toString()}")
-
-        }
-
-    }
-    //리프레시
-    override fun onRefresh() {
-
-
-        //비우고 데이터 호출
-        this.contentArray.clear()
-        this.adapter.clearList()
-
-
-
-        FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
+        FirebaseFirestore.getInstance().collection("images")?.orderBy("meaningCount").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
             contentArray.clear()
             contentUidList.clear()
             if (querySnapshot == null) return@addSnapshotListener
@@ -243,20 +194,12 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
                 contentArray.add(item1!!)
                 contentUidList.add(snapshot.id)
 
-                fragmentHomeBinding?.swipeRefresh?.isRefreshing = false
 
             }
             fragmentHomeBinding?.homefragmentRecyclerview?.adapter?.notifyDataSetChanged()
             Log.d(Constants.TAG, "SORT:${ Constants.SORT.toString()}")
 
         }
-
-//        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
-//            postDialogWindow()
-//
-//        }
-        adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-
     }
 
 
@@ -292,7 +235,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
 //    }
 
 
-//// 게시글다이얼로그 정렬 파업창
+// 게시글다이얼로그 정렬 파업창
 //fun postDialogWindow() {
 //    val dialog = Dialog(requireContext())
 //    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -355,8 +298,8 @@ class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefresh
 //
 //        loading_progress.visibility = View.VISIBLE
 //    }
-
-
+//
+//
 //}
 }
 

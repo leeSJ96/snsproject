@@ -14,15 +14,16 @@
         android:background="@color/Darkgray"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
 
         <ImageView
             android:id="@+id/add_back_btn"
-            android:padding="10dp"
             android:layout_width="44dp"
             android:layout_height="39dp"
+            android:padding="10dp"
             android:src="@drawable/main_logo5back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/logo_t"
@@ -64,14 +65,14 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="409dp"
-        android:layout_height="683dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:background="#F2F3F7"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
 
         <LinearLayout
@@ -85,8 +86,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:background="@color/backgraund_gray">
+                android:background="@color/backgraund_gray"
+                android:orientation="horizontal">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -149,8 +150,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="102dp"
-            android:background="@color/backgraund_gray"
             android:layout_gravity="center_horizontal"
+            android:background="@color/backgraund_gray"
             android:orientation="vertical">
 
             <com.google.android.material.button.MaterialButton
@@ -159,96 +160,102 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="사진 올리기"
-                android:theme="@style/AppThemeMaterial"
                 android:backgroundTint="@color/Btn_gray"
-                app:backgroundTint="@null"
-                android:textColor="#FFFFFF" />
+                android:text="사진 올리기"
+                android:textColor="#FFFFFF"
+                android:theme="@style/AppThemeMaterial"
+                app:backgroundTint="@null" />
 
             <com.google.android.material.button.MaterialButton
-                android:backgroundTint="@color/Btn_gray"
-                app:backgroundTint="@null"
-                android:theme="@style/AppThemeMaterial"
                 android:id="@+id/addphoto_btn_upload"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:backgroundTint="@color/Btn_gray"
                 android:text="글올리기"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:theme="@style/AppThemeMaterial"
+                app:backgroundTint="@null" />
         </LinearLayout>
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgraund_gray">
 
 
-                <RelativeLayout
+            <ImageView
+                android:layout_width="362dp"
+                android:layout_height="61dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/border_title" />
+
+            <EditText
+                android:id="@+id/addphoto_edit_mamo"
+                android:layout_width="330dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="30dp"
+                android:background="@null"
+                android:fontFamily="@font/binggrae"
+                android:hint="제목을 적어주세요"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#B5B2B2"
+                android:textCursorDrawable="@drawable/text_cursor" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="350dp"
+                android:layout_height="300dp"
+                android:layout_below="@+id/addphoto_edit_mamo"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="8dp">
+
+                <ImageView
+                    android:id="@+id/imageView6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/backgraund_gray"
-                    >
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:src="@drawable/border_contents"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
 
-
-                    <ImageView
-                        android:layout_width="362dp"
-                        android:layout_height="61dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="25dp"
-                        android:layout_marginTop="25dp"
-                        android:layout_marginEnd="22dp"
-                        android:src="@drawable/border_title" />
-
-                    <EditText
-                        android:id="@+id/addphoto_edit_mamo"
-                        android:layout_width="330dp"
-                        android:layout_height="50dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="33dp"
-                        android:layout_marginTop="30dp"
-
-                        android:layout_marginEnd="46dp"
-                        android:background="@null"
-                        android:fontFamily="@font/binggrae"
-                        android:hint="제목을 적어주세요"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#B5B2B2"
-                        android:textCursorDrawable="@drawable/text_cursor" />
-
-                    <ImageView
-                        android:layout_width="402dp"
-                        android:layout_height="401dp"
-                        android:layout_below="@+id/addphoto_edit_mamo"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="0dp"
-                        android:src="@drawable/border_contents" />
-
-                    <EditText
-                        android:id="@+id/addphoto_edit_explain"
-                        android:layout_width="wrap_content"
-                        android:layout_height="304dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginStart="17dp"
-                        android:layout_marginTop="26dp"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginBottom="46dp"
-                        android:background="@null"
-                        android:fontFamily="@font/binggrae"
-                        android:gravity="center"
-                        android:hint="글을 적어주세요"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#979797"
-                        android:textCursorDrawable="@drawable/text_cursor" />
-
-                </RelativeLayout>
-            </LinearLayout>
+                <EditText
+                    android:id="@+id/addphoto_edit_explain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@null"
+                    android:fontFamily="@font/binggrae"
+                    android:gravity="center"
+                    android:hint="글을 적어주세요"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#979797"
+                    android:textCursorDrawable="@drawable/text_cursor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageView6" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,12 +48,11 @@
             android:id="@+id/commentviewitem_textview_comment"
             android:layout_width="212dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
             android:layout_marginBottom="12dp"
             android:textColor="@color/Text_white"
             card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintEnd_toStartOf="@+id/comment_more_spinner"
-            card_view:layout_constraintHorizontal_bias="0.867"
+            android:layout_marginStart="12dp"
+
             card_view:layout_constraintStart_toEndOf="@+id/commentviewitem_imageview_profile"
             tools:text="User Name" />
 

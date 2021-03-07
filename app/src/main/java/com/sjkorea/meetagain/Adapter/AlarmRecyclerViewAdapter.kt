@@ -221,7 +221,7 @@ class AlarmRecyclerViewAdapter( fragmentManager: FragmentManager,) : RecyclerVie
                         if (task.isSuccessful) {
                             val nameValue = task.result!!["name"]
                             Log.d(Constants.TAG, "commentNameValue: $nameValue")
-                            commentTextView.text = nameValue.toString() + "님이 슬퍼요를 눌렀습니다."
+                            commentTextView.text = nameValue.toString() + "님이 힘내요를 눌렀습니다."
 
                         }
                     }
@@ -270,7 +270,7 @@ class AlarmRecyclerViewAdapter( fragmentManager: FragmentManager,) : RecyclerVie
         var hashmap = alarmDTOList[position].favorites
 
         intent.putExtra("favoriteshashmap", hashmap)
-        //싫어요버튼
+        //힘내요버튼
         var hashmap2 = alarmDTOList[position].meaning
 
         intent.putExtra("meaninghashmap", hashmap2)
