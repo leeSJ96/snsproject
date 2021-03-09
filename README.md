@@ -53,6 +53,7 @@ SNS Meetagin 포트폴리오
     
 닉네임 및 이메일 중복체크    
 
+파이어베이스에서 데이터를 조회해서 중복체크 
     //닉네임,이메일 중복체크
     private fun authCheck() {
 
@@ -108,7 +109,8 @@ SNS Meetagin 포트폴리오
     }
 서버에 데이터 저장
 
-
+ 파이어베이스 서버에 회원 정보(uid,가입한시간,이메일,닉네임)을 저장함
+ 
     //파이어베이스 데이터 저장
     private fun authDatabaseAdd(id: String, pw: String, userName: String, userUid: String) {
 
@@ -513,9 +515,11 @@ SNS Meetagin 포트폴리오
 
 
 ![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
-
+  
+  
 
 [좋아요 힘내요 및 팔로우]
+
 
 
 
