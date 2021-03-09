@@ -23,7 +23,7 @@ SNS Meetagin 포트폴리오
 1. [회원가입] JoinActivity
 
 
-![iage](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)
+![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)
 
 <코드>
 
