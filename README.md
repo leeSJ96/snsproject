@@ -237,6 +237,7 @@ SNS Meetagin 포트폴리오
 
 사진이 있을경우 데이터저장
 
+
     //사진이 있을시 업로드 데이터
     fun contentUpload() {
         // Make filename
@@ -294,6 +295,7 @@ SNS Meetagin 포트폴리오
 
 
 사진이 없을경우 데이터저장
+
 
     //사진이 없을시  업로드 데이터
     fun contentUploadNoPhoto() {
@@ -465,6 +467,7 @@ SNS Meetagin 포트폴리오
 
 
 2. 사진이 없을시
+
 
 
         //사진이 없을시  업로드 데이터
