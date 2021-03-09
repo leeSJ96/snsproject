@@ -512,7 +512,7 @@ SNS Meetagin 포트폴리오
 -------------
 
 
-![image](https://im4.ezgif.com/tmp/ezgif-4-ce793cf856d0.gif)
+![image](https://im4.ezgif.com/tmp/ezgif-4-bd22468fe746.gif)
 
 
 좋아요 힘내요
