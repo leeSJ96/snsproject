@@ -652,7 +652,7 @@ SNS Meetagin 포트폴리오
 -------------
 1. [닉네임 변경] FirstVisitActivity 
 
-![image](https://im4.ezgif.com/tmp/ezgif-4-a0d5bcd0cc4c.gif)
+![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)
 
 
 파이어 베이스에서 유저의 데이터를 조회 해서 
