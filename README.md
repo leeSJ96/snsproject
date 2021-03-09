@@ -148,3 +148,8 @@ SNS Meetagin 포트폴리오
 
 
     }
+    
+[로그인 후 인트로화면에서 메인화면으로->]  IntroActivity
+
+![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)
+
