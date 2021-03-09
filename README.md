@@ -154,6 +154,7 @@ SNS Meetagin 포트폴리오
 ![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)
 
 
+<코드>
 
 데이터는 쉐어드로 조회합니다.
 
@@ -167,7 +168,7 @@ SNS Meetagin 포트폴리오
 데이터가 없다면 -> 로그인 화면
 데이터가 있다면 -> 메인 화면
 
-<코드>
+
    닉네임 이메일 유아이디가 없다면 로그인 화면 ->
    
         if (uid != null && name != null && email != null) {
