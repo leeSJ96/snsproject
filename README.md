@@ -647,4 +647,57 @@ SNS Meetagin 포트폴리오
 
 
     }
-    
+
+유저 정보 
+-------------
+1. [닉네임 변경] FirstVisitActivity 
+
+![image](https://im4.ezgif.com/tmp/ezgif-4-a0d5bcd0cc4c.gif)
+
+
+파이어 베이스에서 유저의 데이터를 조회 해서 
+유저 닉네임을 변경
+
+
+        // 파이어베이스 데이터 조회후 닉네임 변경
+        private fun updateData() {
+
+        SharedPreferenceFactory.getStrValue("userToken", "")  // 유저 uid
+        val path = SharedPreferenceFactory.getStrValue("userPath", "")  // 유저 디비 위치)
+        var uid = FirebaseAuth.getInstance().currentUser!!.uid
+        var contentDTO = ContentDTO()
+        var map = HashMap<String, Any>()
+        val nameing = name_edit.text.toString()
+        var email = FirebaseAuth.getInstance().currentUser?.email
+        Log.d(Constants.TAG, "uid = $uid")
+        map["name"] = nameing
+        
+
+        if (path != null) {
+            firestore?.collection("user_auth")?.document(path)?.update(map)
+                ?.addOnCompleteListener {
+                    if (it.isSuccessful) {
+
+                        SharedPreferenceFactory.putStrValue("userName", nameing)   // 유저 닉네임
+                        Toast.makeText(this, "닉네임이 변경 되었습니다", Toast.LENGTH_SHORT).show()
+                        finish()
+
+
+                    }
+                }
+        }
+        if (path != null) {
+        FirebaseFirestore.getInstance().collection("profileName").document(uid).set(map)
+            ?.addOnCompleteListener {
+                if (it.isSuccessful) {
+
+                    SharedPreferenceFactory.putStrValue("userMainName", nameing)   // 유저 닉네임
+                    finish()
+
+
+                }
+            }
+        }
+
+
+    }
