@@ -763,6 +763,6 @@ JSON 파싱후  서버에 알림송출
         fcmPush?.sendMessage(destinationUid!!, "알림 메시지 입니다", message)
   댓글
   
-   var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
+    var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
         
