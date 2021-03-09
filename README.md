@@ -228,6 +228,8 @@ SNS Meetagin 포트폴리오
 
 
 ![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)
+
+
 사진이 있을경우 와 사진이 없을경우 나뉨
 
 <코드>
@@ -334,6 +336,171 @@ SNS Meetagin 포트폴리오
 
     }
 
+2.[게시글 업데이트(수정)] AddUpdateActivity
+
+
+![iage](https://im4.ezgif.com/tmp/ezgif-4-63c18f044f7b.gif)
+
+
+사진이 있을때 
+사진 변경유무 구분 처리
+
+사진이 없을때도
+사진 변경유무 구분 처리
 
 
 
+<코드>
+
+1. 사진이 있을시
+
+
+       //사진이 있을시 업로드 데이터
+    fun contentUpload() {
+        // Make filename
+        val now = Date()
+        val timestamp = now.time
+        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
+        val createdAt = sdf.format(timestamp)
+        var imageFileName = "IMAGE_" + createdAt + "_.png"
+
+
+        // Callback method
+        var storageRef = storage?.reference?.child("images")?.child(imageFileName)
+        //사진이 변경 구분
+        when (photoUri) {
+            //사진 변경을 안 했을 시
+            null -> {
+
+                val name = SharedPreferenceFactory.getStrValue("userName", null)
+                Log.d(Constants.TAG, "네임확인 : $name ")
+                contentDTO?.name = name
+
+                contentDTO!!.let { it ->
+
+                    it.uid = auth?.currentUser?.uid
+                    // Insert userId
+                    it.userId = auth?.currentUser?.email
+                    it.explain = addphoto_edit_explain.text.toString()
+                    it.title = addphoto_edit_mamo.text.toString()
+
+                }
+                Log.d("로그", "링크 ${contentDTO!!.pathData}")
+
+                val mamoText = addphoto_edit_mamo.text.toString()
+                val explainText = addphoto_edit_explain.text.toString()
+                val update = firestore?.collection("images")?.document(contentDTO!!.pathData.toString())
+
+                val mamoTextmap = HashMap<String, Any>()
+                val explainTextmap = HashMap<String, Any>()
+                mamoTextmap["title"] = mamoText
+                explainTextmap["explain"] = explainText
+
+                update?.set(contentDTO!!)?.addOnSuccessListener {
+                    Log.d(Constants.TAG, "제목수정완료: ")
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+
+                update?.set(contentDTO!!)?.addOnSuccessListener {
+                    Log.d(Constants.TAG, "내용수정완료: ")
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+
+
+
+                setResult(Activity.RESULT_OK)
+
+                finish()
+
+            }
+            else -> {  //변경 했을시
+
+
+                storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+                    Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG)
+                        .show()
+                    storageRef.downloadUrl.addOnSuccessListener { uri ->
+
+                        val name = SharedPreferenceFactory.getStrValue("userName", null)
+                        Log.d(Constants.TAG, "네임확인 : $name ")
+
+                        contentDTO?.name = name
+
+                        // Insert downloadUrl of image
+                        contentDTO?.imageUrl = uri.toString()
+
+                        contentDTO?.let { it ->
+                            // Insert uid of user
+                            it.uid = auth?.currentUser?.uid
+                            // Insert userId
+                            it.userId = auth?.currentUser?.email
+                            // Insert explain of content
+                            it.explain = addphoto_edit_explain.text.toString()
+
+                            it.title = addphoto_edit_mamo.text.toString()
+
+                        }
+
+
+
+                        firestore?.collection("images")?.document(contentDTO?.pathData.toString())
+                            ?.set(contentDTO!!)
+                            ?.addOnSuccessListener {
+                                hideAndShowUi(false)
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }?.addOnFailureListener {
+                                uploadErrorMessage(it)
+                            }
+                    }
+
+                }
+            }
+
+
+        }
+
+
+
+2. 사진이 없을시
+
+
+        //사진이 없을시  업로드 데이터
+        fun contentUploadNoPhoto() {
+
+
+        // Make filename
+        val now = Date()
+        val timestamp = now.time
+        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
+        val createdAt = sdf.format(timestamp)
+        val contentDTO = ContentDTO()
+        val email = FirebaseAuth.getInstance().currentUser?.email
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val name = SharedPreferenceFactory.getStrValue("userName", null)
+        Log.d(Constants.TAG, "네임확인 : $name ")
+        contentDTO.name = name
+
+        contentDTO.let {
+            // Insert downloadUrl of image
+
+            it.imageUrl = "NullPhotoLink"
+            // Insert uid of user
+            it.uid = auth?.currentUser?.uid
+
+            // Insert userId
+            it.userId = auth?.currentUser?.email
+
+            // Insert explain of content
+            it.explain = addphoto_edit_explain.text.toString()
+
+            it.title = addphoto_edit_mamo.text.toString()
+
+
+
+            it.imageUrl =
+                "https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
+
+        }
