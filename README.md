@@ -221,4 +221,119 @@ SNS Meetagin 포트폴리오
         }, 1500)
 
   
+업로드 및 수정,삭제
+-------------
+
+1.[게시글 업로드] AddActivity
+
+
+![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)
+사진이 있을경우 와 사진이 없을경우 나뉨
+
+<코드>
+
+
+사진이 있을경우 데이터저장
+
+    //사진이 있을시 업로드 데이터
+    fun contentUpload() {
+        // Make filename
+        val now = Date()
+        val timestamp = now.time
+        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
+        val createdAt = sdf.format(timestamp)
+        var imageFileName = "IMAGE_" + createdAt + "_.png"
+        val contentDTO = ContentDTO()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val path = "${uid}_${System.currentTimeMillis()}"
+
+
+
+        // 데이터 저장
+        var storageRef = storage?.reference?.child("images")?.child(imageFileName)
+        storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+            Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG)
+                .show()
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                
+                val name = SharedPreferenceFactory.getStrValue("userName", null)
+                Log.d(Constants.TAG, "네임확인 : $name ")
+
+                contentDTO.name = name
+                // Insert downloadUrl of image
+                contentDTO.imageUrl = uri.toString()
+
+                contentDTO.pathData = path
+                // Insert uid of user
+                contentDTO.uid = auth?.currentUser?.uid
+
+                // Insert userId
+                contentDTO.userId = auth?.currentUser?.email
+
+                // Insert explain of content
+                contentDTO.explain = addphoto_edit_explain.text.toString()
+
+                contentDTO.title = addphoto_edit_mamo.text.toString()
+                
+                // Insert timestamp
+                contentDTO.timestamp = System.currentTimeMillis()
+                
+                firestore?.collection("images")?.document(path)?.set(contentDTO)
+
+
+                setResult(Activity.RESULT_OK)
+
+                finish()
+            }
+        }
+
+    }
+
+
+
+사진이 없을경우 데이터저장
+
+    //사진이 없을시  업로드 데이터
+    fun contentUploadNoPhoto() {
+
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val path = "${uid}_${System.currentTimeMillis()}"
+        val contentDTO = ContentDTO()
+        val name = SharedPreferenceFactory.getStrValue("userName", null)
+        Log.d(Constants.TAG, "네임확인 : $name ")
+        //contentDTO 모델 리스트
+                contentDTO.name = name
+                // Insert downloadUrl of image
+                contentDTO.imageUrl = "NullPhotoLink"
+                // Insert uid of user
+                contentDTO.uid = auth?.currentUser?.uid
+
+                contentDTO.pathData = path
+
+                // Insert userId
+                contentDTO.userId = auth?.currentUser?.email
+
+                // Insert explain of content
+                contentDTO.explain = addphoto_edit_explain.text.toString()
+
+                contentDTO.title = addphoto_edit_mamo.text.toString()
+
+                // Insert timestamp
+                contentDTO.timestamp = System.currentTimeMillis()
+
+                contentDTO.imageUrl ="https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
+
+                firestore?.collection("images")?.document(path)?.set(contentDTO)
+
+
+                setResult(Activity.RESULT_OK)
+
+                finish()
+
+
+
+    }
+
+
+
 
