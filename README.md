@@ -169,6 +169,7 @@ SNS Meetagin 포트폴리오
 
 <코드>
    닉네임 이메일 유아이디가 없다면 로그인 화면 ->
+   
         if (uid != null && name != null && email != null) {
 
             moveNext(uid, email, name)
@@ -186,7 +187,8 @@ SNS Meetagin 포트폴리오
         }
         
   닉네임 이메일 유아이디가 있다면 메인 화면 ->
-         Handler(Looper.getMainLooper()).postDelayed({
+  
+            Handler(Looper.getMainLooper()).postDelayed({
 
             authStore.whereEqualTo("uid",uid).get().addOnSuccessListener { querySnapshot ->
 
