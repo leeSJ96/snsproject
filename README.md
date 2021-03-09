@@ -704,3 +704,65 @@ SNS Meetagin 코드 설명드립니다
 
 
     }
+  
+  
+  
+ Fcm 알림 서비스 
+-------------
+1. [Fcm 알림] FcmPush 
+
+![image](https://im4.ezgif.com/tmp/ezgif-4-2dc6faf27b11.gif)
+
+
+서버 키를 가져와
+JSON 파싱후  서버에 알림송출
+
+    fun sendMessage(destinationUid: String, title: String, message: String) {
+        FirebaseFirestore.getInstance().collection("pushtokens").document(destinationUid).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                var token = task.result!!["pushToken"].toString()
+                println(token)
+                var pushDTO = PushDTO()
+                pushDTO.to = token
+                pushDTO.notification?.title = title
+                pushDTO.notification?.body = message
+
+                var body = RequestBody.create(JSON, gson?.toJson(pushDTO))
+                var request = Request
+                    .Builder()
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Authorization", "key=" + serverKey)
+                    .url(url)
+                    .post(body)
+                    .build()
+                okHttpClient?.newCall(request)?.enqueue(object : Callback {
+                    override fun onFailure(request: Request?, e: IOException?) {
+                    }
+
+                    override fun onResponse(response: Response?) {
+                        println(response?.body()?.string())
+                    }
+                })
+            }
+        }
+    }
+    
+  좋아요,힘내요,댓글,팔로우 알림함수에 추가
+  
+  좋아요  
+  
+     var message = alarmDTO.name + "님이 좋아요를 눌렀습니다"
+        fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
+  힘내요  
+  
+     var message = alarmDTO.name + "님이 힘내요를 눌렀습니다"
+        fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
+  팔로우
+  
+    var message = alarmDTO.name + getString(R.string.alarm_follow)
+        fcmPush?.sendMessage(destinationUid!!, "알림 메시지 입니다", message)
+  댓글
+  
+   var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
+        fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
+        
