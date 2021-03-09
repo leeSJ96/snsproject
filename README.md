@@ -5,6 +5,9 @@ SNS Meetagin 포트폴리오
 개발언어 . Kotlin
 개발 프로그램 . Android Studio
 
+사용 라이브러리 리사이클러뷰, glide , firebase , viewpager2
+
+firebase 사용하였습니다
 
 
 유튜브 영상이 준비 되어있습니다 
@@ -12,8 +15,6 @@ SNS Meetagin 포트폴리오
 * 유튜브 포트폴리오 <https://youtu.be/0pU1JdHvN4c>
 
 영상을 다 시청해주시고 코드를 봐주시면 이해하시기 더 편합니다
-
-
 
 
 SNS Meetagin 코드 설명드립니다
