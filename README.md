@@ -515,7 +515,7 @@ SNS Meetagin 포트폴리오
 
 
 
-![image](https://im4.ezgif.com/tmp/ezgif-4-a9c1ae5df3ae.gif)
+![image](https://im4.ezgif.com/tmp/ezgif-4-ce793cf856d0.gif)
 
 좋아요 힘내요
 
