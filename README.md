@@ -511,11 +511,9 @@ SNS Meetagin 포트폴리오
  SNS 부가기능
 -------------
 
-좋아요,힘내요
-
-
 
 ![image](https://im4.ezgif.com/tmp/ezgif-4-ce793cf856d0.gif)
+
 
 좋아요 힘내요
 
