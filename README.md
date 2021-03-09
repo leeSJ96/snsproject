@@ -358,14 +358,14 @@ SNS Meetagin 포트폴리오
 
 
        //사진이 있을시 업로드 데이터
-    fun contentUpload() {
-        // Make filename
-        val now = Date()
-        val timestamp = now.time
-        val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
-        val createdAt = sdf.format(timestamp)
-        var imageFileName = "IMAGE_" + createdAt + "_.png"
-
+   
+       fun contentUpload() {
+         // Make filename
+         val now = Date()
+         val timestamp = now.time
+         val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
+         val createdAt = sdf.format(timestamp)
+         var imageFileName = "IMAGE_" + createdAt + "_.png"
 
         // Callback method
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
