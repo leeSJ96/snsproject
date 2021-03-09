@@ -11,7 +11,7 @@ SNS Meetagin 포트폴리오
 
 <코드>
 
-1.패스워드 패턴
+패스워드 패턴
 
     //패스워드 필터
     override fun filter(
