@@ -5,6 +5,8 @@ SNS Meetagin 포트폴리오
 개발언어 . Kotlin
 개발 프로그램 . Android Studio
 
+
+
 유튜브 영상이 준비 되어있습니다 
 
 * 유튜브 포트폴리오 <https://youtu.be/0pU1JdHvN4c>
@@ -13,7 +15,8 @@ SNS Meetagin 포트폴리오
 
 
 
-안녕하세요 SNS Meetagin 코드 설명드립니다
+
+SNS Meetagin 코드 설명드립니다
 
 
 
