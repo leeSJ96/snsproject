@@ -515,9 +515,16 @@ SNS Meetagin 포트폴리오
 ![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
 
 
-좋아요 힘내요
+[좋아요 힘내요 및 팔로우]
+
+
+
+좋아요,힘내요. HomeViewRecyclerViewAdapter
+
 
 <코드>
+
+좋아요,힘내요 구문
 
     //좋아요 이벤트 기능
     private fun favoriteEvent(position: Int) {
@@ -567,3 +574,73 @@ SNS Meetagin 포트폴리오
         }
 
     }
+    
+팔로우 구문 .CustomBottomDialog
+    
+    
+     //팔로우
+    fun requestFollow() {
+
+        // Save data to my account
+
+        var tsDocFollowing = firestore!!.collection("users").document(currentUserUid!!)
+        firestore?.runTransaction { transaction ->
+
+            var followDTO = transaction.get(tsDocFollowing!!).toObject(FollowDTO::class.java)
+            if (followDTO == null) {
+
+                followDTO = FollowDTO()
+                followDTO.followingCount = 1
+                followDTO.followings[uid!!] = true
+
+                transaction.set(tsDocFollowing, followDTO)
+                return@runTransaction
+
+            }
+
+
+            if (followDTO?.followings?.containsKey(uid)!!) {
+                // It remove following third person when a third person follow me
+                followDTO?.followingCount = followDTO?.followingCount - 1
+                followDTO?.followings.remove(uid)
+            } else {
+                // It remove following third person when a third person not follow me
+                followDTO?.followingCount = followDTO?.followingCount + 1
+                followDTO?.followings[uid!!] = true
+            }
+            transaction.set(tsDocFollowing, followDTO)
+            return@runTransaction
+        }
+
+        // Save data to third person
+        var tsDocFollower = firestore!!.collection("users").document(uid!!)
+        firestore?.runTransaction { transaction ->
+
+            var followDTO = transaction.get(tsDocFollower!!).toObject(FollowDTO::class.java)
+            if (followDTO == null) {
+
+                followDTO = FollowDTO()
+                followDTO!!.followerCount = 1
+                followDTO!!.followers[currentUserUid!!] = true
+
+                transaction.set(tsDocFollower, followDTO!!)
+                return@runTransaction
+            }
+
+            if (followDTO!!.followers.containsKey(currentUserUid!!)) {
+                // It cancel my follower when I follow a third person
+                followDTO!!.followerCount = followDTO!!.followerCount - 1
+                followDTO!!.followers.remove(currentUserUid!!)
+            } else {
+                // It cancel my follower when I don't follow a third person
+                followDTO!!.followerCount = followDTO!!.followerCount + 1
+                followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid)
+            }
+            transaction.set(tsDocFollower, followDTO!!)
+            return@runTransaction
+        }
+
+
+    }
+    
