@@ -507,3 +507,64 @@ SNS Meetagin 포트폴리오
                 "https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
 
         }
+
+ SNS 부가기능
+-------------
+
+좋아요,힘내요
+
+![iage](https://im4.ezgif.com/tmp/ezgif-4-a9c1ae5df3ae.gif)
+
+
+좋아요 힘내요
+
+<코드>
+
+    //좋아요 이벤트 기능
+    private fun favoriteEvent(position: Int) {
+        val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+        firestore?.runTransaction { transaction ->
+
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+            if (contentDTO!!.favorites.containsKey(uid)) {
+                // When the button is clicked
+                contentDTO.favoriteCount = contentDTO.favoriteCount - 1
+                contentDTO.favorites.remove(uid)
+            } else {
+                // When the button is not clicked
+                contentDTO.favoriteCount = contentDTO.favoriteCount + 1
+                contentDTO.favorites[uid] = true
+                favoriteAlarm(contentArray[position].uid!!)
+            }
+            transaction.set(tsDoc, contentDTO)
+        }
+    }
+
+
+    //힘내요 이벤트 기능
+    private fun meaningEvent(position: Int) {
+        val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+        firestore?.runTransaction { transaction ->
+
+            val contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+
+            if (contentDTO!!.meaning.containsKey(uid)) {
+
+                // When the button is clicked
+                contentDTO.meaningCount = contentDTO.meaningCount - 1
+                contentDTO.meaning.remove(uid)
+            } else {
+
+                // When the button is not clicked
+                contentDTO.meaningCount = contentDTO.meaningCount + 1
+                contentDTO.meaning[uid] = true
+
+                meaningAlarm(contentArray[position].uid!!)
+            }
+            transaction.set(tsDoc, contentDTO)
+        }
+
+    }
