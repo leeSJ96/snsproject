@@ -6,6 +6,7 @@ SNS Meetagin 포트폴리오
 -------------
 
 1.회원가입
-https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif
+
+![iage](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)
 
 
