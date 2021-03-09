@@ -153,3 +153,53 @@ SNS Meetagin 포트폴리오
 
 ![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)
 
+
+
+데이터는 쉐어드로 조회합니다.
+
+        // 사용자가 로그인을 전에 했을 경우 자동 로그인을 하기 위해 디바이스에 저장된 데이터값을 조회한다
+        val uid = SharedPreferenceFactory.getStrValue("userToken", null)
+        val name = SharedPreferenceFactory.getStrValue("userName", null)
+        val email = SharedPreferenceFactory.getStrValue("userEmail", null)
+        
+        
+인트로 화면에서 데이터를 조회하고
+데이터가 없다면 -> 로그인 화면
+데이터가 있다면 -> 메인 화면
+
+<코드>
+   닉네임 이메일 유아이디가 없다면 로그인 화면 ->
+        if (uid != null && name != null && email != null) {
+
+            moveNext(uid, email, name)
+
+        } else {
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
+                finish()
+            }, 1500)
+
+
+        }
+        
+  닉네임 이메일 유아이디가 있다면 메인 화면 ->
+         Handler(Looper.getMainLooper()).postDelayed({
+
+            authStore.whereEqualTo("uid",uid).get().addOnSuccessListener { querySnapshot ->
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
+                finish()
+
+            }.addOnFailureListener { error ->
+                Log.d("로그","error $error")
+            }
+
+        }, 1500)
+
+  
+
