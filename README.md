@@ -766,3 +766,6 @@ JSON 파싱후  서버에 알림송출
     var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
         
+이걸로 코드설명을 마치겠습니다   
+이 앱을 개발하면서 수 많은 삽질과 구글링을 통해 카카오톡 오픈채팅방에 계시는 개발자분에게 질문과 조언을 듣고 많은 도움으로   
+마무리를 짓게 되었습니다 앞으로 더 많은 기능을 가진 앱을 만들고 싶습니다 
