@@ -30,7 +30,7 @@ SNS Meetagin 코드 설명드립니다
 
 <코드>
 
-패스워드 패턴
+[패스워드 패턴]
 
     //패스워드 필터
     override fun filter(
@@ -54,11 +54,12 @@ SNS Meetagin 코드 설명드립니다
     }
     
     
-닉네임 및 이메일 중복체크    
-
-파이어베이스에서 데이터를 조회해서 중복체크 
-    //닉네임,이메일 중복체크
-    private fun authCheck() {
+[닉네임 및 이메일 중복체크]    
+ 
+    
+    
+             //닉네임,이메일 중복체크
+          private fun authCheck() {
 
         val emailValue = email_input.text.toString()
         val pwValue = password_input.text.toString()
@@ -109,10 +110,15 @@ SNS Meetagin 코드 설명드립니다
             input_btn.isEnabled = true
             input_btn.text = "가입하기"
         }
-    }
-서버에 데이터 저장
+    }    
+    
+        
+          
+파이어베이스에서 데이터를 조회해서 중복체크      
 
- 파이어베이스 서버에 회원 정보(uid,가입한시간,이메일,닉네임)을 저장함
+[서버에 데이터 저장]   
+
+ 파이어베이스 서버에 회원 정보(uid,가입한시간,이메일,닉네임)을 저장함   
  
     //파이어베이스 데이터 저장
     private fun authDatabaseAdd(id: String, pw: String, userName: String, userUid: String) {
@@ -170,27 +176,26 @@ SNS Meetagin 코드 설명드립니다
 
     }
     
-자동 로그인 IntroActivity
-
+[자동 로그인] IntroActivity   
+   
 ![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)
 
+   
+<코드>   
+   
 
-<코드>
-
-데이터는 쉐어드로 조회합니다.
 
         // 사용자가 로그인을 전에 했을 경우 자동 로그인을 하기 위해 디바이스에 저장된 데이터값을 조회한다
         val uid = SharedPreferenceFactory.getStrValue("userToken", null)
         val name = SharedPreferenceFactory.getStrValue("userName", null)
         val email = SharedPreferenceFactory.getStrValue("userEmail", null)
-        
-        
-인트로 화면에서 데이터를 조회하고
-조회한 데이터가 없다면 -> 로그인 화면
-조회한 데이터가 있다면 -> 메인 화면
-
-   핸들러를 사용 했습니다
-   닉네임 이메일 유아이디가 없다면 로그인 화면 ->
+           
+ 데이터는 쉐어드로 조회합니다.      
+ 
+ 
+   
+   [인트로 화면 데이터 조회]   
+   
    
         if (uid != null && name != null && email != null) {
 
@@ -223,24 +228,30 @@ SNS Meetagin 코드 설명드립니다
                 Log.d("로그","error $error")
             }
 
-        }, 1500)
+        }, 1500)   
+              
+인트로 화면에서 데이터를 조회하고
+조회한 데이터가 없다면 -> 로그인 화면
+조회한 데이터가 있다면 -> 메인 화면
+
+   핸들러를 사용 했습니다
+   닉네임 이메일 유아이디가 없다면 로그인 화면 ->  
 
   
 업로드 및 수정,삭제
 -------------
+   
+1.[게시글 업로드] AddActivity   
 
-1.[게시글 업로드] AddActivity
+    
+![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)   
+   
 
+사진이 있을경우 와 사진이 없을경우 나눠집니다   
+   
+<코드>   
+   
 
-![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)
-
-
-사진이 있을경우 와 사진이 없을경우 나뉨
-
-<코드>
-
-
-사진이 있을경우 데이터저장
 
 
     //사진이 있을시 업로드 데이터
@@ -296,10 +307,9 @@ SNS Meetagin 코드 설명드립니다
         }
 
     }
+   
+사진이 있을경우 데이터저장   
 
-
-
-사진이 없을경우 데이터저장
 
 
     //사진이 없을시  업로드 데이터
@@ -341,11 +351,13 @@ SNS Meetagin 코드 설명드립니다
 
 
 
-    }
+    }   
+    
+사진이 없을경우 데이터저장   
 
-2.[게시글 업데이트(수정)] AddUpdateActivity
+2.[게시글 업데이트(수정)] AddUpdateActivity   
 
-
+   
 ![iage](https://im4.ezgif.com/tmp/ezgif-4-63c18f044f7b.gif)
 
 
@@ -359,8 +371,7 @@ SNS Meetagin 코드 설명드립니다
 
 <코드>
 
-1. 사진이 있을시
-
+   
 
        //사진이 있을시 업로드 데이터
    
@@ -468,10 +479,10 @@ SNS Meetagin 코드 설명드립니다
 
 
         }
+   
+1. 사진이 있을시   
+   
 
-
-
-2. 사진이 없을시
 
 
 
@@ -511,8 +522,12 @@ SNS Meetagin 코드 설명드립니다
             it.imageUrl =
                 "https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
 
-        }
-
+        }   
+         
+   2. 사진이 없을시     
+         
+            
+                
  SNS 부가기능
 -------------
 
@@ -526,13 +541,13 @@ SNS Meetagin 코드 설명드립니다
 
 
 
-좋아요,힘내요. HomeViewRecyclerViewAdapter
+[좋아요,힘내요]. HomeViewRecyclerViewAdapter
 
 
-<코드>
-
-좋아요,힘내요 구문
-
+<코드>   
+   
+좋아요,힘내요 구문   
+   
     //좋아요 이벤트 기능
     private fun favoriteEvent(position: Int) {
         val tsDoc = firestore?.collection("images")?.document(contentUidList[position])
@@ -580,10 +595,12 @@ SNS Meetagin 코드 설명드립니다
             transaction.set(tsDoc, contentDTO)
         }
 
-    }
+    }   
     
-팔로우 구문 .CustomBottomDialog
-    
+       
+[팔로우 구문] .CustomBottomDialog   
+
+       
     
      //팔로우
     fun requestFollow() {
@@ -652,16 +669,16 @@ SNS Meetagin 코드 설명드립니다
     }
 
 유저 정보 
--------------
-1. [닉네임 변경] FirstVisitActivity 
+-------------   
+   
+1. [닉네임 변경] FirstVisitActivity    
+    
+![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)   
 
-![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)
+  
 
-
-파이어 베이스에서 유저의 데이터를 조회 해서 
-유저 닉네임을 변경
-
-
+   
+   
         // 파이어베이스 데이터 조회후 닉네임 변경
         private fun updateData() {
 
@@ -706,6 +723,10 @@ SNS Meetagin 코드 설명드립니다
     }
   
   
+        
+파이어 베이스에서 유저의 데이터를 조회 해서 
+유저 닉네임을 변경   
+
   
  Fcm 알림 서비스 
 -------------
@@ -713,10 +734,9 @@ SNS Meetagin 코드 설명드립니다
 
 ![image](https://im4.ezgif.com/tmp/ezgif-4-2dc6faf27b11.gif)
 
-
-서버 키를 가져와
-JSON 파싱후  서버에 알림송출
-
+   
+   
+      
     fun sendMessage(destinationUid: String, title: String, message: String) {
         FirebaseFirestore.getInstance().collection("pushtokens").document(destinationUid).get().addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -746,8 +766,13 @@ JSON 파싱후  서버에 알림송출
             }
         }
     }
-    
-  좋아요,힘내요,댓글,팔로우 알림함수에 추가
+       
+          
+          
+서버 키를 가져와
+JSON 파싱후  서버에 알림송출   
+       
+  [좋아요,힘내요,댓글,팔로우 알림함수에 추가]
   
   좋아요  
   
@@ -766,6 +791,6 @@ JSON 파싱후  서버에 알림송출
     var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
         
-이걸로 코드설명을 마치겠습니다   
-이 앱을 개발하면서 수 많은 삽질과 구글링을 통해 카카오톡 오픈채팅방에 계시는 개발자분에게 질문과 조언을 듣고 많은 도움으로   
-마무리를 짓게 되었습니다 앞으로 더 많은 기능을 가진 앱을 만들고 싶습니다 
+//이걸로 코드설명을 마치겠습니다 긴 글 읽어주셔서 감사합니다  
+//이 앱을 개발하면서 수 많은 삽질과 구글링을 통해 카카오톡 오픈채팅방에 계시는 개발자분에게 질문과 조언을 듣고 많은 도움으로   
+//마무리를 짓게 되었습니다 앞으로 더 많은 기능을 가진 앱을 만들고 싶습니다 
