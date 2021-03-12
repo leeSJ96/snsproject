@@ -17,18 +17,19 @@ firebase 사용하였습니다
 
 * 유튜브 포트폴리오 <https://youtu.be/0pU1JdHvN4c>   
 SNS Meetagin 코드 설명드립니다  
+   
+      
 
 로그인 및 회원가입
 -------------
-1. [회원가입] JoinActivity
-
-
-![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)
-
-<코드>
-
+1. [회원가입] JoinActivity   
+   
+![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)   
+   
+<코드>   
+   
 [패스워드 패턴]
-
+   
     //패스워드 필터
     override fun filter(
         source: CharSequence?,
@@ -50,9 +51,9 @@ SNS Meetagin 코드 설명드립니다
 
     }
     
-    
+       
 [닉네임 및 이메일 중복체크]    
- 
+    
     
     
              //닉네임,이메일 중복체크
@@ -108,14 +109,13 @@ SNS Meetagin 코드 설명드립니다
             input_btn.text = "가입하기"
         }
     }    
-    
         
-          
 파이어베이스에서 데이터를 조회해서 중복체크      
-
+   
+      
+         
 [서버에 데이터 저장]   
 
- 파이어베이스 서버에 회원 정보(uid,가입한시간,이메일,닉네임)을 저장함   
  
     //파이어베이스 데이터 저장
     private fun authDatabaseAdd(id: String, pw: String, userName: String, userUid: String) {
@@ -172,10 +172,15 @@ SNS Meetagin 코드 설명드립니다
 
 
     }
-    
+
+ 파이어베이스 서버에 회원 정보(uid,가입한시간,이메일,닉네임)을 저장합니다     
+     
+         
+             
+             
 [자동 로그인] IntroActivity   
    
-![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)
+![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)    
 
    
 <코드>   
@@ -188,7 +193,10 @@ SNS Meetagin 코드 설명드립니다
         val email = SharedPreferenceFactory.getStrValue("userEmail", null)
            
  데이터는 쉐어드로 조회합니다.      
- 
+     
+         
+             
+             
  
    
    [인트로 화면 데이터 조회]   
