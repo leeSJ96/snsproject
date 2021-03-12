@@ -535,18 +535,18 @@ SNS Meetagin 코드 설명드립니다
                 
  SNS 부가기능
 -------------
-
-
-![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
-  
   
 
 [좋아요 힘내요 및 팔로우]
 
+[좋아요,힘내요]. HomeViewRecyclerViewAdapter   
+![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
+  
 
 
 
-[좋아요,힘내요]. HomeViewRecyclerViewAdapter
+
+
 
 
 <코드>   
@@ -679,7 +679,8 @@ SNS Meetagin 코드 설명드립니다
 1. [닉네임 변경] FirstVisitActivity    
     
 ![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)   
-
+   
+      
   
 
    
@@ -731,7 +732,9 @@ SNS Meetagin 코드 설명드립니다
         
 파이어 베이스에서 유저의 데이터를 조회 해서 
 유저 닉네임을 변경   
-
+   
+      
+      
   
  Fcm 알림 서비스 
 -------------
@@ -796,6 +799,4 @@ JSON 파싱후  서버에 알림송출
     var message = alarmDTO.name + getString(R.string.alarm_who) + message + "댓글을 남기셨습니다."
         fcmPush?.sendMessage(destinationUid, "알림 메시지 입니다", message)
         
-//이걸로 코드설명을 마치겠습니다 긴 글 읽어주셔서 감사합니다  
-//이 앱을 개발하면서 수 많은 삽질과 구글링을 통해 카카오톡 오픈채팅방에 계시는 개발자분에게 질문과 조언을 듣고 많은 도움으로   
-//마무리를 짓게 되었습니다 앞으로 더 많은 기능을 가진 앱을 만들고 싶습니다 
+
