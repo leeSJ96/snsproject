@@ -22,13 +22,13 @@ SNS Meetagin 코드 설명드립니다
 
 로그인 및 회원가입
 -------------
-1. [회원가입] JoinActivity   
+#  [회원가입] JoinActivity   
    
 ![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)   
    
 <코드>   
    
-[패스워드 패턴]
+# [패스워드 패턴]
    
     //패스워드 필터
     override fun filter(
@@ -52,7 +52,7 @@ SNS Meetagin 코드 설명드립니다
     }
     
        
-[닉네임 및 이메일 중복체크]    
+# [닉네임 및 이메일 중복체크]    
     
     
     
@@ -114,7 +114,7 @@ SNS Meetagin 코드 설명드립니다
    
       
          
-[서버에 데이터 저장]   
+# [서버에 데이터 저장]   
 
  
     //파이어베이스 데이터 저장
@@ -178,7 +178,7 @@ SNS Meetagin 코드 설명드립니다
          
              
              
-[자동 로그인] IntroActivity   
+# [자동 로그인] IntroActivity   
    
 ![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)    
 
@@ -199,7 +199,7 @@ SNS Meetagin 코드 설명드립니다
              
  
    
-   [인트로 화면 데이터 조회]   
+  #  [인트로 화면 데이터 조회]   
    
    
         if (uid != null && name != null && email != null) {
@@ -246,7 +246,7 @@ SNS Meetagin 코드 설명드립니다
 업로드 및 수정,삭제
 -------------
    
-1.[게시글 업로드] AddActivity   
+# [게시글 업로드] AddActivity   
 
     
 ![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)   
@@ -360,7 +360,7 @@ SNS Meetagin 코드 설명드립니다
     
 사진이 없을경우 데이터저장   
 
-2.[게시글 업데이트(수정)] AddUpdateActivity   
+# [게시글 업데이트(수정)] AddUpdateActivity   
 
    
 ![iage](https://im4.ezgif.com/tmp/ezgif-4-63c18f044f7b.gif)
@@ -537,9 +537,9 @@ SNS Meetagin 코드 설명드립니다
 -------------
   
 
-[좋아요 힘내요 및 팔로우]
+# [좋아요 힘내요 및 팔로우]
 
-[좋아요,힘내요]. HomeViewRecyclerViewAdapter   
+# [좋아요,힘내요]. HomeViewRecyclerViewAdapter   
 ![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
   
 
@@ -551,7 +551,7 @@ SNS Meetagin 코드 설명드립니다
 
 <코드>   
    
-좋아요,힘내요 구문   
+# [좋아요,힘내요] 구문   
    
     //좋아요 이벤트 기능
     private fun favoriteEvent(position: Int) {
@@ -603,7 +603,7 @@ SNS Meetagin 코드 설명드립니다
     }   
     
        
-[팔로우 구문] .CustomBottomDialog   
+#  [팔로우 구문] .CustomBottomDialog   
 
        
     
@@ -676,7 +676,7 @@ SNS Meetagin 코드 설명드립니다
 유저 정보 
 -------------   
    
-1. [닉네임 변경] FirstVisitActivity    
+# [닉네임 변경] FirstVisitActivity    
     
 ![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)   
    
@@ -738,7 +738,7 @@ SNS Meetagin 코드 설명드립니다
   
  Fcm 알림 서비스 
 -------------
-1. [Fcm 알림] FcmPush 
+# [Fcm 알림] FcmPush 
 
 ![image](https://im4.ezgif.com/tmp/ezgif-4-2dc6faf27b11.gif)
 
@@ -780,7 +780,7 @@ SNS Meetagin 코드 설명드립니다
 서버 키를 가져와
 JSON 파싱후  서버에 알림송출   
        
-  [좋아요,힘내요,댓글,팔로우 알림함수에 추가]
+ # [좋아요,힘내요,댓글,팔로우 알림함수에 추가]
   
   좋아요  
   
