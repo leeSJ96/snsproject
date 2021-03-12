@@ -26,10 +26,10 @@ SNS Meetagin 코드 설명드립니다
    
 ![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)   
    
-<코드>   
+
    
 # [패스워드 패턴]
-   
+   <코드>   
     //패스워드 필터
     override fun filter(
         source: CharSequence?,
@@ -549,9 +549,10 @@ SNS Meetagin 코드 설명드립니다
 
 
 
-<코드>   
    
-# [좋아요,힘내요] 구문   
+   
+# [좋아요,힘내요] 구문  
+<코드>
    
     //좋아요 이벤트 기능
     private fun favoriteEvent(position: Int) {
