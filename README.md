@@ -182,7 +182,8 @@ SNS Meetagin 코드 설명드립니다
              
 # [자동 로그인] IntroActivity   
    
-![iage](https://im.ezgif.com/tmp/ezgif-1-2c7aef175b07.gif)    
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/74143090/111018793-52dbcb00-83fe-11eb-9bb1-ef0e8f1f347b.gif)
+
 
    
 <코드>   
@@ -251,7 +252,8 @@ SNS Meetagin 코드 설명드립니다
 # [게시글 업로드] AddActivity   
 
     
-![iage](https://im.ezgif.com/tmp/ezgif-1-d4e57af9a9df.gif)   
+![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/74143090/111018827-a3ebbf00-83fe-11eb-8922-4f5d22491172.gif)
+   
    
 
 사진이 있을경우 와 사진이 없을경우 나눠집니다   
@@ -365,7 +367,7 @@ SNS Meetagin 코드 설명드립니다
 # [게시글 업데이트(수정)] AddUpdateActivity   
 
    
-![iage](https://im4.ezgif.com/tmp/ezgif-4-63c18f044f7b.gif)
+![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/74143090/111018860-e44b3d00-83fe-11eb-971a-900469e73ee7.gif)
 
 
 사진이 있을때 
@@ -542,7 +544,7 @@ SNS Meetagin 코드 설명드립니다
 # [좋아요 힘내요 및 팔로우]
 
 # [좋아요,힘내요]. HomeViewRecyclerViewAdapter   
-![image](https://im4.ezgif.com/tmp/ezgif-4-6fb8bd15f310.gif)
+![ezgif com-gif-maker (6)](https://user-images.githubusercontent.com/74143090/111018891-2eccb980-83ff-11eb-8ae5-448b94294974.gif)
   
 
 
@@ -681,7 +683,7 @@ SNS Meetagin 코드 설명드립니다
    
 # [닉네임 변경] FirstVisitActivity    
     
-![image](https://im4.ezgif.com/tmp/ezgif-4-1526738fafeb.gif)   
+![ezgif com-gif-maker (8)](https://user-images.githubusercontent.com/74143090/111018919-5459c300-83ff-11eb-92ca-3f85c94c0124.gif)   
    
       
   
@@ -743,7 +745,7 @@ SNS Meetagin 코드 설명드립니다
 -------------
 # [Fcm 알림] FcmPush 
 
-![image](https://im4.ezgif.com/tmp/ezgif-4-2dc6faf27b11.gif)
+![ezgif com-gif-maker (9)](https://user-images.githubusercontent.com/74143090/111018944-76ebdc00-83ff-11eb-915b-faf082d33377.gif)
 
    
    
