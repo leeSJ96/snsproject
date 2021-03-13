@@ -24,7 +24,8 @@ SNS Meetagin 코드 설명드립니다
 -------------
 #  [회원가입] JoinActivity   
    
-![image](https://im.ezgif.com/tmp/ezgif-1-bb5365f7829c.gif)   
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/74143090/111018732-ea8ce980-83fd-11eb-81b5-4ab8c2780311.gif)
+
    
 
    
