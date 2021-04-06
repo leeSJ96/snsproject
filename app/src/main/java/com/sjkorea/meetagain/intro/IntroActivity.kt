@@ -1,24 +1,15 @@
 package com.sjkorea.meetagain.intro
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.MainActivity
 import com.sjkorea.meetagain.R
-import com.sjkorea.meetagain.intro.LoginActivity
-import com.sjkorea.meetagain.model.IdDTO
-import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.IDDTO
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
-import kotlinx.coroutines.*
-import java.lang.Runnable
 
 class IntroActivity : AppCompatActivity() {
 

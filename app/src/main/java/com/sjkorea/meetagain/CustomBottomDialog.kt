@@ -50,23 +50,6 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
         //...
     }
 
-//    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        val bottomSheetDialog = BottomSheetDialog(requireContext(), theme)
-//        bottomSheetDialog.setOnShowListener { dialog ->
-//
-//
-//            val fragmentView =
-//                (dialog as BottomSheetDialog).findViewById<FrameLayout>(R.id.design_bottom_sheet)
-//            BottomSheetBehavior.from(fragmentView!!).state = BottomSheetBehavior.STATE_EXPANDED
-//            BottomSheetBehavior.from(fragmentView).skipCollapsed = true
-//            BottomSheetBehavior.from(fragmentView).isHideable = true
-//
-//            bottomSheetDialog.setCancelable(true); // true : cancle , false : no cancle
-//        }
-//        return bottomSheetDialog
-//
-//    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -114,29 +97,6 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
         }
 
-//        contentDTO = requireArguments().getInt("name")
-//        Log.d(this.contentDTO.toString(),"btome size 받기 ")
-//        bottom_tv_post_count!!.text = contentDTO.toString()
-//        Log.d(contentDTO.toString(), "size 결과 ")
-
-//        if(arguments != null){
-//            uid = requireArguments().getString("destinationUid")
-//            if (uid != null && uid == currentUserUid){
-//
-//            }
-//        } else{
-//            BottomView!!.bottom_btn_follow_signout.text = getString(R.string.follow)
-//
-//            var mainActivity = (activity as MainActivity)
-//            mainActivity.toolbar_title_image.visibility = View.GONE
-//            mainActivity.toolbar_btn_back.visibility = View.VISIBLE
-//            mainActivity.toolbar_username.visibility = View.VISIBLE
-//            mainActivity.toolbar_username.text = requireArguments().getString("userId")
-//            mainActivity.toolbar_btn_back.setOnClickListener {
-//                mainActivity.bottomNavigationView.selectedItemId = R.id.action_home
-//            }
-//
-//        }
 
         firestore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -160,7 +120,6 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
 
 
-//        btoolbar_username.text = userId
 
         firestore?.collection("profileName")?.document(uid.toString())
             ?.get()?.addOnCompleteListener { task ->
@@ -172,19 +131,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
                 }
             }
-//        // Profile Image 가져오기
-//        firestore?.collection("profileImages")?.document(uid!!)
-//            ?.get()?.addOnCompleteListener { task ->
-//                if (task.isSuccessful) {
-//
-//                    val url = task.result!!["image"]
-//                    Glide.with(this)
-//                        .load(url)
-//                        .apply(RequestOptions().circleCrop())
-//                        .into(Bottom_profile_image)
-//
-//                }
-//            }
+
 
 
         //팔로우 버튼
@@ -204,38 +151,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
             intent.putExtra("pathData", path)
             startActivity(intent)
 
-//            var historyFrag = HistoryFragmentSub()
-//
-////            bundle.putString("userId", userId)
-//            bundle.putString("destinationUid", uid)
-//            bundle.putString("userId", userId)
-//            bundle.putString("userIdposition", contentUidListposition)
-//            bundle.putString("pathData", path)
-//            Log.d(contentUidListposition.toString(), "홈포스트contentUid1 로그 ")
-//            Log.d(uid.toString(), "로그 바텀 보내기 ")
-////            HistoryFrag.arguments = bundle
-//
-//
-////            userFragment.arguments = bundle
-//            historyFrag.arguments = bundle
-//
-//            when (POSTSHOW) {
-//                "mainView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
-//                    R.id.main_view,
-//                    historyFrag,)
-//                    .addToBackStack(null)
-//                    .commit()
-//
-//
-//                "homePostView" -> requireActivity().supportFragmentManager.beginTransaction().replace(
-//                    R.id.homepost_view,
-//                    historyFrag,
-//                    )
-//                    .addToBackStack(null)
-//                    .commit()
-//
-//
-//            }
+
         }
 
         //바텀다이얼로그 == 상대방 프로필사진 보기
@@ -313,26 +229,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
 
     }
 
-//    fun gettitleName() {
-//        var contentDTO: ArrayList<ContentDTO>
-//        contentDTO = ArrayList()
-//
-//        firestore?.collection("images")?.whereEqualTo("uid", uid)
-//            ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//                contentDTO.clear()
-//                if (querySnapshot == null)
-//                    return@addSnapshotListener
-//                for (snapshot in querySnapshot!!.documents) {
-//                    Log.d(ContentValues.TAG, "1")
-//                    contentDTO.add(snapshot.toObject(ContentDTO::class.java)!!)
-//                    Log.d(ContentValues.TAG, "2")
-//                    btoolbar_username.text = userId.toString()
-//                    Log.d(userId.toString(), "로그 바텀프래그먼트 닉네임")
-//                }
-//
-//            }
-//
-//    }
+
 
     fun getProfileImage() {
         imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid.toString())
@@ -358,7 +255,7 @@ class CustomBottomDialog : BottomSheetDialogFragment() {
             }
     }
 
-
+    //팔로우
     fun requestFollow() {
 
         // Save data to my account

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
-import com.sjkorea.meetagain.Adapter.OnpostListener
+import com.sjkorea.meetagain.Adapter.IOnpostListener
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
@@ -26,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 
 
-class HomeFragment : Fragment(), IHomeRecyclerview, OnpostListener ,SwipeRefreshLayout.OnRefreshListener{
+class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefreshLayout.OnRefreshListener{
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null

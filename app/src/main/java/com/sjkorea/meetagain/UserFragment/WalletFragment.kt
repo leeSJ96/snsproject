@@ -66,7 +66,6 @@ class WalletFragment : Fragment() {
         AlertDialog.Builder(context)
             .setTitle("회원탈퇴").setMessage(" 정말 회원탈퇴하시겠습니까? \n [ 기록된 정보는 사라집니다 ]  ")
             .setPositiveButton("회원탈퇴", DialogInterface.OnClickListener { dialog, whichButton ->
-
                 SharedPreferenceFactory.clearAllValue()
 
                 deleteId()
@@ -85,21 +84,15 @@ class WalletFragment : Fragment() {
         AlertDialog.Builder(context)
             .setTitle("로그아웃").setMessage("로그아웃 하시겠습니까?")
             .setPositiveButton("로그아웃", DialogInterface.OnClickListener { dialog, whichButton ->
+                SharedPreferenceFactory.clearAllValue()
+                firebaseAuth?.signOut()
+
                 val i = Intent(context, LoginActivity::class.java)
                 i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(i)
-                firebaseAuth?.signOut()
                 Snackbar.make(frag_layout, "로그아웃 되었습니다.", Snackbar.LENGTH_LONG).show();
 
-                UserApiClient.instance.logout { error ->
-                    if (error != null) {
-                        Snackbar.make(frag_layout, "로그아웃 실패하였습니다.", Snackbar.LENGTH_LONG).show();
-                    }else {
-                        Snackbar.make(frag_layout, "로그아웃 되었습니다.", Snackbar.LENGTH_LONG).show();
-                    }
-                    val intent = Intent(context, LoginActivity::class.java)
-                    startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP))
-                }
+
             })
             .setNegativeButton("취소",
                 DialogInterface.OnClickListener { dialog, whichButton -> })

@@ -1,16 +1,12 @@
 package com.sjkorea.meetagain.homeFragment
 
 
-import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcelable
 import android.util.Log
 import android.view.*
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -19,18 +15,15 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.sjkorea.meetagain.Adapter.*
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FcmPush
-import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.SORTT
-import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.fragment_home.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class MeaningFragment : Fragment(), IHomeRecyclerview, OnpostListener {
+class MeaningFragment : Fragment(), IHomeRecyclerview, IOnpostListener {
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null

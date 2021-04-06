@@ -9,16 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.Adapter.HistoryRecyclerviewAdapter
-import com.sjkorea.meetagain.Adapter.HomeViewRecyclerViewAdapter
 import com.sjkorea.meetagain.Adapter.IHomeRecyclerview
-import com.sjkorea.meetagain.Adapter.OnpostListener
+import com.sjkorea.meetagain.Adapter.IOnpostListener
 import com.sjkorea.meetagain.ContentDTO
 import com.sjkorea.meetagain.FcmPush
 import com.sjkorea.meetagain.databinding.ViewpagerHistoryItemBinding
 import kotlin.collections.ArrayList
 
 
-class HistoryFragment : Fragment(), IHomeRecyclerview, OnpostListener {
+class HistoryFragment : Fragment(), IHomeRecyclerview, IOnpostListener {
 
     // 내가 선택한 uid
     var uid: String? = null

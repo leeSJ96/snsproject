@@ -1,21 +1,15 @@
 package com.sjkorea.meetagain.homeFragment
 
-import android.content.Intent
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.sjkorea.meetagain.Adapter.CustomFragmentStateAdapter
 import com.sjkorea.meetagain.Adapter.CustomFragmentStateAdapterSub
-import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.databinding.FragmentMainhomeBinding
-import com.sjkorea.meetagain.databinding.FragmentUserBinding
 import kotlinx.android.synthetic.main.fragment_mainhome.*
-
 class MainHomeFragment : Fragment() {
 
     //    val contentDTO: ArrayList<ContentDTO> = arrayListOf()
@@ -26,7 +20,7 @@ class MainHomeFragment : Fragment() {
 //        R.drawable.ic_arrow_drop_down_black_24dp,
 //        R.drawable.ic_arrow_drop_down_black_24dp
 //    )
-    private var fragmentMainhomeBinding: FragmentMainhomeBinding? = null
+    private var fragmentMainHomeBinding: FragmentMainhomeBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,9 +29,9 @@ class MainHomeFragment : Fragment() {
     ): View? {
 
         val binding = FragmentMainhomeBinding.inflate(inflater, container, false)
-        fragmentMainhomeBinding = binding
+        fragmentMainHomeBinding = binding
 
-        return fragmentMainhomeBinding!!.root
+        return fragmentMainHomeBinding!!.root
     }
 
 
@@ -61,7 +55,6 @@ class MainHomeFragment : Fragment() {
 
 
     }
-
 
     private fun init() {
 

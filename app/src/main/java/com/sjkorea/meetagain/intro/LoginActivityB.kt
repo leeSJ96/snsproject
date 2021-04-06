@@ -1,48 +1,6 @@
 package com.sjkorea.meetagain.intro
 
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
-import com.kakao.sdk.auth.LoginClient
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.AuthErrorCause
-import com.kakao.sdk.user.UserApiClient
-import com.sjkorea.meetagain.MainActivity
-import com.sjkorea.meetagain.R
-import com.sjkorea.meetagain.databinding.ActivityLoginBinding
-import com.sjkorea.meetagain.model.IdDTO
-import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.IDDTO
-import com.sjkorea.meetagain.utils.SharedPreferenceFactory
-import kotlinx.android.synthetic.main.activity_firstvisit.*
-import kotlinx.android.synthetic.main.activity_login.*
-import java.util.*
-    //페이스북,구글,익명로그인 구현
+//페이스북,구글,익명로그인 구현
     //회원가입으로 변경
 
 //class LoginActivity : AppCompatActivity() {

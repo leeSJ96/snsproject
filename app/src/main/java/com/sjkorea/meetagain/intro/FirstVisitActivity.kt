@@ -101,11 +101,9 @@ class FirstVisitActivity : AppCompatActivity() {
     }
 
 
-    //
+    // 파이어베이스 데이터 조회후 닉네임 변경
     private fun updateData() {
 
-        val userName = SharedPreferenceFactory.getStrValue("userName", "")//유저 닉네임
-        val id  =     SharedPreferenceFactory.getStrValue("userEmail", "") // 유저 이메일
         SharedPreferenceFactory.getStrValue("userToken", "")  // 유저 uid
         val path = SharedPreferenceFactory.getStrValue("userPath", "")  // 유저 디비 위치)
         var uid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -116,10 +114,6 @@ class FirstVisitActivity : AppCompatActivity() {
         Log.d(Constants.TAG, "uid = $uid")
         map["name"] = nameing
 
-
-
-//        val pathData = "${id}_${System.currentTimeMillis()}"
-        val authModel = AuthModel()
 
         if (path != null) {
             firestore?.collection("user_auth")?.document(path)?.update(map)

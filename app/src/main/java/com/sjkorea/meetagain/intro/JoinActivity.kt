@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sjkorea.meetagain.R
 import com.sjkorea.meetagain.model.AuthModel
+import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.AuthOverLap
 import com.sjkorea.meetagain.utils.Constants.EmailFormError
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
@@ -25,6 +26,7 @@ class JoinActivity : AppCompatActivity(), InputFilter {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val authStore = FirebaseFirestore.getInstance().collection("user_auth")
 
+    //패스워드 필터
     override fun filter(
         source: CharSequence?,
         start: Int,
@@ -60,6 +62,7 @@ class JoinActivity : AppCompatActivity(), InputFilter {
 
         }
 
+        // 사이즈 제한
         input_btn.setOnClickListener {
 
             imm.hideSoftInputFromWindow(password_input.windowToken, 0);
@@ -107,7 +110,7 @@ class JoinActivity : AppCompatActivity(), InputFilter {
         }
     }
 
-
+    //닉네임,이메일 중복체크
     private fun authCheck() {
 
         val emailValue = email_input.text.toString()
@@ -184,7 +187,7 @@ class JoinActivity : AppCompatActivity(), InputFilter {
 
     }
 
-
+    //파이어베이스 데이터 저장
     private fun authDatabaseAdd(id: String, pw: String, userName: String, userUid: String) {
 
 
@@ -218,15 +221,18 @@ class JoinActivity : AppCompatActivity(), InputFilter {
             }
 
 
-        authStore.document(pathData).set(authModel).addOnSuccessListener {
 
+        authStore.document(pathData).set(authModel).addOnSuccessListener {
+            Log.d(Constants.TAG, "로그인로그: ")
             Snackbar.make(join_layout, "계정 생성 완료", Snackbar.LENGTH_SHORT).show()
 
             val intent = Intent(this, LoginActivity::class.java)
+
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             intent.putExtra("id", id)
             intent.putExtra("pw", pw)
             startActivity(intent)
+
             overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
 
 

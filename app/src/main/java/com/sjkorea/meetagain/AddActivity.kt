@@ -2,12 +2,10 @@ package com.sjkorea.meetagain
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import android.view.Window
@@ -19,14 +17,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.databinding.ActivityAddBinding
-import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.IDDTO
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_add.*
-import kotlinx.android.synthetic.main.activity_firstvisit.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.custom_dialog_close.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -203,31 +196,19 @@ class AddActivity : AppCompatActivity() {
         val timestamp = now.time
         val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
         val createdAt = sdf.format(timestamp)
-
-
-//        var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//        var curTime = Timestamp.now()
-//        val timestamp = SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.KOREA).format(Date())
-//        val curDate = timestamp.format(curTime)
-
         var imageFileName = "IMAGE_" + createdAt + "_.png"
         val contentDTO = ContentDTO()
-        val idDTO = IdDTO()
-
-        val email = FirebaseAuth.getInstance().currentUser?.email
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val path = "${uid}_${System.currentTimeMillis()}"
 
 
 
-        // Callback method
+        // 데이터 저장
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
             Toast.makeText(this, getString(R.string.upload_success), Toast.LENGTH_LONG)
                 .show()
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-
-
 
                 val name = SharedPreferenceFactory.getStrValue("userName", null)
                 Log.d(Constants.TAG, "네임확인 : $name ")
@@ -248,13 +229,8 @@ class AddActivity : AppCompatActivity() {
 
                 contentDTO.title = addphoto_edit_mamo.text.toString()
 
-
                 // Insert timestamp
                 contentDTO.timestamp = System.currentTimeMillis()
-
-
-//
-//                contentDTO.createdAt =  timeDiff(contentDTO.timestamp)
 
                 firestore?.collection("images")?.document(path)?.set(contentDTO)
 

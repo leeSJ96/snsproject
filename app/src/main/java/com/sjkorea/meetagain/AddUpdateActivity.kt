@@ -18,12 +18,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.databinding.ActivityUpdateBinding
-import com.sjkorea.meetagain.model.IdDTO
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_add.*
-import kotlinx.android.synthetic.main.activity_home_post.*
-import kotlinx.android.synthetic.main.activity_loginsub.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -224,13 +221,8 @@ class AddUpdateActivity : AppCompatActivity() {
         val timestamp = now.time
         val sdf = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.KOREA)
         val createdAt = sdf.format(timestamp)
-//        var timestamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-//        var curTime = Timestamp.now()
-//        val timestamp = SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.KOREA).format(Date())
-//        val curDate = timestamp.format(curTime)
         var imageFileName = "IMAGE_" + createdAt + "_.png"
-        val email = FirebaseAuth.getInstance().currentUser?.email
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
+
 
         // Callback method
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
