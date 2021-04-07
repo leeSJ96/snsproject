@@ -3,6 +3,7 @@ package com.sjkorea.meetagain
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -93,6 +94,10 @@ class AddUpdateActivity : AppCompatActivity() {
 
         setContentView(activityUpdateBinding!!.root)
 
+
+        //프로그레스바 색상
+        activityUpdateBinding?.loadingProgress?.indeterminateDrawable?.setColorFilter(Color.rgb(255 ,255 ,255), android.graphics.PorterDuff.Mode.MULTIPLY)
+
         //제목누르면 키보드 상단에 맞춤
         activityUpdateBinding?.addphotoEditMamo?.setOnClickListener {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -124,7 +129,7 @@ class AddUpdateActivity : AppCompatActivity() {
                     Snackbar.make(add_back, "내용을 8자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
                 }
                 else -> {
-
+                    hideAndShowUi(true)
                     if (photoUse) {
                         //사진이 있을경우
                         contentUpload()
@@ -417,37 +422,33 @@ class AddUpdateActivity : AppCompatActivity() {
         Toast.makeText(this, "업로드 실패/ 서버 에러", Toast.LENGTH_SHORT).show()
         finish()
     }
+    private fun hideAndShowUi(hideCheck: Boolean) {
 
-    private fun hideAndShowUi(hiddenCheck: Boolean) {
+        when (hideCheck) {
 
-        when (hiddenCheck) {
+            true -> {
 
-//            true -> {
-//
-//                date_title.isEnabled = false
-//                edit_title.isEnabled = false
-//                edit_content.isEnabled = false
-//                add_photo_image.isEnabled = false
-//                btn_img_input.isEnabled = false
-//                btn_save.isEnabled = false
-//                back_btn.isEnabled = false
-//
-//                loading_progress_update.visibility = View.VISIBLE
-//
-//            }
-//
-//            false -> {
-//                date_title.isEnabled = true
-//                edit_title.isEnabled = true
-//                edit_content.isEnabled = true
-//                add_photo_image.isEnabled = true
-//                btn_img_input.isEnabled = true
-//                btn_save.isEnabled = true
-//                back_btn.isEnabled = true
-//
-//                loading_progress_update.visibility = View.INVISIBLE
-//
-//            }
+                loading_progress.visibility = View.VISIBLE
+                btn_select_image.isEnabled = false
+                addphoto_btn_upload.isEnabled = false
+                addphoto_edit_mamo.isEnabled = false
+                imageView6.isEnabled = false
+                Image_p1.isEnabled = false
+                add_back_btn.isEnabled = false
+
+            }
+
+            false -> {
+
+                loading_progress.visibility = View.INVISIBLE
+                btn_select_image.isEnabled = true
+                addphoto_btn_upload.isEnabled = true
+                addphoto_edit_mamo.isEnabled = true
+                imageView6.isEnabled = true
+                Image_p1.isEnabled = true
+                add_back_btn.isEnabled = true
+
+            }
 
         }
 

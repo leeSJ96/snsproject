@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.PagerAdapter
@@ -32,6 +33,7 @@ import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
+import java.lang.Exception
 
 class UserFragment : Fragment() {
 
@@ -48,7 +50,7 @@ class UserFragment : Fragment() {
     var followListenerRegistration: ListenerRegistration? = null
     var imageprofileListenerRegistration: ListenerRegistration? = null
     var getTitleListenerRegistration: ListenerRegistration? = null
-    var viewpagerRegistration: ListenerRegistration? = null
+
 
     //    val contentDTO: ArrayList<ContentDTO> = arrayListOf()
     private val tabTextList = arrayListOf("HOME", "CHATTING", "NEWS", "SETTING")
@@ -109,13 +111,13 @@ class UserFragment : Fragment() {
             var photoPcikerIntent = Intent(Intent.ACTION_PICK)
             photoPcikerIntent.type = "image/*"
             activity?.startActivityForResult(photoPcikerIntent, PICK_PROFILE_FROM_ALBUM)
+
         }
         return fragmentUserBinding!!.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
 
         init()
 //
@@ -313,6 +315,7 @@ class UserFragment : Fragment() {
             }
         }
     }
+
 
 
 

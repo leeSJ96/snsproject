@@ -3,9 +3,13 @@ package com.sjkorea.meetagain
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -28,21 +32,23 @@ import com.sjkorea.meetagain.UserFragment.*
 import com.sjkorea.meetagain.databinding.ActivityMainBinding
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.MainHomeFragment
+import com.sjkorea.meetagain.utils.Constants
 import com.squareup.okhttp.internal.Internal.instance
+import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog.*
+import java.lang.Exception
 
 
 private var mAuth: FirebaseAuth? = null
 
 
-
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener, BottomNavigationView.OnNavigationItemReselectedListener {
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+    BottomNavigationView.OnNavigationItemReselectedListener {
 
 
     private var backKeyPressedTime: Long = 0
     var PICK_PROFILE_FROM_ALBUM = 10
-
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -134,6 +140,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
             1
         )
+        //프로그레스바 색상
+        activityMainBinding?.loadingProgress?.indeterminateDrawable?.setColorFilter(Color.rgb(255 ,255 ,255), android.graphics.PorterDuff.Mode.MULTIPLY)
 
     }
 
@@ -145,6 +153,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // 앨범에서 Profile Image 사진 선택시 호출 되는 부분
         if (requestCode == PICK_PROFILE_FROM_ALBUM && resultCode == Activity.RESULT_OK) {
 
+            hideAndShowUi(true)
             var imageUri = data?.data
             var uid = FirebaseAuth.getInstance().currentUser!!.uid //파일 업로드
             var storageRef =
@@ -160,12 +169,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     var map = HashMap<String, Any>()
                     map["image"] = uri.toString()
                     FirebaseFirestore.getInstance().collection("profileImages").document(uid)
-                        .set(map)
+                        .set(map).addOnCompleteListener {
+
+                            hideAndShowUi(false)
+                        }.addOnFailureListener {
+
+                            uploadErrorMessage(it)
+                        }
+
                 }
 
         }
 
     }
+
 
     fun registerPushToken() {
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
@@ -179,9 +196,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
 
-
-
-//
+    //
 //
 //
 //    bottomNavigationView.background = null
@@ -199,17 +214,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 //    }
     //뒤로가기 2초
     override fun onBackPressed() {
-    if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
-        backKeyPressedTime = System.currentTimeMillis();
-        Toast.makeText(this,"한번 더 누르시면 앱이 종료됩니다.",Toast.LENGTH_SHORT).show()
-        return;
-    }
-    // 현재 표시된 Toast 취소
-    if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
-        finish();
-    }
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+            return;
+        }
+        // 현재 표시된 Toast 취소
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            finish();
+        }
 
     }
+
     //로그아웃
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
@@ -220,7 +236,49 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mAuth!!.currentUser!!.delete()
     }
 
+    private fun uploadErrorMessage(errorMessage: Exception) {
 
-     }
+        hideAndShowUi(false)
+        Log.d("로그", "error $errorMessage")
+        Toast.makeText(this, "업로드 실패/ 서버 에러", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+    private fun hideAndShowUi(hideCheck: Boolean) {
+
+        when (hideCheck) {
+
+            true -> {
+
+                activityMainBinding?.loadingProgress?.visibility = View.VISIBLE
+
+//                btn_select_image.isEnabled = false
+//                addphoto_btn_upload.isEnabled = false
+//                addphoto_edit_mamo.isEnabled = false
+//                imageView6.isEnabled = false
+//                Image_p1.isEnabled = false
+//                add_back_btn.isEnabled = false
+
+            }
+
+            false -> {
+
+                activityMainBinding?.loadingProgress?.visibility = View.INVISIBLE
+
+//                btn_select_image.isEnabled = true
+//                addphoto_btn_upload.isEnabled = true
+//                addphoto_edit_mamo.isEnabled = true
+//                imageView6.isEnabled = true
+//                Image_p1.isEnabled = true
+//                add_back_btn.isEnabled = true
+
+            }
+
+        }
+
+    }
+
+
+
+}
 
 

@@ -3,6 +3,7 @@ package com.sjkorea.meetagain
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,6 +21,8 @@ import com.sjkorea.meetagain.databinding.ActivityAddBinding
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.custom_dialog_close.*
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,6 +54,10 @@ class AddActivity : AppCompatActivity() {
 
         setContentView(activityAddBinding!!.root)
 
+
+        //프로그레스바 색상
+        activityAddBinding?.loadingProgress?.indeterminateDrawable?.setColorFilter(Color.rgb(255 ,255 ,255), android.graphics.PorterDuff.Mode.MULTIPLY)
+
         //제목누르면 키보드 상단에 맞춤
         activityAddBinding?.addphotoEditMamo?.setOnClickListener {
             window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN) }
@@ -70,7 +77,6 @@ class AddActivity : AppCompatActivity() {
         activityAddBinding?.addphotoBtnUpload?.setOnClickListener {
 
 
-
             if (System.currentTimeMillis() >= commentTime + 5000) {
                 commentTime = System.currentTimeMillis()
 
@@ -86,6 +92,8 @@ class AddActivity : AppCompatActivity() {
                         Snackbar.make(add_back, "내용을 8자이상 적어주세요", Snackbar.LENGTH_SHORT).show()
                     }
                     else -> {
+
+                        hideAndShowUi(true)
 
                         if (photoUse) {
                             //사진이 있을경우
@@ -190,7 +198,7 @@ class AddActivity : AppCompatActivity() {
 
 
     //사진이 있을시 업로드 데이터
-    fun contentUpload() {
+    private fun contentUpload() {
         // Make filename
         val now = Date()
         val timestamp = now.time
@@ -232,19 +240,25 @@ class AddActivity : AppCompatActivity() {
                 // Insert timestamp
                 contentDTO.timestamp = System.currentTimeMillis()
 
-                firestore?.collection("images")?.document(path)?.set(contentDTO)
+                firestore?.collection("images")?.document(path)?.set(contentDTO)?.addOnCompleteListener {
+                    hideAndShowUi(false)
+
+                    setResult(Activity.RESULT_OK)
+
+                    finish()
+                }
 
 
-                setResult(Activity.RESULT_OK)
 
-                finish()
+            }?.addOnFailureListener {
+                errorMessageShow(it)
             }
         }
 
     }
 
     //사진이 없을시  업로드 데이터
-    fun contentUploadNoPhoto() {
+    private fun contentUploadNoPhoto() {
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val path = "${uid}_${System.currentTimeMillis()}"
@@ -273,12 +287,18 @@ class AddActivity : AppCompatActivity() {
 
                 contentDTO.imageUrl ="https://img.khan.co.kr/news/2020/06/11/l_2020061201001441700115431.jpg"
 
-                firestore?.collection("images")?.document(path)?.set(contentDTO)
+                firestore?.collection("images")?.document(path)?.set(contentDTO)?.addOnCompleteListener {
+                    hideAndShowUi(false)
+
+                    setResult(Activity.RESULT_OK)
+
+                    finish()
+                }?.addOnFailureListener {
+                    errorMessageShow(it)
+                }
 
 
-                setResult(Activity.RESULT_OK)
 
-                finish()
 
 
 
@@ -293,7 +313,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     // 뒤로가기 경고창(다이로그)
-    fun warningWindow(){
+    private fun warningWindow(){
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(R.layout.custom_dialog_close)
@@ -307,6 +327,46 @@ class AddActivity : AppCompatActivity() {
     }
 
 
+    private fun errorMessageShow(error: Exception) {
+
+        Log.d("로그", "error $error")
+
+        Toast.makeText(this, "업로드 실패/ 서버 에러", Toast.LENGTH_SHORT).show()
+        hideAndShowUi(false)
+    }
+
+
+    private fun hideAndShowUi(hideCheck: Boolean) {
+
+        when (hideCheck) {
+
+            true -> {
+
+                loading_progress.visibility = View.VISIBLE
+                btn_select_image.isEnabled = false
+                addphoto_btn_upload.isEnabled = false
+                addphoto_edit_mamo.isEnabled = false
+                imageView6.isEnabled = false
+                Image_p1.isEnabled = false
+                add_back_btn.isEnabled = false
+
+            }
+
+            false -> {
+
+                loading_progress.visibility = View.INVISIBLE
+                btn_select_image.isEnabled = true
+                addphoto_btn_upload.isEnabled = true
+                addphoto_edit_mamo.isEnabled = true
+                imageView6.isEnabled = true
+                Image_p1.isEnabled = true
+                add_back_btn.isEnabled = true
+
+            }
+
+        }
+
+    }
 
 }
 
