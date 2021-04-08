@@ -80,6 +80,14 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
                 recyclerViewState
             );
 //        return searchview
+
+        when(Constants.FOLLOWDATA){
+            0->  IvVisibility()
+
+
+            1->  rvVisibility()
+        }
+
         return fragmentFollowBinding?.root
 
     }
@@ -98,13 +106,7 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
 
 
 
-        Log.d(Constants.TAG, "FOLLOWDATA: $FOLLOWDATA")
-        when(Constants.FOLLOWDATA){
-            0->  IvVisibility()
 
-
-            1->  rvVisibility()
-        }
 
 
     }
@@ -115,7 +117,6 @@ class FollowFragment : Fragment(), IHomeRecyclerview {
     fun IvVisibility(){
         fragmentFollowBinding?.noData?.visibility = View.VISIBLE
         fragmentFollowBinding?.tourRV?.visibility = View.INVISIBLE
-
     }
 
     override fun onDestroyView() {
