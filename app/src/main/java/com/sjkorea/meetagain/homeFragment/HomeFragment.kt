@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +30,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
     var firestore: FirebaseFirestore? = null
     var fcmPush: FcmPush? = null
     var imagesSnapshot: ListenerRegistration? = null
-    var manager = LinearLayoutManager(activity)
     var okHttpClient: OkHttpClient? = null
     var contentArray: ArrayList<ContentDTO> = arrayListOf()
     var contentUidList: ArrayList<String> = arrayListOf()
@@ -37,7 +37,8 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
     var uid: String? = null
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
     var tr: Boolean? = null
-    var LIST_STATE_KEY = "list_state"
+
+    private var page = 1 // 현재 페이지
 
     private var recyclerViewState: Parcelable? = null
 
@@ -74,6 +75,16 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
             fcmPush, contentUidList
         )
 
+        adapter.apply {
+
+
+            notifyItemRangeInserted((page - 1) * 10, 10)
+
+            if (hasObservers()) {
+                setHasStableIds(true)
+            }
+
+        }
 
         fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adapter
 
@@ -83,9 +94,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         manager.stackFromEnd = true
 
 
-        if (!adapter.hasObservers()) {
-            adapter.setHasStableIds(true)
-        }
 
         var recyclerViewState: Parcelable
         recyclerViewState =
@@ -97,6 +105,24 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
                 recyclerViewState
             );
 
+
+        // 스크롤 리스너
+        fragmentHomeBinding?.homefragmentRecyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val lastVisibleItemPosition =
+                    (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+                val itemTotalCount = recyclerView.adapter!!.itemCount-1
+
+                // 스크롤이 끝에 도달했는지 확인
+                if (!fragmentHomeBinding?.homefragmentRecyclerview?.canScrollVertically(1)!! && lastVisibleItemPosition == itemTotalCount) {
+                    adapter.deleteLoading()
+//                    model.loadBaeminNotice(++page)
+                    Toast.makeText(context, "Last Position", Toast.LENGTH_SHORT).show();
+                }
+            }
+        })
 
 
 
@@ -111,6 +137,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
         timestampData()
 
+
     }
 
 
@@ -124,16 +151,17 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
 
 
+
+//        fragmentHomeBinding?.swipeRefresh?.setOnRefreshListener {
 //
-//        fragmentHomeBinding?.swipe?.setOnRefreshListener {
 //
-////            contentArray.clear()
-////            this.homeAdapter.clearList()
-////            contentArray.addAll(contentArray)
-////            homeAdapter.submitList(contentArray)
-////            homeAdapter.notifyDataSetChanged()
+//            contentArray.clear()
+//            this.adapter.clearList()
+//            contentArray.addAll(contentArray)
+//            adapter.submitList(contentArray)
+//            adapter.notifyDataSetChanged()
 //
-//            swipe.isRefreshing = false
+//            fragmentHomeBinding?.swipeRefresh?.isRefreshing = false
 //        }
 
 //
@@ -205,8 +233,9 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
                 var item1 = snapshot.toObject(ContentDTO::class.java)
 
 
-                    contentArray.add(item1!!)
-                    contentUidList.add(snapshot.id)
+                        contentArray.add(item1!!)
+                        contentUidList.add(snapshot.id)
+
 
 
 
@@ -229,8 +258,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         this.contentArray.clear()
         this.adapter.clearList()
 
-
-
         FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
             contentArray.clear()
             contentUidList.clear()
@@ -239,8 +266,9 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
                 var item1 = snapshot.toObject(ContentDTO::class.java)
 
 
-                contentArray.add(item1!!)
-                contentUidList.add(snapshot.id)
+                    contentArray.add(item1!!)
+                    contentUidList.add(snapshot.id)
+
 
                 fragmentHomeBinding?.swipeRefresh?.isRefreshing = false
 
@@ -250,10 +278,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
         }
 
-//        fragmentHomeBinding?.alignmentBtn?.setOnClickListener {
-//            postDialogWindow()
-//
-//        }
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
     }

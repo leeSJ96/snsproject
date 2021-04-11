@@ -21,6 +21,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.sjkorea.meetagain.databinding.ActivityUpdateBinding
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_add.*
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -42,6 +44,8 @@ class AddUpdateActivity : AppCompatActivity() {
     var view: View? = null
     private var contentDTO: ContentDTO? = ContentDTO()
     private var photoUse: Boolean = false
+
+    private var PICK_IMAGE_FROM_ALBUM = 13
 
     var explain: String? = null
     var title: String? = null
@@ -155,37 +159,94 @@ class AddUpdateActivity : AppCompatActivity() {
 
         activityUpdateBinding?.btnSelectImage?.setOnClickListener {
 
+
+
             val intent = Intent(
                 Intent.ACTION_GET_CONTENT,
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+
             )
+
             //사진을 여러개 선택할수 있도록 한다
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+
+            intent.putExtra("crop", true) //기존 코드에 이 줄 추가!
             intent.type = "image/*"
             startActivityForResult(
                 Intent.createChooser(intent, "Select Picture"),
-                PICTURE_REQUEST_CODE
+                PICK_IMAGE_FROM_ALBUM
+
             )
+
+//            val intent = Intent(
+//                Intent.ACTION_GET_CONTENT,
+//                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+//            )
+//            //사진을 여러개 선택할수 있도록 한다
+//            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//            intent.type = "image/*"
+//            startActivityForResult(
+//                Intent.createChooser(intent, "Select Picture"),
+//                PICTURE_REQUEST_CODE
+//            )
         }
 
 
     }
 
+    private fun cropImage(uri: Uri?){
+        CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON)
+            .setCropShape(CropImageView.CropShape.RECTANGLE)
+            //사각형 모양으로 자른다
+            .start(this)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICTURE_REQUEST_CODE) {
 
-            if(resultCode == Activity.RESULT_OK){
-                // This is path to the seleted image
+
+        when (requestCode){
+            PICK_IMAGE_FROM_ALBUM -> {
+                data?.data?.let { uri ->
+                    cropImage(uri) //이미지를 선택하면 여기가 실행됨
+                }
                 photoUri = data?.data
-                activityUpdateBinding?.ImageP1?.setImageURI(photoUri)
                 photoUse = true
-
-            }else{
-                // Exit the addPhotoActivity if you leave the album without selecting it
-                finish()
+                activityUpdateBinding?.ImageP1?.setImageURI(photoUri)
             }
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                //그후, 이곳으로 들어와 RESULT_OK 상태라면 이미지 Uri를 결과 Uri로 저장!
+                val result = CropImage.getActivityResult(data)
+                if(resultCode == Activity.RESULT_OK){
+                    result.uri?.let {
+                        activityUpdateBinding?.ImageP1?.setImageBitmap(result.bitmap)
+                        activityUpdateBinding?.ImageP1?.setImageURI(result.uri)
+                        photoUri = result.uri
+
+                    }
+                }else if(resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE){
+                    val error = result.error
+                    Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+            else ->{finish()}
+
+        }
+
+
+
+//        if (requestCode == PICTURE_REQUEST_CODE) {
+//
+//            if(resultCode == Activity.RESULT_OK){
+//                // This is path to the seleted image
+//                photoUri = data?.data
+//                activityUpdateBinding?.ImageP1?.setImageURI(photoUri)
+//                photoUse = true
+//
+//            }else{
+//                // Exit the addPhotoActivity if you leave the album without selecting it
+//                finish()
+//            }
 
 //            if (resultCode == RESULT_OK) {
 //
@@ -215,7 +276,7 @@ class AddUpdateActivity : AppCompatActivity() {
 //                        Image_p1.setImageURI(photoUri)
 //                    }
 //            }
-        }
+
     }
 
 

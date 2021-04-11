@@ -9,6 +9,8 @@ object Constants {
 
     var TAG : String? = "로그"
 
+    var CONTEXT_NULL = "CONTEXT_NOT_NULL"
+
     var ODRDER : String = "0"
     //댓글 부분 더보기 싱글톤
     var LIST : Int = 0

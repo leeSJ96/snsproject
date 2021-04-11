@@ -20,6 +20,7 @@ import com.sjkorea.meetagain.*
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
+import com.sjkorea.meetagain.utils.Constants.CONTEXT_NULL
 import com.sjkorea.meetagain.utils.Constants.TAG
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
@@ -49,6 +50,10 @@ class HomeViewRecyclerViewAdapter(
     var name: String? = null
     var userid: String? = null
 
+    //
+    private val VIEW_TYPE_ITEM = 0
+    private val VIEW_TYPE_LOADING = 1
+
     private var recyclerViewState: Parcelable? = null
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
@@ -73,31 +78,66 @@ class HomeViewRecyclerViewAdapter(
     }
 
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-
-        return CustomViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_sub, parent, false),
-            this.homeRecyclerviewInterface!!
-        )
+    // 뷰의 타입을 정해주는 곳이다.
+    override fun getItemViewType(position: Int): Int {
+        // 게시물과 프로그레스바 아이템뷰를 구분할 기준이 필요하다.
+        return when (contentArray[position].title) {
+            " " -> VIEW_TYPE_LOADING
+            else -> VIEW_TYPE_ITEM
+        }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        // switch
-        when (holder) {
-            is CustomViewHolder -> {
-
-                if (contentArray.size > 0) {
-                    holder.bind(contentArray[position], mFragmentManager)
-                }
+        return when (viewType) {
+            VIEW_TYPE_ITEM -> {
+                val binding =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_sub, parent, false)
+                CustomViewHolder(binding, this.homeRecyclerviewInterface!!)
             }
+            else -> {
+                val binding =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false)
+                LoadingViewHolder(binding)
+            }
+
         }
 
     }
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder is CustomViewHolder){
+            holder.bind(contentArray[position],mFragmentManager)
+        }else{
+
+        }
+//        // switch
+//        when (holder) {
+//            is CustomViewHolder -> {
+//
+//                if (contentArray.size > 0) {
+//                    Constants.CONTEXT_NULL = "CONTEXT_NOT_NULL"
+//                    Log.d(Constants.TAG, "1: ${CONTEXT_NULL}")
+//                    holder.bind(contentArray[position], mFragmentManager)
+//                } else {
+//                    Constants.CONTEXT_NULL = "CONTEXT_NULL"
+//                    Log.d(Constants.TAG, "2: ${CONTEXT_NULL}")
+//                }
+//            }
+//        }
+
+    }
+
+    // 아이템뷰에 프로그레스바가 들어가는 경우
+    inner class LoadingViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+    }
+
     inner class CustomViewHolder(itemView: View, recyclerviewInterface: IHomeRecyclerview) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
+
 
         private var homeRecyclerviewInterface: IHomeRecyclerview? = null
 
@@ -294,8 +334,14 @@ class HomeViewRecyclerViewAdapter(
     }
 
 
+    fun setList(notice: MutableList<ContentDTO>) {
+        contentArray.addAll(notice)
+        contentArray.add(ContentDTO(" ", " ")) // progress bar 넣을 자리
+    }
 
-
+    fun deleteLoading(){
+        contentArray.removeAt(contentArray.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
+    }
 
 
     //시간

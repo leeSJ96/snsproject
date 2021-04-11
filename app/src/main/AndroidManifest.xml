@@ -39,6 +39,9 @@
             android:windowSoftInputMode="adjustUnspecified|adjustPan">
         </activity>
 
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
+
         <activity
             android:name=".intro.FirstVisitActivity"
             android:windowSoftInputMode="adjustUnspecified|adjustPan">

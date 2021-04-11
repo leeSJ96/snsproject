@@ -131,6 +131,9 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
     //새로고침 스와이프
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    //이미지라이브러리
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+
 
 
 
