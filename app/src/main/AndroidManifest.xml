@@ -48,7 +48,10 @@
 
 
 
+
+
         </activity>
+
 
         <activity
             android:name="com.sjkorea.meetagain.MainActivity"

@@ -43,7 +43,7 @@ class AddActivity : AppCompatActivity() {
     var uid: String? = null
     var view : View? = null
     private var photoUse : Boolean = false
-    private var PICK_IMAGE_FROM_ALBUM = 12
+    private var PICK_PHOTO_FROM_ALBUM = 11
 
     private var activityAddBinding: ActivityAddBinding? = null
 
@@ -145,16 +145,9 @@ class AddActivity : AppCompatActivity() {
             intent.type = "image/*"
             startActivityForResult(
                 Intent.createChooser(intent, "Select Picture"),
-                PICK_IMAGE_FROM_ALBUM
+                PICK_PHOTO_FROM_ALBUM
 
             )
-
-
-
-
-
-
-
 
 
         }
@@ -174,7 +167,7 @@ class AddActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode){
-            PICK_IMAGE_FROM_ALBUM -> {
+            PICK_PHOTO_FROM_ALBUM -> {
                 data?.data?.let { uri ->
                     cropImage(uri) //이미지를 선택하면 여기가 실행됨
                 }

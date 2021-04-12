@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -39,6 +40,9 @@ import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.MainHomeFragment
 import com.sjkorea.meetagain.utils.Constants
 import com.squareup.okhttp.internal.Internal.instance
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog.*
@@ -54,7 +58,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     private var backKeyPressedTime: Long = 0
     var PICK_PROFILE_FROM_ALBUM = 10
-
+    private var photoUri: Uri? = null
+    private var photoUse: Boolean = false
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
@@ -146,46 +151,116 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             1
         )
         //프로그레스바 색상
-        activityMainBinding?.loadingProgress?.indeterminateDrawable?.setColorFilter(Color.rgb(255 ,255 ,255), android.graphics.PorterDuff.Mode.MULTIPLY)
+        activityMainBinding?.loadingProgress?.indeterminateDrawable?.setColorFilter(
+            Color.rgb(
+                255,
+                255,
+                255
+            ), android.graphics.PorterDuff.Mode.MULTIPLY
+        )
 
     }
-
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // 앨범에서 Profile Image 사진 선택시 호출 되는 부분
-        if (requestCode == PICK_PROFILE_FROM_ALBUM && resultCode == Activity.RESULT_OK) {
+//        // 앨범에서 Profile Image 사진 선택시 호출 되는 부분
+//        if (requestCode == PICK_PROFILE_FROM_ALBUM && resultCode == Activity.RESULT_OK) {
+//
+//            hideAndShowUi(true)
+//            var imageUri = data?.data
+//            var uid = FirebaseAuth.getInstance().currentUser!!.uid //파일 업로드
+//            var storageRef =
+//                FirebaseStorage.getInstance().reference.child("userProfileImages").child(
+//                    uid!!
+//                )
+//
+//            //사진을 업로드 하는 부분  userProfileImages 폴더에 uid에 파일을 업로드함
+//            storageRef.putFile(imageUri!!)
+//                .continueWithTask { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
+//                    return@continueWithTask storageRef.downloadUrl
+//                }.addOnSuccessListener { uri ->
+//
+//                    var map = HashMap<String, Any>()
+//                    map["image"] = uri.toString()
+//                    FirebaseFirestore.getInstance().collection("profileImages").document(uid)
+//                        .set(map).addOnCompleteListener {
+//
+//                            hideAndShowUi(false)
+//                        }.addOnFailureListener {
+//
+//                            uploadErrorMessage(it)
+//                        }
+//
+//                }
 
-            hideAndShowUi(true)
-            var imageUri = data?.data
-            var uid = FirebaseAuth.getInstance().currentUser!!.uid //파일 업로드
-            var storageRef =
-                FirebaseStorage.getInstance().reference.child("userProfileImages").child(
-                    uid!!
-                )
+//        }
 
-            //사진을 업로드 하는 부분  userProfileImages 폴더에 uid에 파일을 업로드함
-            storageRef.putFile(imageUri!!)
-                .continueWithTask { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
-                    return@continueWithTask storageRef.downloadUrl
-                }.addOnSuccessListener { uri ->
-                    var map = HashMap<String, Any>()
-                    map["image"] = uri.toString()
-                    FirebaseFirestore.getInstance().collection("profileImages").document(uid)
-                        .set(map).addOnCompleteListener {
 
-                            hideAndShowUi(false)
-                        }.addOnFailureListener {
-
-                            uploadErrorMessage(it)
-                        }
-
+        when (requestCode) {
+            PICK_PROFILE_FROM_ALBUM -> {
+                data?.data?.let { uri ->
+                    cropImage(uri) //이미지를 선택하면 여기가 실행됨
                 }
+                photoUri = data?.data
+                photoUse = true
+
+            }
+
+            CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+
+                var uid = FirebaseAuth.getInstance().currentUser!!.uid //파일 업로드
+                var storageRef =
+                    FirebaseStorage.getInstance().reference.child("userProfileImages").child(
+                        uid!!
+                    )
+                val result = CropImage.getActivityResult(data)
+                if (resultCode == Activity.RESULT_OK) {
+                    result.uri?.let {
+                        Log.d(Constants.TAG, "secces : 1 ")
+                        //사진을 업로드 하는 부분  userProfileImages 폴더에 uid에 파일을 업로드함
+                        storageRef.putFile(photoUri!!)
+                            .continueWithTask { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
+                                return@continueWithTask storageRef.downloadUrl
+                            }.addOnSuccessListener { it ->
+
+
+                                var map = HashMap<String, Any>()
+                                map["image"] = it.toString()
+                                FirebaseFirestore.getInstance().collection("profileImages")
+                                    .document(uid)
+                                    .set(map).addOnCompleteListener {
+
+                                        hideAndShowUi(false)
+                                    }.addOnFailureListener {
+
+                                        uploadErrorMessage(it)
+                                    }
+
+                            }
+
+
+                    }
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    val error = result.error
+                    Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+                    Log.d(Constants.TAG, "error:2 ")
+                }
+            }
+            else -> {
+                Log.d(Constants.TAG, "finish:3 ")
+            }
 
         }
 
+    }
+
+    private fun cropImage(uri: Uri?) {
+        CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON)
+            .setCropShape(CropImageView.CropShape.RECTANGLE)
+            //사각형 모양으로 자른다
+            .start(this)
     }
 
 
@@ -248,6 +323,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         Toast.makeText(this, "업로드 실패/ 서버 에러", Toast.LENGTH_SHORT).show()
         finish()
     }
+
     private fun hideAndShowUi(hideCheck: Boolean) {
 
         when (hideCheck) {
@@ -281,7 +357,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
     }
-
 
 
 }

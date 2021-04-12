@@ -1,9 +1,12 @@
 package com.sjkorea.meetagain.UserFragment
 
 
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +33,9 @@ import com.sjkorea.meetagain.databinding.FragmentUserBinding
 import com.sjkorea.meetagain.intro.FirstVisitActivity
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*
@@ -45,7 +51,7 @@ class UserFragment : Fragment() {
     var currentUserUid: String? = null
 
 
-    private var fragmentUserBinding : FragmentUserBinding? = null
+    private var fragmentUserBinding: FragmentUserBinding? = null
 
     var followListenerRegistration: ListenerRegistration? = null
     var imageprofileListenerRegistration: ListenerRegistration? = null
@@ -68,7 +74,7 @@ class UserFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val binding  = FragmentUserBinding.inflate(inflater, container,false)
+        val binding = FragmentUserBinding.inflate(inflater, container, false)
         fragmentUserBinding = binding
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -77,7 +83,7 @@ class UserFragment : Fragment() {
 
         if (arguments != null) {
 //            contentDTO = requireArguments().getString("qwer")
-           uid = requireArguments().getString("destinationUid")
+            uid = requireArguments().getString("destinationUid")
             if (uid != null && uid == currentUserUid) {
 //                //나의 유저페이지
 //                userview?.account_btn_follow_signout?.text = getString(R.string.signout)
@@ -112,9 +118,27 @@ class UserFragment : Fragment() {
             photoPcikerIntent.type = "image/*"
             activity?.startActivityForResult(photoPcikerIntent, PICK_PROFILE_FROM_ALBUM)
 
+
+
+//            val intent = Intent(
+//                Intent.ACTION_GET_CONTENT,
+//                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+//
+//            )
+//
+//            intent.putExtra("crop", true) //기존 코드에 이 줄 추가!
+//            intent.type = "image/*"
+//            startActivityForResult(
+//                Intent.createChooser(intent, "Select Picture"),
+//                PICK_PROFILE_FROM_ALBUM
+//            )
+
+
         }
         return fragmentUserBinding!!.root
     }
+
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -170,7 +194,6 @@ class UserFragment : Fragment() {
     }
 
 
-
     fun gettitlecount() {
         var contentDTO: ArrayList<ContentDTO>
         contentDTO = ArrayList()
@@ -195,20 +218,22 @@ class UserFragment : Fragment() {
 
 
     fun getProfileImages() {
-        imageprofileListenerRegistration = firestore?.collection("profileImages")?.document(uid.toString())
-            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if (documentSnapshot == null) return@addSnapshotListener
-                if (documentSnapshot.data != null) {
-                    val url = documentSnapshot.data!!["image"]
-                    Glide.with(requireActivity()).load(url).apply(RequestOptions().circleCrop())
-                        .placeholder(R.drawable.icon_noimage1)
-                        .error(R.drawable.icon_noimage1)
-                        .into(account_iv_profile)
+        imageprofileListenerRegistration =
+            firestore?.collection("profileImages")?.document(uid.toString())
+                ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                    if (documentSnapshot == null) return@addSnapshotListener
+                    if (documentSnapshot.data != null) {
+                        val url = documentSnapshot.data!!["image"]
+                        Glide.with(requireActivity()).load(url).apply(RequestOptions().circleCrop())
+                            .placeholder(R.drawable.icon_noimage1)
+                            .error(R.drawable.icon_noimage1)
+                            .into(account_iv_profile)
 
+                    }
                 }
-            }
     }
-    private fun profileUserName(){
+
+    private fun profileUserName() {
 
         val userName = SharedPreferenceFactory.getStrValue("userName", null)
         fragmentUserBinding?.userNameTv?.text = userName
@@ -218,13 +243,10 @@ class UserFragment : Fragment() {
     private fun profileUserNamechange() {
         fragmentUserBinding?.userNamechangeTv?.setOnClickListener {
 
-        val intent = Intent(activity, FirstVisitActivity::class.java)
-        startActivity(intent)
+            val intent = Intent(activity, FirstVisitActivity::class.java)
+            startActivity(intent)
         }
     }
-
-
-
 
 
     private fun requestFollow() {
@@ -291,17 +313,20 @@ class UserFragment : Fragment() {
 
     }
 
-    fun getFolloerAndFollowing(){
-        followListenerRegistration = firestore?.collection("users")?.document(uid.toString())?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-            if (documentSnapshot==null) return@addSnapshotListener
+    fun getFolloerAndFollowing() {
+        followListenerRegistration = firestore?.collection("users")?.document(uid.toString())
+            ?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+                if (documentSnapshot == null) return@addSnapshotListener
 
-            var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
+                var followDTO = documentSnapshot.toObject(FollowDTO::class.java)
 
-            if(followDTO?.followingCount != null){
-                fragmentUserBinding?.accountTvFollowingCount?.text = followDTO?.followingCount?.toString()
-            }
-            if(followDTO?.followerCount != null){
-                fragmentUserBinding?.accountTvFollowerCount?.text = followDTO?.followerCount?.toString()
+                if (followDTO?.followingCount != null) {
+                    fragmentUserBinding?.accountTvFollowingCount?.text =
+                        followDTO?.followingCount?.toString()
+                }
+                if (followDTO?.followerCount != null) {
+                    fragmentUserBinding?.accountTvFollowerCount?.text =
+                        followDTO?.followerCount?.toString()
 
 //                if(followDTO?.followers?.containsKey(currentUserUid!!)) {
 //                    userview?.account_btn_follow_signout?.text = getString(R.string.follow_cancel)
@@ -312,11 +337,9 @@ class UserFragment : Fragment() {
 //                        userview?.account_btn_follow_signout?.background?.colorFilter = null
 //                    }
 //                }
+                }
             }
-        }
     }
-
-
 
 
 }
