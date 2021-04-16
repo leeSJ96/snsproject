@@ -29,6 +29,11 @@ object Constants {
         //댓글 더보기 스니퍼 싱글톤
         var COMMENTMORESPINNER : String? = null
 
+
+        const val VIEW_TYPE_ITEM = 0
+        const val VIEW_TYPE_LOADING = 1
+
+
     const val AuthOverLap = "The email address is already in use by another account"
     const val EmailFormError = "he email address is badly formatted"
     const val PasswordFail = "The password is invalid or the user does not have a password"

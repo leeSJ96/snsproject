@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +37,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
     var tr: Boolean? = null
 
-    private var page = 1 // 현재 페이지
+
 
     private var recyclerViewState: Parcelable? = null
 
@@ -65,6 +64,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         //스와이프리프레시시
         fragmentHomeBinding?.swipeRefresh?.setOnRefreshListener(this)
 
+
         adapter = HomeViewRecyclerViewAdapter(
             this,
             childFragmentManager,
@@ -78,8 +78,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         adapter.apply {
 
 
-            notifyItemRangeInserted((page - 1) * 10, 10)
-
             if (hasObservers()) {
                 setHasStableIds(true)
             }
@@ -87,12 +85,10 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         }
 
         fragmentHomeBinding?.homefragmentRecyclerview?.adapter = adapter
-
         val manager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, true)
-        fragmentHomeBinding?.homefragmentRecyclerview?.layoutManager = manager
-        manager.reverseLayout = true
-        manager.stackFromEnd = true
-
+        binding.homefragmentRecyclerview.layoutManager = manager
+        manager.reverseLayout = false
+        manager.stackFromEnd = false
 
 
         var recyclerViewState: Parcelable
@@ -105,24 +101,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
                 recyclerViewState
             );
 
-
-        // 스크롤 리스너
-        fragmentHomeBinding?.homefragmentRecyclerview?.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val lastVisibleItemPosition =
-                    (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-                val itemTotalCount = recyclerView.adapter!!.itemCount-1
-
-                // 스크롤이 끝에 도달했는지 확인
-                if (!fragmentHomeBinding?.homefragmentRecyclerview?.canScrollVertically(1)!! && lastVisibleItemPosition == itemTotalCount) {
-                    adapter.deleteLoading()
-//                    model.loadBaeminNotice(++page)
-                    Toast.makeText(context, "Last Position", Toast.LENGTH_SHORT).show();
-                }
-            }
-        })
 
 
 
@@ -145,7 +123,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
     override fun onResume() {
         super.onResume()
-
 
 
 
@@ -181,15 +158,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
     }
 
-    private fun saveRecyclerViewState() {
-        // LayoutManager를 불러와 Parcelable 변수에 리사이클러뷰 상태를 Bundle 형태로 저장한다
-        recyclerViewState = homefragment_recyclerview.layoutManager!!.onSaveInstanceState()
-
-    }
-
-    private fun setSavedRecyclerViewState() {
-        homefragment_recyclerview.layoutManager!!.onRestoreInstanceState(recyclerViewState)
-    }
 
 
 
@@ -220,7 +188,6 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
     override fun onModify() {
         Log.d(TAG, "수정")
     }
-
 
 
     fun timestampData() {

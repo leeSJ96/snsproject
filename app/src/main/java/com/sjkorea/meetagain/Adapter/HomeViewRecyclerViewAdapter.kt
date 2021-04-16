@@ -1,7 +1,9 @@
 package com.sjkorea.meetagain.Adapter
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +24,8 @@ import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.CONTEXT_NULL
 import com.sjkorea.meetagain.utils.Constants.TAG
+import com.sjkorea.meetagain.utils.Constants.VIEW_TYPE_ITEM
+import com.sjkorea.meetagain.utils.Constants.VIEW_TYPE_LOADING
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.activity_firstvisit.*
@@ -50,9 +54,10 @@ class HomeViewRecyclerViewAdapter(
     var name: String? = null
     var userid: String? = null
 
-    //
-    private val VIEW_TYPE_ITEM = 0
-    private val VIEW_TYPE_LOADING = 1
+    //무한스크롤
+    lateinit var mcontext: Context
+
+
 
     private var recyclerViewState: Parcelable? = null
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
@@ -78,6 +83,12 @@ class HomeViewRecyclerViewAdapter(
     }
 
 
+
+
+
+
+
+
     // 뷰의 타입을 정해주는 곳이다.
     override fun getItemViewType(position: Int): Int {
         // 게시물과 프로그레스바 아이템뷰를 구분할 기준이 필요하다.
@@ -88,23 +99,15 @@ class HomeViewRecyclerViewAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        return when (viewType) {
-            VIEW_TYPE_ITEM -> {
-                val binding =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_sub, parent, false)
-                CustomViewHolder(binding, this.homeRecyclerviewInterface!!)
-            }
-            else -> {
-                val binding =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_progress, parent, false)
-                LoadingViewHolder(binding)
-            }
-
+        mcontext = parent.context
+        return if (viewType == Constants.VIEW_TYPE_ITEM) {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_sub, parent, false)
+            CustomViewHolder(view,homeRecyclerviewInterface!!)
+        } else {
+            val view = LayoutInflater.from(mcontext).inflate(R.layout.progress_loading, parent, false)
+            LoadingViewHolder(view)
         }
-
     }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is CustomViewHolder){
@@ -301,7 +304,8 @@ class HomeViewRecyclerViewAdapter(
 
                 val bottomSheetDialogFragment = CustomBottomDialog()
                 bottomSheetDialogFragment.arguments = bundle
-                bottomSheetDialogFragment.show(fragmentManager, bottomSheetDialogFragment.tag)
+                bottomSheetDialogFragment
+                    .show(fragmentManager, bottomSheetDialogFragment.tag)
             }
 
             //누르면 홈포스트 프래그먼트 호출
@@ -325,6 +329,10 @@ class HomeViewRecyclerViewAdapter(
         }
     }
 
+
+
+
+
     override fun getItemId(position: Int): Long =
         position.toLong()
 
@@ -337,10 +345,6 @@ class HomeViewRecyclerViewAdapter(
     fun setList(notice: MutableList<ContentDTO>) {
         contentArray.addAll(notice)
         contentArray.add(ContentDTO(" ", " ")) // progress bar 넣을 자리
-    }
-
-    fun deleteLoading(){
-        contentArray.removeAt(contentArray.lastIndex) // 로딩이 완료되면 프로그레스바를 지움
     }
 
 

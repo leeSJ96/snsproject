@@ -35,7 +35,6 @@ import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.custom_dialog.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.viewpager_history_item.view.*

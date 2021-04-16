@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.animation.AnimationSet
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +43,6 @@ import com.sjkorea.meetagain.utils.Constants
 import com.squareup.okhttp.internal.Internal.instance
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
-import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custom_dialog.*
@@ -64,7 +64,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
 
         action_add.setOnClickListener {
+
             startActivity(Intent(this, AddActivity::class.java))
+
         }
 
 
@@ -74,6 +76,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 var homeFragment = MainHomeFragment()
 
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right)
                     .replace(R.id.main_content, homeFragment).commit()
 
                 return true
@@ -83,16 +86,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 var searchFragment = FollowFragment()
 
 
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, searchFragment)
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right)
+                    .replace(R.id.main_content, searchFragment)
                     .commit()
-
+                overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_right)
                 return true
             }
 
 
             R.id.action_Notice -> {
                 var alertFragment = AlarmFragment()
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, alertFragment)
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right)
+                    .replace(R.id.main_content, alertFragment)
                     .commit()
 
                 return true
@@ -105,7 +112,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
                 bundle.putString("destinationUid", uid)
                 userFragment.arguments = bundle
-                supportFragmentManager.beginTransaction().replace(R.id.main_content, userFragment)
+
+                supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right)
+                    .replace(R.id.main_content, userFragment)
                     .commit()
                 return true
             }
