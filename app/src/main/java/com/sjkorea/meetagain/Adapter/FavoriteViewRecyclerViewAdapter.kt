@@ -1,6 +1,8 @@
 package com.sjkorea.meetagain.Adapter
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,9 +20,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.MetadataChanges
 import com.sjkorea.meetagain.*
 import com.sjkorea.meetagain.homeFragment.FavoriteFragment
-import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
-import com.sjkorea.meetagain.homeFragment.MeaningFragment
 import com.sjkorea.meetagain.utils.Constants
 import com.sjkorea.meetagain.utils.Constants.ODRDER
 import com.sjkorea.meetagain.utils.Constants.TAG
@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.custom_dialog.view.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import kotlinx.android.synthetic.main.item_main.view.*
+import kotlinx.android.synthetic.main.item_sub.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -162,7 +163,7 @@ class FavoriteViewRecyclerViewAdapter(
             datatitle.text = contentDTOs.title
             // 메인사진
             Glide.with(itemView.context).load(contentDTOs.imageUrl)
-                .into(itemView.homeviewitem_imageview_content)
+                .into(itemView.homeviewitem_imageview_content_sub)
 //            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
             // 내용
             datacontext.text = contentDTOs.explain
@@ -523,7 +524,17 @@ class FavoriteViewRecyclerViewAdapter(
         intent.putExtra("meaninghashmap", hashmap2)
         //putSerializable
         intent.putExtra("hashmap", contentArray[position].favorites)
-        context.startActivity(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            val options : ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                context.activity,context.homeviewitem_imageview_content_sub,"imageTransition"
+            )
+            context.startActivity(intent,options.toBundle())
+        }
+        else{
+            context.startActivity(intent)
+        }
 
     }
 

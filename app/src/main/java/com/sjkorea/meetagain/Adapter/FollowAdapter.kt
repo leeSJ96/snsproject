@@ -1,7 +1,9 @@
 package com.sjkorea.meetagain.Adapter
 
 
+import android.app.ActivityOptions
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,6 +30,7 @@ import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.item_follow.view.*
 import kotlinx.android.synthetic.main.item_main.view.*
 import kotlinx.android.synthetic.main.item_main.view.date
+import kotlinx.android.synthetic.main.item_sub.*
 
 
 class FollowAdapter(
@@ -479,7 +482,17 @@ class FollowAdapter(
         intent.putExtra("meaninghashmap", hashmap2)
         //putSerializable
         intent.putExtra("hashmap", contentDTOs[position].favorites)
-        context.startActivity(intent);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            val options : ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                context.activity,context.homeviewitem_imageview_content_sub,"imageTransition"
+            )
+            context.startActivity(intent,options.toBundle())
+        }
+        else{
+            context.startActivity(intent)
+        }
 
     }
 

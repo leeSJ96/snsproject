@@ -66,6 +66,8 @@ class HomePostActivity : AppCompatActivity() {
         contentUidListposition = intent.getStringExtra("userIdposition")
         Log.d(contentUidListposition.toString(), " 홈 포스트 로그 contentUidListposition 받기")
 
+
+
         //uid
         var alarmUid = intent.getStringExtra("destinationUid")
         //title
@@ -76,17 +78,9 @@ class HomePostActivity : AppCompatActivity() {
         var alarmImageUrl = intent.getStringExtra("imageUrl")
         //favoriteCount
         var alarmFavoriteCount = intent.getIntExtra("favoriteCount",0)
-        Log.d(Constants.TAG, "alarmFavoriteCount: $alarmFavoriteCount ")
-        //name
-        var uidPosition = SharedPreferenceFactory.getStrValue("contentUidList","")
-        //userIdposition
-        var alarmUserIdposition = intent.getStringExtra("userIdposition")
         //meaningCount
         var alarmMeaningCount = intent.getIntExtra("meaningCount",0)
 
-        var alarmHashmapt = intent.getStringExtra("favoriteshashmap")
-
-        var alarmHashmap2 = intent.getStringExtra("meaninghashmap")
 
 
         //싱글톤사용 동적 스피너 체인지

@@ -3,10 +3,12 @@
 
     <style name="Theme.Meetagain" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#C6B6DD</item>
+        <item name="colorPrimary">#FFFFFF</item>
         <item name="colorPrimaryDark">#4F5577</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="android:windowActivityTransitions">true</item>
 
 
         <!--custom font-family 적용-->

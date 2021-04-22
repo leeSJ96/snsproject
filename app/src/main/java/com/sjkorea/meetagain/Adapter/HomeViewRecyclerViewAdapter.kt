@@ -1,10 +1,12 @@
 package com.sjkorea.meetagain.Adapter
 
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.Parcelable
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,19 +24,23 @@ import com.sjkorea.meetagain.*
 import com.sjkorea.meetagain.homeFragment.HomeFragment
 import com.sjkorea.meetagain.homeFragment.HomePostActivity
 import com.sjkorea.meetagain.utils.Constants
-import com.sjkorea.meetagain.utils.Constants.CONTEXT_NULL
 import com.sjkorea.meetagain.utils.Constants.TAG
 import com.sjkorea.meetagain.utils.Constants.VIEW_TYPE_ITEM
 import com.sjkorea.meetagain.utils.Constants.VIEW_TYPE_LOADING
 import com.sjkorea.meetagain.utils.SharedPreferenceFactory
 import com.squareup.okhttp.OkHttpClient
-import kotlinx.android.synthetic.main.activity_firstvisit.*
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.custom_dialog.view.*
-import kotlinx.android.synthetic.main.fragment_user.*
-import kotlinx.android.synthetic.main.item_main.view.*
-import java.util.*
-import kotlin.collections.ArrayList
+import kotlinx.android.synthetic.main.item_main.view.date
+import kotlinx.android.synthetic.main.item_main.view.home_post_item
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_explain_textview
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_favoritecounter_textview
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_fovorite_imageview
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_imageview_content_sub
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_meaning_imageview
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_meaningcounter_textview
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_profile_image
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_profile_name
+import kotlinx.android.synthetic.main.item_main.view.homeviewitem_profile_textview
+import kotlinx.android.synthetic.main.item_sub.*
 
 
 class HomeViewRecyclerViewAdapter(
@@ -53,12 +59,13 @@ class HomeViewRecyclerViewAdapter(
     var uid: String? = null
     var name: String? = null
     var userid: String? = null
+    var view : View? = null
 
     //무한스크롤
     lateinit var mcontext: Context
 
 
-
+    private var listener : OnItemClickListener? = null
     private var recyclerViewState: Parcelable? = null
     private var homeRecyclerviewInterface: IHomeRecyclerview? = null
     private var mFragmentManager: FragmentManager
@@ -111,7 +118,7 @@ class HomeViewRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder is CustomViewHolder){
-            holder.bind(contentArray[position],mFragmentManager)
+            holder.bind(contentArray[position],mFragmentManager,listener)
         }else{
 
         }
@@ -131,6 +138,7 @@ class HomeViewRecyclerViewAdapter(
 //        }
 
     }
+
 
     // 아이템뷰에 프로그레스바가 들어가는 경우
     inner class LoadingViewHolder(itemView: View) :
@@ -171,8 +179,10 @@ class HomeViewRecyclerViewAdapter(
         //힘내요 버튼
         private val meaningbtn = itemView.homeviewitem_meaning_imageview
 
+        private val item = itemView.home_post_item
 
-        fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager) {
+
+        fun bind(contentDTOs: ContentDTO, fragmentManager: FragmentManager,listener: OnItemClickListener?) {
             //  Profile Image 가져오기
             firestore?.collection("profileImages")?.document(contentDTOs.uid!!)
                 ?.get()?.addOnCompleteListener { task ->
@@ -206,12 +216,24 @@ class HomeViewRecyclerViewAdapter(
 
                 }
 
+            var mLastClickTime : Long = 0
+
+            item.setOnClickListener {
+                if(SystemClock.elapsedRealtime() - mLastClickTime > 1000){
+                    val pos = adapterPosition
+                    if ( pos != RecyclerView.NO_POSITION){
+                        listener?.onItemClick(itemView, contentDTOs)
+                    }
+                }
+                mLastClickTime = SystemClock.elapsedRealtime()
+            }
+
 
             //제목
             datatitle.text = contentDTOs.title
             // 메인사진
             Glide.with(itemView.context).load(contentDTOs.imageUrl)
-                .into(itemView.homeviewitem_imageview_content)
+                .into(itemView.homeviewitem_imageview_content_sub)
 //            itemView.homeviewitem_profile_name.text = contentDTOs[position].name
             // 내용
             datacontext.text = contentDTOs.explain
@@ -311,7 +333,6 @@ class HomeViewRecyclerViewAdapter(
             //누르면 홈포스트 프래그먼트 호출
             itemView.home_post_item.setOnClickListener {
                 homePostData(adapterPosition)
-
             }
 
             //내용누르면 홈프래그먼트로 이동
@@ -445,7 +466,11 @@ class HomeViewRecyclerViewAdapter(
     }
 
     fun homePostData(position: Int) {
+
+
         // 데이터  넘겨줌
+
+
         val intent = Intent(getApplicationContext(), HomePostActivity::class.java)
 
         intent.putExtra("contentDTO", contentArray[position])
@@ -484,8 +509,28 @@ class HomeViewRecyclerViewAdapter(
         intent.putExtra("meaninghashmap", hashmap2)
         //putSerializable
         intent.putExtra("hashmap", contentArray[position].favorites)
-        context.startActivity(intent);
 
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+            val options : ActivityOptions = ActivityOptions.makeSceneTransitionAnimation(
+                context.activity,context.homeviewitem_imageview_content_sub,"imageTransition"
+            )
+            context.startActivity(intent,options.toBundle())
+        }
+        else{
+            context.startActivity(intent)
+        }
+
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(v : View, contentDTOs: ContentDTO)
+    }
+
+    fun setOnItemClickListener (listener : OnItemClickListener){
+        this.listener = listener
     }
 
     // 즉 총알을 넣는다.

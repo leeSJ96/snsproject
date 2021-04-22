@@ -11,7 +11,7 @@
     app:cardElevation="10dp">
 
     <ImageView
-        android:id="@+id/homeviewitem_imageview_content"
+        android:id="@+id/homeviewitem_imageview_content_sub"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -19,7 +19,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,8 +96,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
-            app:layout_constraintTop_toTopOf="parent"
-          >
+            app:layout_constraintTop_toTopOf="parent">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -256,10 +254,10 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:text="2014년\n11월 18일"
                 android:textColor="@color/Text_white"
                 android:textSize="10sp"
-                android:layout_margin= "1dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

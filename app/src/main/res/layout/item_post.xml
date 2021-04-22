@@ -78,7 +78,7 @@
             android:textColor="@color/Text_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.12"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content_sub"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:textColor="@color/Text_white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.228"
-            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content"
+            app:layout_constraintStart_toEndOf="@+id/homeviewitem_imageview_content_sub"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView

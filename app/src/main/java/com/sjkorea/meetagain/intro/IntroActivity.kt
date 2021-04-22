@@ -57,7 +57,7 @@ class IntroActivity : AppCompatActivity() {
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
+//                overridePendingTransition(R.anim.page_right_in, R.anim.page_left_out)
                 finish()
 
             }.addOnFailureListener { error ->

@@ -1,7 +1,10 @@
 package com.sjkorea.meetagain.homeFragment
 
 
+import android.app.ActivityOptions
 import android.content.ContentValues.TAG
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -22,6 +25,7 @@ import com.sjkorea.meetagain.databinding.FragmentHomeBinding
 import com.sjkorea.meetagain.utils.Constants
 import com.squareup.okhttp.OkHttpClient
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.item_sub.view.*
 import java.util.*
 
 
@@ -36,6 +40,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
     var uid: String? = null
     var comments: ArrayList<ContentDTO.Comment> = arrayListOf()
     var tr: Boolean? = null
+
 
 
 
@@ -113,7 +118,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         super.onActivityCreated(savedInstanceState)
 
 
-        timestampData()
+
 
 
     }
@@ -125,7 +130,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         super.onResume()
 
 
-
+        timestampData()
 
 
 
@@ -192,21 +197,23 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
 
     fun timestampData() {
 
-        FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
+        FirebaseFirestore.getInstance().collection("images").orderBy("timestamp").startAt(2) .limit(10).addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
             contentArray.clear()
             contentUidList.clear()
             if (querySnapshot == null) return@addSnapshotListener
-            for (snapshot in querySnapshot.documents) {
-                var item1 = snapshot.toObject(ContentDTO::class.java)
 
 
-                        contentArray.add(item1!!)
-                        contentUidList.add(snapshot.id)
+                    for (snapshot in querySnapshot.documents) {
+
+                        var item1 = snapshot.toObject(ContentDTO::class.java)
+
+
+                            contentArray.add(item1!!)
+                            contentUidList.add(snapshot.id)
 
 
 
-
-            }
+                    }
 
             fragmentHomeBinding?.homefragmentRecyclerview?.adapter?.notifyDataSetChanged()
 
@@ -217,6 +224,8 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         }
 
     }
+
+
     //리프레시
     override fun onRefresh() {
 
@@ -225,7 +234,7 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         this.contentArray.clear()
         this.adapter.clearList()
 
-        FirebaseFirestore.getInstance().collection("images")?.orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
+        FirebaseFirestore.getInstance().collection("images").orderBy("timestamp").addSnapshotListener() { querySnapshot, firebaseFirestoreException ->
             contentArray.clear()
             contentUidList.clear()
             if (querySnapshot == null) return@addSnapshotListener
@@ -248,6 +257,9 @@ class HomeFragment : Fragment(), IHomeRecyclerview, IOnpostListener ,SwipeRefres
         adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
 
     }
+
+
+
 
 
 //    fun favoriteCountList() {
